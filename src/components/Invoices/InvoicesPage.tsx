@@ -168,6 +168,17 @@ export function InvoicesPage() {
                 <Undo2 className="w-4 h-4" />
               </button>
             )}
+
+            {/* Bouton Supprimer - Devis brouillon uniquement */}
+            {viewMode === 'quotes' && doc.status === 'draft' && (
+              <button
+                onClick={() => handleDeleteQuote(doc)}
+                className="p-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                title="Supprimer"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </td>
       </tr>
@@ -208,6 +219,21 @@ export function InvoicesPage() {
       alert('✅ Devis converti en facture avec succès !');
     } catch (error) {
       alert('❌ Erreur lors de la conversion');
+    }
+  };
+
+  const handleDeleteQuote = async (quote: Invoice) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer le devis ${quote.quote_number} ?\n\nCette action est irréversible.`)) {
+      return;
+    }
+
+    try {
+      await deleteInvoice(quote.id);
+      alert('✅ Devis supprimé avec succès !');
+      await fetchInvoices();
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      alert('❌ Erreur lors de la suppression du devis');
     }
   };
 
@@ -475,7 +501,7 @@ function MobileInvoiceCard({ doc, index, viewMode }: { doc: Invoice; index: numb
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showSendModal, setShowSendModal] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
-  const { convertQuoteToInvoice } = useInvoices();
+  const { convertQuoteToInvoice, deleteInvoice, fetchInvoices } = useInvoices();
 
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString('fr-FR', {
@@ -539,6 +565,21 @@ function MobileInvoiceCard({ doc, index, viewMode }: { doc: Invoice; index: numb
       alert('✅ Devis converti en facture avec succès !');
     } catch (error) {
       alert('❌ Erreur lors de la conversion');
+    }
+  };
+
+  const handleDeleteQuote = async (quote: Invoice) => {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer le devis ${quote.quote_number} ?\n\nCette action est irréversible.`)) {
+      return;
+    }
+
+    try {
+      await deleteInvoice(quote.id);
+      alert('✅ Devis supprimé avec succès !');
+      await fetchInvoices();
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      alert('❌ Erreur lors de la suppression du devis');
     }
   };
 
@@ -655,6 +696,18 @@ function MobileInvoiceCard({ doc, index, viewMode }: { doc: Invoice; index: numb
               >
                 <Undo2 className="w-5 h-5" />
                 <span className="text-[10px] mt-1 font-bold">Rembourser</span>
+              </button>
+            )}
+
+            {/* Bouton Supprimer - Devis brouillon uniquement */}
+            {isQuote && doc.status === 'draft' && (
+              <button
+                onClick={() => handleDeleteQuote(doc)}
+                className="p-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
+                title="Supprimer"
+              >
+                <Trash2 className="w-5 h-5" />
+                <span className="text-[10px] mt-1 font-bold">Supprimer</span>
               </button>
             )}
           </div>
