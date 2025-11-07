@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Phone, Search, Filter, ChevronLeft, ChevronRight, CreditCard as Edit, Eye, Trash2, Plus, Calendar, ArrowUpDown, AlertTriangle } from 'lucide-react';
+import { User, Mail, Phone, Search, Filter, ChevronLeft, ChevronRight, Edit, Eye, Trash2, Plus, Calendar, ArrowUpDown, AlertTriangle } from 'lucide-react';
 import { useClients } from '../../hooks/useClients';
 import { useBookings } from '../../hooks/useBookings';
 import { useTeam } from '../../hooks/useTeam';
