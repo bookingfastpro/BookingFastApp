@@ -1,0 +1,51 @@
+/* Styles spécifiques pour les modals avec safe areas */
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  
+  /* Safe areas avec fallback */
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: constant(safe-area-inset-left);
+  padding-left: env(safe-area-inset-left);
+  padding-right: constant(safe-area-inset-right);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Pour iOS PWA standalone */
+@supports (padding-top: max(0px)) {
+  .modal-container {
+    padding-top: max(env(safe-area-inset-top), 20px);
+    padding-bottom: max(env(safe-area-inset-bottom), 20px);
+  }
+}
+
+/* Ajustements pour iPhone avec notch */
+@media screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3),
+       screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3),
+       screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2),
+       screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3),
+       screen and (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3),
+       screen and (device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3),
+       screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) {
+  
+  /* Force un padding minimum pour les iPhones avec notch */
+  .modal-container {
+    padding-top: max(env(safe-area-inset-top), 44px) !important;
+  }
+}
+
+/* Modal content sur mobile */
+@media (max-width: 640px) {
+  .modal-content-mobile {
+    height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    height: calc(100vh - constant(safe-area-inset-top) - constant(safe-area-inset-bottom));
+    max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    max-height: calc(100vh - constant(safe-area-inset-top) - constant(safe-area-inset-bottom));
+  }
+}

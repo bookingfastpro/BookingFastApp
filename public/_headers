@@ -1,0 +1,55 @@
+# CRITICAL: Disable ALL caching for ALL files
+/*
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+  Surrogate-Control: no-store
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# HTML files - NO CACHE
+/*.html
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+
+# JavaScript files - NO CACHE
+/*.js
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+
+# CSS files - NO CACHE
+/*.css
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+
+# JSON files - NO CACHE
+/*.json
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+
+# Images - NO CACHE
+/*.png
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+
+/*.jpg
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+
+/*.svg
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0
+
+/*.webp
+  Cache-Control: no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0
+  Pragma: no-cache
+  Expires: 0

@@ -1,0 +1,858 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "yes": "Oui",
+    "no": "Non",
+    "all": "Tous",
+    "none": "Aucun",
+    "select": "Sélectionner",
+    "selected": "Sélectionné",
+    "actions": "Actions",
+    "details": "Détails",
+    "view": "Voir",
+    "download": "Télécharger",
+    "upload": "Télécharger",
+    "export": "Exporter",
+    "import": "Importer",
+    "print": "Imprimer",
+    "refresh": "Actualiser",
+    "reset": "Réinitialiser",
+    "clear": "Effacer",
+    "apply": "Appliquer",
+    "submit": "Soumettre",
+    "send": "Envoyer",
+    "at": "à",
+    "from": "de",
+    "to": "à",
+    "of": "de",
+    "in": "dans",
+    "on": "le",
+    "by": "par",
+    "for": "pour",
+    "with": "avec",
+    "without": "sans",
+    "and": "et",
+    "or": "ou"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "calendar": "Calendrier",
+    "clients": "Clients",
+    "services": "Services",
+    "emails": "Emails",
+    "plugins": "Plugins",
+    "settings": "Paramètres",
+    "logout": "Déconnexion",
+    "bookingsList": "Liste des réservations",
+    "pos": "Point de vente",
+    "reports": "Rapports"
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "logout": "Déconnexion",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "signIn": "Se connecter",
+    "signUp": "S'inscrire",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "dontHaveAccount": "Vous n'avez pas de compte ?",
+    "loginSuccess": "Connexion réussie",
+    "loginError": "Erreur de connexion",
+    "registerSuccess": "Inscription réussie",
+    "registerError": "Erreur d'inscription"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "overview": "Vue d'ensemble de votre activité",
+    "periods": {
+      "today": "Aujourd'hui",
+      "week": "Cette semaine",
+      "month": "Ce mois",
+      "day": "CA jour",
+      "weekLabel": "semaine",
+      "monthLabel": "mois"
+    },
+    "stats": {
+      "revenue": "CA",
+      "pending": "En attente",
+      "completed": "Complétés",
+      "restrictedAccess": "Accès restreint"
+    },
+    "role": {
+      "level": "Niveau"
+    },
+    "upcomingBookings": {
+      "title": "Prochaines réservations",
+      "subtitle": "Dans les 24 prochaines heures",
+      "noBookings": "Aucune réservation dans les 24h",
+      "confirmed": "Confirmée",
+      "pending": "En attente",
+      "persons": "pers.",
+      "viewDetails": "Voir les détails",
+      "callClient": "Appeler le client"
+    },
+    "popularServices": {
+      "title": "Services populaires",
+      "subtitle": "Ce mois",
+      "bookings": "réservations"
+    },
+    "pendingPayments": {
+      "title": "Paiements en attente",
+      "count": "en attente"
+    },
+    "bookingDetails": {
+      "title": "Détails de la réservation",
+      "confirmed": "Confirmée",
+      "pending": "En attente",
+      "details": "Détails de la réservation",
+      "service": "Service",
+      "dateTime": "Date et heure",
+      "duration": "Durée",
+      "minutes": "minutes",
+      "participants": "Participants",
+      "person": "personne(s)",
+      "payment": "Paiement",
+      "totalAmount": "Montant total",
+      "paidAmount": "Montant payé",
+      "remaining": "Reste à payer",
+      "status": "Statut",
+      "paid": "Payé",
+      "partial": "Acompte",
+      "unpaid": "Non payé",
+      "callClient": "Appeler le client",
+      "sendEmail": "Envoyer un email"
+    },
+    "invitations": {
+      "pending": "invitation(s) en attente",
+      "invited": "Vous avez été invité à rejoindre",
+      "team": "équipe",
+      "teams": "équipes",
+      "view": "Voir les invitations",
+      "title": "Invitation à rejoindre une équipe",
+      "from": "De",
+      "role": "Rôle :",
+      "permissions": "permissions",
+      "expires": "Expire le",
+      "accept": "Accepter",
+      "reject": "Refuser",
+      "accepted": "Invitation acceptée avec succès",
+      "rejected": "Invitation refusée"
+    }
+  },
+  "calendar": {
+    "title": "Calendrier",
+    "overview": "Gérez vos réservations",
+    "views": {
+      "calendar": "Calendrier",
+      "list": "Liste",
+      "clients": "Clients"
+    },
+    "filterByMember": "Filtrer par membre",
+    "allMembers": "Tous les membres",
+    "unassigned": "Non assignées",
+    "resetFilter": "Réinitialiser",
+    "activeFilter": "Filtre actif :",
+    "unassignedBookings": "Réservations non assignées",
+    "unknownMember": "Membre inconnu",
+    "bookingsCount": "réservation(s)",
+    "loading": "Chargement...",
+    "noPermission": "Vous n'avez pas la permission de créer des réservations",
+    "limitReached": "Limite atteinte : {{max}} réservations maximum par jour",
+    "cannotEdit": "Vous ne pouvez pas modifier cette réservation",
+    "cannotDelete": "Vous ne pouvez pas supprimer cette réservation",
+    "timeSlots": {
+      "available": "Disponible",
+      "booked": "Réservé",
+      "past": "Passé"
+    },
+    "booking": {
+      "new": "Nouvelle réservation",
+      "edit": "Modifier la réservation",
+      "delete": "Supprimer la réservation",
+      "confirm": "Confirmer",
+      "cancel": "Annuler",
+      "status": "Statut",
+      "pending": "En attente",
+      "confirmed": "Confirmée",
+      "cancelled": "Annulée"
+    },
+    "errors": {
+      "loadFailed": "Erreur lors du chargement du calendrier",
+      "saveFailed": "Erreur lors de la sauvegarde",
+      "deleteFailed": "Erreur lors de la suppression"
+    }
+  },
+  "bookings": {
+    "title": "Mes Réservations",
+    "subtitle": "Liste complète de toutes vos réservations ({{count}})",
+    "search": "Rechercher...",
+    "filters": {
+      "allStatus": "Tous les statuts",
+      "pending": "En attente",
+      "confirmed": "Confirmées",
+      "cancelled": "Annulées",
+      "allPayments": "Tous les paiements",
+      "unpaid": "Non payé",
+      "partial": "Acompte",
+      "paid": "Payé"
+    },
+    "sort": {
+      "dateRecent": "Date (récent)",
+      "dateOld": "Date (ancien)",
+      "clientAZ": "Client (A-Z)",
+      "clientZA": "Client (Z-A)",
+      "serviceAZ": "Service (A-Z)",
+      "amountHigh": "Montant (élevé)",
+      "amountLow": "Montant (faible)"
+    },
+    "table": {
+      "dateTime": "Date & Heure",
+      "client": "Client",
+      "service": "Service",
+      "status": "Statut",
+      "amount": "Montant",
+      "actions": "Actions"
+    },
+    "status": {
+      "confirmed": "Confirmée",
+      "cancelled": "Annulée",
+      "pending": "En attente",
+      "paid": "Payé",
+      "partial": "Acompte",
+      "unpaid": "Non payé"
+    },
+    "details": {
+      "title": "Détails de la réservation",
+      "date": "Date",
+      "service": "Service",
+      "duration": "Durée",
+      "quantity": "Quantité",
+      "totalAmount": "Montant total",
+      "paidAmount": "Payé",
+      "remaining": "Reste à payer",
+      "paymentStatus": "Statut"
+    },
+    "actions": {
+      "view": "Voir les détails",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "call": "Appeler le client",
+      "email": "Envoyer un email"
+    },
+    "empty": {
+      "title": "Aucune réservation",
+      "noResults": "Aucune réservation ne correspond à votre recherche",
+      "noBookings": "Les réservations apparaîtront ici une fois créées"
+    },
+    "pagination": {
+      "showing": "Affichage {{start}}-{{end}} sur {{total}}"
+    }
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Gérez vos services et tarifs (TVA: {{rate}}%)",
+    "count": "{{count}} services",
+    "new": "Nouveau service",
+    "edit": "Modifier le service",
+    "delete": "Supprimer le service",
+    "addCategory": "Catégorie",
+    "addService": "Service",
+    "form": {
+      "name": "Nom du service",
+      "namePlaceholder": "Ex: Massage relaxant",
+      "pricing": "Tarification (TVA: {{rate}}%)",
+      "priceTTC": "Prix TTC (€) *",
+      "priceTTCPlaceholder": "120.00",
+      "priceTTCHelp": "Prix toutes taxes comprises",
+      "priceHT": "Prix HT (calculé automatiquement)",
+      "taxAmount": "TVA: {{amount}}",
+      "calculationInfo": "💡 Calcul automatique: Le prix HT est calculé à partir du prix TTC avec la formule: HT = TTC ÷ (1 + {{rate}}%)",
+      "duration": "Durée (minutes)",
+      "capacity": "Capacité (personnes)",
+      "unitName": "Nom de l'unité (optionnel)",
+      "unitNamePlaceholder": "Ex: Jet ski, Vélo, Chambre...",
+      "unitNameHelp": "Ce mot remplacera \"participants\" dans la réservation",
+      "imageUrl": "URL de l'image (optionnel)",
+      "imageUrlPlaceholder": "https://exemple.com/image.jpg",
+      "description": "Description",
+      "descriptionPlaceholder": "Décrivez votre service...",
+      "availability": "Horaires de disponibilité du service",
+      "availabilityInfo": "💡 Conseil : Configurez des horaires spécifiques pour ce service.",
+      "availabilityNote": "Si aucun horaire n'est défini, les horaires généraux de l'entreprise seront utilisés.",
+      "days": {
+        "monday": "Lundi",
+        "tuesday": "Mardi",
+        "wednesday": "Mercredi",
+        "thursday": "Jeudi",
+        "friday": "Vendredi",
+        "saturday": "Samedi",
+        "sunday": "Dimanche"
+      },
+      "available": "Disponible",
+      "addTimeRange": "Ajouter une plage horaire",
+      "removeTimeRange": "Supprimer cette plage"
+    },
+    "details": {
+      "priceTTC": "Prix TTC:",
+      "priceHT": "Prix HT:",
+      "tax": "TVA ({{rate}}%):",
+      "duration": "Durée:",
+      "capacity": "Capacité:",
+      "unit": "Unité:",
+      "minutes": "min",
+      "persons": "pers."
+    },
+    "actions": {
+      "edit": "Modifier",
+      "delete": "Supprimer"
+    },
+    "empty": {
+      "title": "Aucun service",
+      "subtitle": "Commencez par créer votre premier service",
+      "create": "Créer un service"
+    },
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer le service \"{{name}}\" ?"
+  },
+  "emails": {
+    "title": "Workflows Email",
+    "subtitle": "Automatisez vos communications avec vos clients",
+    "tabs": {
+      "workflows": "Workflows",
+      "templates": "Templates",
+      "stats": "Statistiques",
+      "send": "Envoi"
+    },
+    "workflows": {
+      "title": "Workflows Actifs",
+      "new": "Nouveau Workflow",
+      "edit": "Modifier le workflow",
+      "delete": "Supprimer le workflow",
+      "active": "Actif",
+      "inactive": "Inactif",
+      "trigger": "Déclencheur",
+      "template": "Template",
+      "delay": "Délai",
+      "actions": {
+        "edit": "Modifier",
+        "delete": "Supprimer",
+        "activate": "Activer",
+        "deactivate": "Désactiver"
+      },
+      "triggers": {
+        "booking_created": "Réservation créée",
+        "booking_confirmed": "Réservation confirmée",
+        "booking_cancelled": "Réservation annulée",
+        "payment_received": "Paiement reçu",
+        "reminder_24h": "Rappel 24h avant",
+        "reminder_1h": "Rappel 1h avant"
+      },
+      "empty": {
+        "title": "Aucun workflow",
+        "subtitle": "Créez votre premier workflow d'automatisation",
+        "create": "Créer un workflow"
+      }
+    },
+    "templates": {
+      "title": "Templates Email",
+      "new": "Nouveau Template",
+      "edit": "Modifier le template",
+      "delete": "Supprimer le template",
+      "subject": "Sujet:",
+      "actions": {
+        "edit": "Modifier",
+        "delete": "Supprimer"
+      },
+      "empty": {
+        "title": "Aucun template",
+        "subtitle": "Créez votre premier template d'email",
+        "create": "Créer un template"
+      }
+    },
+    "stats": {
+      "title": "Statistiques",
+      "sent": "Envoyés",
+      "opened": "Ouverts",
+      "clicked": "Cliqués",
+      "failed": "Échoués"
+    },
+    "send": {
+      "title": "Envoi manuel",
+      "selectTemplate": "Sélectionner un template",
+      "selectClient": "Sélectionner un client",
+      "send": "Envoyer",
+      "success": "Email envoyé avec succès",
+      "error": "Erreur lors de l'envoi"
+    },
+    "deleteConfirm": "Supprimer {{type}} \"{{name}}\" ?"
+  },
+  "pos": {
+    "title": "Point de vente",
+    "subtitle": "Gestion des ventes et encaissements",
+    "views": {
+      "services": "Services",
+      "reservations": "Réservations"
+    },
+    "menu": {
+      "history": "Historique",
+      "settings": "Paramètres"
+    },
+    "cart": {
+      "title": "Panier",
+      "empty": "Panier vide",
+      "emptyMessage": "Ajoutez des services ou sélectionnez une réservation",
+      "subtotalHT": "Sous-total HT",
+      "tax": "TVA",
+      "taxIncluded": "(incluse)",
+      "totalTTC": "Total TTC",
+      "clear": "Vider",
+      "payment": "Paiement"
+    },
+    "categories": {
+      "all": "Tous",
+      "new": "Catégorie",
+      "edit": "Modifier la catégorie",
+      "delete": "Supprimer la catégorie"
+    },
+    "products": {
+      "new": "Service",
+      "edit": "Modifier le service",
+      "delete": "Supprimer le service",
+      "stock": "Stock:",
+      "duration": "min",
+      "bookingService": "Service de réservation",
+      "cannotEdit": "Les services de réservation ne peuvent pas être modifiés depuis le POS. Utilisez la page Services."
+    },
+    "checkout": {
+      "title": "Finaliser la transaction",
+      "reservationPayment": "Paiement de réservation",
+      "amount": "Montant à payer",
+      "remaining": "Reste à payer",
+      "enterAmount": "Montant à encaisser",
+      "enterAmountPlaceholder": "0.00",
+      "paymentMethod": "Méthode de paiement",
+      "methods": {
+        "cash": "Espèces",
+        "card": "Carte bancaire",
+        "check": "Chèque",
+        "transfer": "Virement"
+      },
+      "transactions": "Transactions",
+      "totalPaid": "Total encaissé",
+      "remaining": "Reste",
+      "change": "Monnaie à rendre : {{amount}} €",
+      "customer": "Sélectionner un client (optionnel)",
+      "quickPayment": "Paiement rapide (sans client)",
+      "customerName": "Nom du client (optionnel)",
+      "customerNamePlaceholder": "Jean Dupont",
+      "customerEmail": "Email (optionnel)",
+      "customerEmailPlaceholder": "jean@example.com",
+      "customerPhone": "Téléphone (optionnel)",
+      "customerPhonePlaceholder": "06 12 34 56 78",
+      "notes": "Notes (optionnel)",
+      "notesPlaceholder": "Notes supplémentaires...",
+      "processing": "Traitement en cours...",
+      "success": "Transaction enregistrée avec succès !",
+      "reservationSuccess": "Paiement de réservation enregistré avec succès !",
+      "error": "Erreur lors du paiement",
+      "invalidAmount": "Veuillez saisir un montant valide"
+    },
+    "reservations": {
+      "title": "Réservations à encaisser",
+      "search": "Rechercher une réservation...",
+      "filters": {
+        "all": "Toutes",
+        "today": "Aujourd'hui",
+        "week": "Cette semaine",
+        "unpaid": "Non payées",
+        "partial": "Acomptes"
+      },
+      "select": "Sélectionner",
+      "selected": "Sélectionnée",
+      "totalAmount": "Montant total",
+      "paidAmount": "Déjà payé",
+      "remainingAmount": "Reste à payer",
+      "empty": {
+        "title": "Aucune réservation",
+        "subtitle": "Aucune réservation à encaisser"
+      }
+    },
+    "history": {
+      "title": "Historique des transactions",
+      "date": "Date",
+      "customer": "Client",
+      "amount": "Montant",
+      "method": "Méthode",
+      "status": "Statut",
+      "empty": {
+        "title": "Aucune transaction",
+        "subtitle": "L'historique des transactions apparaîtra ici"
+      }
+    },
+    "settings": {
+      "title": "Paramètres POS",
+      "taxRate": "Taux de TVA (%)",
+      "receiptHeader": "En-tête du reçu",
+      "receiptFooter": "Pied de page du reçu",
+      "save": "Enregistrer"
+    }
+  },
+  "reports": {
+    "title": "Rapports",
+    "subtitle": "Analyses et statistiques détaillées",
+    "period": {
+      "today": "Aujourd'hui",
+      "week": "Cette semaine",
+      "month": "Ce mois",
+      "year": "Cette année",
+      "custom": "Personnalisé"
+    },
+    "types": {
+      "revenue": "Chiffre d'affaires",
+      "bookings": "Réservations",
+      "clients": "Clients",
+      "services": "Services",
+      "payments": "Paiements"
+    },
+    "revenue": {
+      "title": "Rapport de chiffre d'affaires",
+      "total": "Total",
+      "average": "Moyenne",
+      "growth": "Croissance",
+      "byService": "Par service",
+      "byPaymentMethod": "Par méthode de paiement"
+    },
+    "bookings": {
+      "title": "Rapport de réservations",
+      "total": "Total",
+      "confirmed": "Confirmées",
+      "pending": "En attente",
+      "cancelled": "Annulées",
+      "byService": "Par service",
+      "byStatus": "Par statut"
+    },
+    "clients": {
+      "title": "Rapport clients",
+      "total": "Total",
+      "new": "Nouveaux",
+      "returning": "Récurrents",
+      "topClients": "Meilleurs clients"
+    },
+    "services": {
+      "title": "Rapport services",
+      "mostPopular": "Plus populaires",
+      "revenue": "Chiffre d'affaires",
+      "bookings": "Réservations"
+    },
+    "payments": {
+      "title": "Rapport paiements",
+      "total": "Total",
+      "completed": "Complétés",
+      "pending": "En attente",
+      "byMethod": "Par méthode"
+    },
+    "export": {
+      "title": "Exporter",
+      "pdf": "PDF",
+      "excel": "Excel",
+      "csv": "CSV"
+    },
+    "empty": {
+      "title": "Aucune donnée",
+      "subtitle": "Aucune donnée disponible pour cette période"
+    }
+  },
+  "clients": {
+    "title": "Clients",
+    "subtitle": "Gérez votre base de clients ({{count}})",
+    "search": "Rechercher un client...",
+    "new": "Nouveau client",
+    "edit": "Modifier le client",
+    "delete": "Supprimer le client",
+    "form": {
+      "firstname": "Prénom",
+      "lastname": "Nom",
+      "email": "Email",
+      "phone": "Téléphone",
+      "notes": "Notes",
+      "firstnamePlaceholder": "Jean",
+      "lastnamePlaceholder": "Dupont",
+      "emailPlaceholder": "jean.dupont@example.com",
+      "phonePlaceholder": "06 12 34 56 78",
+      "notesPlaceholder": "Notes sur le client..."
+    },
+    "details": {
+      "title": "Détails du client",
+      "contact": "Contact",
+      "stats": "Statistiques",
+      "totalBookings": "Total réservations",
+      "totalSpent": "Total dépensé",
+      "lastBooking": "Dernière réservation",
+      "history": "Historique des réservations",
+      "noHistory": "Aucune réservation"
+    },
+    "actions": {
+      "view": "Voir les détails",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "call": "Appeler",
+      "email": "Envoyer un email"
+    },
+    "empty": {
+      "title": "Aucun client",
+      "noResults": "Aucun client ne correspond à votre recherche",
+      "noClients": "Les clients apparaîtront ici une fois créés",
+      "create": "Créer un client"
+    },
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer le client \"{{name}}\" ?"
+  },
+  "settings": {
+    "title": "Administration",
+    "subtitle": "Gérez les paramètres de votre compte",
+    "superAdminTitle": "Super Administration",
+    "superAdminSubtitle": "Gestion complète de la plateforme",
+    "tabs": {
+      "settings": "Paramètres",
+      "subscription": "Abonnement",
+      "affiliate": "Affiliation",
+      "iframe": "Iframe",
+      "team": "Équipe",
+      "plugins": "Plugins",
+      "superadmin": "Super Admin",
+      "general": "Paramètres généraux",
+      "calendar": "Google Calendar"
+    },
+    "descriptions": {
+      "settings": "Configuration générale",
+      "subscription": "Statut et codes secrets",
+      "affiliate": "Programme de parrainage",
+      "iframe": "Lien de réservation",
+      "team": "Gestion des membres",
+      "plugins": "Extensions et fonctionnalités",
+      "superadmin": "Administration globale"
+    },
+    "general": {
+      "title": "Informations Générales",
+      "businessName": "Nom de l'entreprise",
+      "businessNamePlaceholder": "Mon Entreprise",
+      "timezone": "Fuseau horaire",
+      "selectTimezone": "Sélectionner un fuseau horaire"
+    },
+    "tax": {
+      "title": "Configuration TVA / Taxe de vente",
+      "howItWorks": "💡 Comment ça fonctionne ?",
+      "explanation": {
+        "line1": "• Configurez votre taux de TVA/taxe (ex: 20% pour la France)",
+        "line2": "• Dans les services, vous entrez le prix TTC (toutes taxes comprises)",
+        "line3": "• Le prix HT (hors taxes) est calculé automatiquement",
+        "line4": "• Formule: HT = TTC ÷ (1 + taux/100)"
+      },
+      "rate": "Taux de TVA / Taxe (%)",
+      "ratePlaceholder": "20",
+      "rateHelp": "Taux standard en France: 20% | Taux réduit: 5.5% ou 10%",
+      "example": "📊 Exemple de calcul",
+      "priceTTC": "Prix TTC:",
+      "taxRate": "Taux TVA:",
+      "priceHT": "Prix HT:",
+      "taxAmount": "Montant TVA:",
+      "important": "Important:",
+      "importantNote": "Ce taux s'applique à tous vos services. Les prix HT seront recalculés automatiquement pour tous les services existants."
+    },
+    "hours": {
+      "title": "Horaires d'Ouverture",
+      "days": {
+        "monday": "Lundi",
+        "tuesday": "Mardi",
+        "wednesday": "Mercredi",
+        "thursday": "Jeudi",
+        "friday": "Vendredi",
+        "saturday": "Samedi",
+        "sunday": "Dimanche"
+      },
+      "open": "Ouvert",
+      "closed": "Fermé",
+      "addTimeRange": "+ Ajouter une plage horaire",
+      "to": "à"
+    },
+    "booking": {
+      "title": "Paramètres de Réservation",
+      "minimumDelay": "Délai minimum (heures)",
+      "minimumDelayHelp": "Délai minimum avant qu'un client puisse réserver",
+      "bufferTime": "Temps de battement (minutes)",
+      "bufferTimeHelp": "Temps entre deux rendez-vous",
+      "linkExpiry": "Expiration liens (minutes)",
+      "linkExpiryHelp": "Durée de validité des liens de paiement",
+      "deposit": {
+        "title": "Acompte par défaut",
+        "type": "Type d'acompte",
+        "percentage": "Pourcentage",
+        "fixedAmount": "Montant fixe",
+        "percentageValue": "Pourcentage d'acompte (%)",
+        "fixedValue": "Montant fixe (€)",
+        "multiply": "Multiplier l'acompte par la quantité",
+        "multiplyHelp": "Quand activé, l'acompte sera multiplié par le nombre de services/participants sélectionnés.",
+        "example": "📊 Exemple :",
+        "exampleLine1": "• Service à 100€ avec acompte de 30%",
+        "exampleLine2": "• Client sélectionne 3 participants",
+        "exampleResultMultiplied": "→ Acompte = 30€ × 3 = 90€",
+        "exampleResultNotMultiplied": "→ Acompte = 30€ (non multiplié)"
+      }
+    },
+    "stripe": {
+      "title": "Configuration Stripe",
+      "enable": "Activer les paiements Stripe",
+      "info": "Configuration Stripe",
+      "infoLine1": "• Récupérez vos clés API depuis votre dashboard Stripe",
+      "infoLine2": "• Configurez le webhook pour les paiements automatiques",
+      "infoLine3": "• Testez la connexion avant d'activer",
+      "publicKey": "Clé publique Stripe",
+      "publicKeyPlaceholder": "pk_test_...",
+      "secretKey": "Clé secrète Stripe",
+      "secretKeyPlaceholder": "sk_test_...",
+      "webhookSecret": "Webhook secret Stripe",
+      "webhookSecretPlaceholder": "whsec_...",
+      "testConnection": "Tester la connexion",
+      "testSuccess": "✅ Clés Stripe valides ! Configuration OK",
+      "testError": "❌ Erreur lors du test de connexion",
+      "invalidFormat": "❌ Format des clés Stripe invalide",
+      "missingKeys": "❌ Veuillez renseigner les clés Stripe"
+    },
+    "email": {
+      "title": "Configuration Email (Brevo)",
+      "enable": "Activer l'envoi d'emails via Brevo",
+      "apiKey": "Clé API Brevo",
+      "apiKeyPlaceholder": "xkeysib-...",
+      "senderEmail": "Email expéditeur",
+      "senderEmailPlaceholder": "noreply@monentreprise.com",
+      "senderName": "Nom expéditeur",
+      "senderNamePlaceholder": "Mon Entreprise",
+      "testConnection": "Tester la connexion",
+      "testSuccess": "✅ Connexion Brevo réussie !",
+      "testError": "❌ Erreur Brevo:",
+      "connectionError": "❌ Erreur de connexion à Brevo",
+      "missingKey": "Veuillez renseigner la clé API Brevo"
+    },
+    "cache": {
+      "title": "Gestion du Cache",
+      "warning": "⚠️ Action irréversible",
+      "warningLine1": "• Supprime toutes les données en cache de l'application",
+      "warningLine2": "• Recharge automatiquement la page",
+      "warningLine3": "• Vous devrez peut-être vous reconnecter",
+      "warningLine4": "• Utile en cas de problèmes d'affichage ou de données obsolètes",
+      "clearTitle": "Vider le cache de l'application",
+      "clearDescription": "Supprime toutes les données temporaires et recharge l'application",
+      "clearButton": "Vider le cache",
+      "clearing": "Vidage en cours...",
+      "cleared": "Cache vidé !",
+      "success": "✅ Cache vidé avec succès !",
+      "successMessage": "L'application va se recharger dans quelques instants...",
+      "confirmTitle": "⚠️ Êtes-vous sûr de vouloir vider le cache ?",
+      "confirmMessage": "Cette action va :\n• Supprimer toutes les données en cache\n• Recharger l'application\n• Vous devrez peut-être vous reconnecter\n\nContinuer ?"
+    },
+    "save": "Sauvegarder les paramètres",
+    "saving": "Sauvegarde...",
+    "saveSuccess": "Paramètres sauvegardés avec succès !",
+    "saveError": "Erreur lors de la sauvegarde"
+  },
+  "plugins": {
+    "title": "Marketplace de Plugins",
+    "subtitle": "Étendez les fonctionnalités de votre plateforme",
+    "features": {
+      "trial": "7 jours d'essai gratuit",
+      "trialDescription": "Testez chaque plugin une seule fois",
+      "instant": "Activation instantanée",
+      "instantDescription": "Utilisez vos plugins immédiatement",
+      "subscription": "Abonnement mensuel",
+      "subscriptionDescription": "Annulation à tout moment"
+    },
+    "sections": {
+      "featured": "Plugins en vedette",
+      "all": "Tous les plugins"
+    },
+    "status": {
+      "active": "Actif",
+      "trial": "Essai ({{days}}j)",
+      "trialUsed": "Essai utilisé"
+    },
+    "pricing": {
+      "perMonth": "/mois",
+      "freeTrial": "+ 7 jours d'essai gratuit",
+      "monthlySubscription": "Abonnement mensuel"
+    },
+    "features": {
+      "included": "Fonctionnalités incluses :",
+      "additional": "Fonctionnalités additionnelles",
+      "more": "+ {{count}} autres fonctionnalités"
+    },
+    "actions": {
+      "manage": "Gérer",
+      "viewDetails": "Voir détails",
+      "subscribe": "S'abonner maintenant",
+      "freeTrial": "Essai gratuit 7j",
+      "startTrial": "Démarrer l'essai gratuit (7 jours)",
+      "subscribeNow": "S'abonner maintenant",
+      "cancel": "Résilier l'abonnement"
+    },
+    "modal": {
+      "title": "Détails du plugin",
+      "close": "Fermer",
+      "pricing": "Tarification",
+      "includedFeatures": "Fonctionnalités incluses",
+      "additionalFeatures": "Fonctionnalités additionnelles",
+      "perMonthExtra": "+{{price}}€/mois",
+      "subscription": {
+        "active": "Abonnement actif",
+        "activeDescription": "Vous avez un accès complet à toutes les fonctionnalités de ce plugin.",
+        "cancel": "Résilier l'abonnement",
+        "cancelling": "Résiliation...",
+        "confirmCancel": "⚠️ Êtes-vous sûr de vouloir résilier votre abonnement à \"{{name}}\" ?\n\nVotre accès restera actif jusqu'à la fin de la période en cours, puis sera automatiquement désactivé.\n\nVous pourrez vous réabonner à tout moment.",
+        "cancelSuccess": "✅ Votre abonnement a été résilié. Vous conservez l'accès jusqu'à la fin de la période en cours."
+      },
+      "trial": {
+        "active": "Essai gratuit en cours",
+        "remaining": "Il vous reste {{days}} jour{{plural}} d'essai gratuit.",
+        "description": "Profitez de toutes les fonctionnalités sans engagement. Vous pourrez souscrire à l'abonnement mensuel avant la fin de l'essai."
+      },
+      "trialUsed": {
+        "title": "Essai gratuit déjà utilisé",
+        "description": "Vous avez déjà bénéficié de l'essai gratuit de 7 jours pour ce plugin. Pour continuer à profiter de toutes les fonctionnalités, souscrivez à l'abonnement mensuel.",
+        "subscriptionTitle": "Abonnement mensuel",
+        "features": {
+          "billing": "Facturation mensuelle automatique",
+          "cancel": "Annulation à tout moment",
+          "immediate": "Accès immédiat après paiement"
+        }
+      },
+      "payment": {
+        "processing": "Traitement en cours...",
+        "redirecting": "Redirection...",
+        "activating": "Activation...",
+        "success": "✅ Essai gratuit démarré avec succès !",
+        "error": "❌ Erreur lors du paiement"
+      }
+    },
+    "errors": {
+      "loadFailed": "Erreur lors du chargement des plugins",
+      "subscriptionFailed": "Erreur lors de l'abonnement",
+      "trialFailed": "Erreur lors du démarrage de l'essai",
+      "cancelFailed": "Erreur lors de la résiliation"
+    }
+  }
+}

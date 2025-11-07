@@ -1,0 +1,309 @@
+# 🐳 Docker Compose pour Supabase Self-Hosting avec BookingFast
+# Version optimisée pour la production
+
+version: '3.8'
+
+services:
+  # ============================================
+  # 🗄️ BASE DE DONNÉES POSTGRESQL
+  # ============================================
+  db:
+    container_name: supabase_db
+    image: supabase/postgres:15.1.1.78
+    restart: unless-stopped
+    ports:
+      - ${DB_PORT:-54322}:5432
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256 --auth-local=scram-sha-256"
+    volumes:
+      - ./volumes/db/data:/var/lib/postgresql/data
+      - ./volumes/db/init:/docker-entrypoint-initdb.d
+    networks:
+      - supabase_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-postgres}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # ============================================
+  # 🔌 API SUPABASE (PostgREST)
+  # ============================================
+  api:
+    container_name: supabase_api
+    image: postgrest/postgrest:v12.0.1
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGRST_DB_URI: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-postgres}
+      PGRST_DB_SCHEMAS: public,graphql_public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      PGRST_DB_USE_LEGACY_GUCS: "false"
+      PGRST_APP_SETTINGS_JWT_SECRET: ${JWT_SECRET}
+      PGRST_APP_SETTINGS_JWT_EXP: ${GOTRUE_JWT_EXP:-3600}
+    networks:
+      - supabase_network
+
+  # ============================================
+  # 🔐 AUTHENTIFICATION (GoTrue)
+  # ============================================
+  auth:
+    container_name: supabase_auth
+    image: supabase/gotrue:v2.132.3
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-postgres}?search_path=auth
+      
+      GOTRUE_SITE_URL: ${GOTRUE_SITE_URL:-https://bookingfast.pro}
+      GOTRUE_URI_ALLOW_LIST: ${GOTRUE_URI_ALLOW_LIST:-https://bookingfast.pro/**}
+      GOTRUE_DISABLE_SIGNUP: ${GOTRUE_DISABLE_SIGNUP:-false}
+      
+      GOTRUE_JWT_ADMIN_ROLES: service_role
+      GOTRUE_JWT_AUD: authenticated
+      GOTRUE_JWT_DEFAULT_GROUP_NAME: authenticated
+      GOTRUE_JWT_EXP: ${GOTRUE_JWT_EXP:-3600}
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      
+      GOTRUE_EXTERNAL_EMAIL_ENABLED: true
+      GOTRUE_MAILER_AUTOCONFIRM: ${GOTRUE_MAILER_AUTOCONFIRM:-false}
+      GOTRUE_SMTP_ADMIN_EMAIL: ${SMTP_ADMIN_EMAIL:-admin@bookingfast.hevolife.fr}
+      GOTRUE_SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      GOTRUE_SMTP_PORT: ${SMTP_PORT:-587}
+      GOTRUE_SMTP_USER: ${SMTP_USER}
+      GOTRUE_SMTP_PASS: ${SMTP_PASS}
+      GOTRUE_SMTP_SENDER_NAME: ${GOTRUE_SMTP_SENDER_NAME:-BookingFast}
+      
+      GOTRUE_PASSWORD_MIN_LENGTH: ${GOTRUE_PASSWORD_MIN_LENGTH:-8}
+      GOTRUE_LOG_LEVEL: ${GOTRUE_LOG_LEVEL:-info}
+    networks:
+      - supabase_network
+
+  # ============================================
+  # 🎨 STUDIO SUPABASE
+  # ============================================
+  studio:
+    container_name: supabase_studio
+    image: supabase/studio:20240326-5e5586d
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      STUDIO_PG_META_URL: http://meta:8080
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      
+      DEFAULT_ORGANIZATION_NAME: ${STUDIO_DEFAULT_ORGANIZATION:-BookingFast}
+      DEFAULT_PROJECT_NAME: ${STUDIO_DEFAULT_PROJECT:-Production}
+      
+      SUPABASE_URL: ${SUPABASE_PUBLIC_URL}
+      SUPABASE_PUBLIC_URL: ${SUPABASE_PUBLIC_URL}
+      SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      
+      LOGFLARE_API_KEY: your-logflare-key
+      LOGFLARE_URL: https://api.logflare.app
+      NEXT_PUBLIC_ENABLE_LOGS: true
+    ports:
+      - ${STUDIO_PORT:-54323}:3000
+    networks:
+      - supabase_network
+
+  # ============================================
+  # 🔧 META API
+  # ============================================
+  meta:
+    container_name: supabase_meta
+    image: supabase/postgres-meta:v0.68.0
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PG_META_PORT: 8080
+      PG_META_DB_HOST: db
+      PG_META_DB_PORT: 5432
+      PG_META_DB_NAME: ${POSTGRES_DB:-postgres}
+      PG_META_DB_USER: ${POSTGRES_USER:-postgres}
+      PG_META_DB_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - supabase_network
+
+  # ============================================
+  # 🌐 KONG (API Gateway)
+  # ============================================
+  kong:
+    container_name: supabase_kong
+    image: kong:2.8.1
+    restart: unless-stopped
+    ports:
+      - ${API_PORT:-54321}:8000/tcp
+      - ${API_PORT:-54321}:8000/udp
+    depends_on:
+      - auth
+      - api
+      - meta
+      - storage
+      - functions
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+      KONG_DNS_ORDER: LAST,A,CNAME
+      KONG_PLUGINS: request-transformer,cors,key-auth,acl,basic-auth
+      KONG_NGINX_PROXY_PROXY_BUFFER_SIZE: 160k
+      KONG_NGINX_PROXY_PROXY_BUFFERS: 64 160k
+    volumes:
+      - ./volumes/api/kong.yml:/var/lib/kong/kong.yml:ro
+    networks:
+      - supabase_network
+
+  # ============================================
+  # 📁 STOCKAGE (Storage)
+  # ============================================
+  storage:
+    container_name: supabase_storage
+    image: supabase/storage-api:v0.40.4
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ANON_KEY: ${ANON_KEY}
+      SERVICE_KEY: ${SERVICE_ROLE_KEY}
+      POSTGREST_URL: http://api:3000
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-postgres}
+      FILE_SIZE_LIMIT: 52428800
+      STORAGE_BACKEND: file
+      FILE_STORAGE_BACKEND_PATH: /var/lib/storage
+      TENANT_ID: stub
+      REGION: stub
+      GLOBAL_S3_BUCKET: stub
+      ENABLE_IMAGE_TRANSFORMATION: true
+      IMGPROXY_URL: http://imgproxy:5001
+    volumes:
+      - ./volumes/storage:/var/lib/storage:z
+    networks:
+      - supabase_network
+
+  # ============================================
+  # 🖼️ TRAITEMENT D'IMAGES
+  # ============================================
+  imgproxy:
+    container_name: supabase_imgproxy
+    image: darthsim/imgproxy:v3.8.0
+    restart: unless-stopped
+    environment:
+      IMGPROXY_BIND: ":5001"
+      IMGPROXY_LOCAL_FILESYSTEM_ROOT: /
+      IMGPROXY_USE_ETAG: true
+      IMGPROXY_ENABLE_WEBP_DETECTION: true
+    volumes:
+      - ./volumes/storage:/var/lib/storage:z
+    networks:
+      - supabase_network
+
+  # ============================================
+  # ⚡ EDGE FUNCTIONS
+  # ============================================
+  functions:
+    container_name: supabase_edge_functions
+    image: supabase/edge-runtime:v1.22.4
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      SUPABASE_URL: ${SUPABASE_PUBLIC_URL}
+      SUPABASE_ANON_KEY: ${ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SERVICE_ROLE_KEY}
+      SUPABASE_DB_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-postgres}
+      
+      # 💳 STRIPE CONFIGURATION (OBLIGATOIRE)
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
+      
+      # 📧 BREVO CONFIGURATION (OPTIONNEL)
+      BREVO_API_KEY: ${BREVO_API_KEY}
+      
+      # Configuration Edge Runtime
+      VERIFY_JWT: ${FUNCTIONS_VERIFY_JWT:-false}
+      IMPORT_MAP_PATH: /home/deno/functions/import_map.json
+    volumes:
+      - ./functions:/home/deno/functions:Z
+      - ./volumes/functions/import_map.json:/home/deno/functions/import_map.json:ro
+    command:
+      - start
+      - --main-service
+      - /home/deno/functions/main
+    networks:
+      - supabase_network
+
+  # ============================================
+  # 📧 INBUCKET (Email Testing)
+  # ============================================
+  inbucket:
+    container_name: supabase_inbucket
+    image: inbucket/inbucket:3.0.3
+    restart: unless-stopped
+    ports:
+      - ${INBUCKET_PORT:-54324}:9000
+    environment:
+      INBUCKET_WEB_ADDR: 0.0.0.0:9000
+      INBUCKET_POP3_ADDR: 0.0.0.0:1100
+      INBUCKET_SMTP_ADDR: 0.0.0.0:1025
+    networks:
+      - supabase_network
+
+  # ============================================
+  # 📊 ANALYTICS (OPTIONNEL)
+  # ============================================
+  analytics:
+    container_name: supabase_analytics
+    image: supabase/logflare:1.4.0
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      DB_USERNAME: ${POSTGRES_USER:-postgres}
+      DB_DATABASE: ${POSTGRES_DB:-postgres}
+      DB_HOSTNAME: db
+      DB_PORT: 5432
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      API_PORT: 4000
+      SINGLE_TENANT: true
+      SUPABASE_MODE: true
+      LOGFLARE_NODE_HOST: 127.0.0.1
+    ports:
+      - 54327:4000
+    networks:
+      - supabase_network
+
+# ============================================
+# 🌐 RÉSEAU
+# ============================================
+networks:
+  supabase_network:
+    driver: bridge
+
+# ============================================
+# 💾 VOLUMES PERSISTANTS
+# ============================================
+volumes:
+  db_data:
+    driver: local
+  storage_data:
+    driver: local
