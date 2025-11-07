@@ -169,8 +169,8 @@ export function InvoicesPage() {
               </button>
             )}
 
-            {/* Bouton Supprimer - Devis et factures brouillon uniquement */}
-            {doc.status === 'draft' && (
+            {/* Bouton Supprimer - Devis et factures brouillon ou non payées */}
+            {(doc.status === 'draft' || (actualStatus === 'sent' && !isPartiallyPaid)) && (
               <button
                 onClick={() => handleDeleteDocument(doc)}
                 className="p-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
@@ -705,8 +705,8 @@ function MobileInvoiceCard({ doc, index, viewMode }: { doc: Invoice; index: numb
               </button>
             )}
 
-            {/* Bouton Supprimer - Devis et factures brouillon uniquement */}
-            {doc.status === 'draft' && (
+            {/* Bouton Supprimer - Devis et factures brouillon ou non payées */}
+            {(doc.status === 'draft' || (actualStatus === 'sent' && !isPartiallyPaid)) && (
               <button
                 onClick={() => handleDeleteDocument(doc)}
                 className="p-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
