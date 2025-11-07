@@ -288,57 +288,59 @@ export function InvoicesPage() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <Button
-              onClick={() => setShowCustomizationModal(true)}
-              variant="secondary"
-              className="flex items-center justify-center gap-2 w-full sm:w-auto"
-            >
-              <Palette className="w-5 h-5" />
-              <span className="hidden sm:inline">Personnaliser PDF</span>
-              <span className="sm:hidden">PDF</span>
-            </Button>
-
-            <Button
-              onClick={() => setShowCreateModal(true)}
-              className="flex items-center justify-center gap-2 w-full sm:w-auto"
-            >
-              <Plus className="w-5 h-5" />
-              <span className="hidden sm:inline">Nouveau devis</span>
-              <span className="sm:hidden">Nouveau</span>
-            </Button>
-          </div>
         </div>
 
-        {/* Onglets Devis/Factures */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-2 mb-6">
-          <div className="flex gap-2">
-            <button
-              onClick={() => setViewMode('quotes')}
-              className={`flex-1 px-6 py-3 rounded-lg font-bold transition-all ${
-                viewMode === 'quotes'
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <div className="flex items-center justify-center gap-2">
-                <FileText className="w-5 h-5" />
-                <span>Devis ({quotes.length})</span>
-              </div>
-            </button>
-            <button
-              onClick={() => setViewMode('invoices')}
-              className={`flex-1 px-6 py-3 rounded-lg font-bold transition-all ${
-                viewMode === 'invoices'
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <div className="flex items-center justify-center gap-2">
-                <FileCheck className="w-5 h-5" />
-                <span>Factures ({invoices.length})</span>
-              </div>
-            </button>
+        {/* Barre compacte : Onglets + Actions */}
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-2 mb-4">
+          <div className="flex flex-col sm:flex-row gap-2">
+            {/* Onglets Devis/Factures */}
+            <div className="flex gap-2 flex-1">
+              <button
+                onClick={() => setViewMode('quotes')}
+                className={`flex-1 sm:flex-initial sm:px-6 py-2.5 rounded-lg font-semibold transition-all ${
+                  viewMode === 'quotes'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  <span className="text-sm">Devis ({quotes.length})</span>
+                </div>
+              </button>
+              <button
+                onClick={() => setViewMode('invoices')}
+                className={`flex-1 sm:flex-initial sm:px-6 py-2.5 rounded-lg font-semibold transition-all ${
+                  viewMode === 'invoices'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <FileCheck className="w-4 h-4" />
+                  <span className="text-sm">Factures ({invoices.length})</span>
+                </div>
+              </button>
+            </div>
+
+            {/* Boutons d'actions */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowCustomizationModal(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all font-medium"
+                title="Personnaliser PDF"
+              >
+                <Palette className="w-4 h-4" />
+                <span className="hidden sm:inline text-sm">PDF</span>
+              </button>
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-lg transition-all font-medium shadow-lg"
+              >
+                <Plus className="w-4 h-4" />
+                <span className="text-sm">Nouveau</span>
+              </button>
+            </div>
           </div>
         </div>
 
