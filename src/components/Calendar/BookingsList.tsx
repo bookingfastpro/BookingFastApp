@@ -26,6 +26,7 @@ export function BookingsList({ onEditBooking }: BookingsListProps) {
   const [selectedTeamMember, setSelectedTeamMember] = useState<string>('all');
   const [canViewTeamFilter, setCanViewTeamFilter] = useState(false);
   const [isMultiUserActive, setIsMultiUserActive] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     const checkAccess = async () => {
