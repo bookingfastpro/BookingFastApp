@@ -169,10 +169,10 @@ export function InvoicesPage() {
               </button>
             )}
 
-            {/* Bouton Supprimer - Devis brouillon uniquement */}
-            {viewMode === 'quotes' && doc.status === 'draft' && (
+            {/* Bouton Supprimer - Devis et factures brouillon uniquement */}
+            {doc.status === 'draft' && (
               <button
-                onClick={() => handleDeleteQuote(doc)}
+                onClick={() => handleDeleteDocument(doc)}
                 className="p-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
                 title="Supprimer"
               >
@@ -222,18 +222,21 @@ export function InvoicesPage() {
     }
   };
 
-  const handleDeleteQuote = async (quote: Invoice) => {
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer le devis ${quote.quote_number} ?\n\nCette action est irréversible.`)) {
+  const handleDeleteDocument = async (doc: Invoice) => {
+    const docType = doc.document_type === 'quote' ? 'devis' : 'facture';
+    const docNumber = doc.document_type === 'quote' ? doc.quote_number : doc.invoice_number;
+
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${docType === 'devis' ? 'le' : 'la'} ${docType} ${docNumber} ?\n\nCette action est irréversible.`)) {
       return;
     }
 
     try {
-      await deleteInvoice(quote.id);
-      alert('✅ Devis supprimé avec succès !');
+      await deleteInvoice(doc.id);
+      alert(`✅ ${docType.charAt(0).toUpperCase() + docType.slice(1)} supprimé${docType === 'facture' ? 'e' : ''} avec succès !`);
       await fetchInvoices();
     } catch (error) {
       console.error('Erreur lors de la suppression:', error);
-      alert('❌ Erreur lors de la suppression du devis');
+      alert(`❌ Erreur lors de la suppression ${docType === 'devis' ? 'du' : 'de la'} ${docType}`);
     }
   };
 
@@ -568,18 +571,21 @@ function MobileInvoiceCard({ doc, index, viewMode }: { doc: Invoice; index: numb
     }
   };
 
-  const handleDeleteQuote = async (quote: Invoice) => {
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer le devis ${quote.quote_number} ?\n\nCette action est irréversible.`)) {
+  const handleDeleteDocument = async (doc: Invoice) => {
+    const docType = doc.document_type === 'quote' ? 'devis' : 'facture';
+    const docNumber = doc.document_type === 'quote' ? doc.quote_number : doc.invoice_number;
+
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer ${docType === 'devis' ? 'le' : 'la'} ${docType} ${docNumber} ?\n\nCette action est irréversible.`)) {
       return;
     }
 
     try {
-      await deleteInvoice(quote.id);
-      alert('✅ Devis supprimé avec succès !');
+      await deleteInvoice(doc.id);
+      alert(`✅ ${docType.charAt(0).toUpperCase() + docType.slice(1)} supprimé${docType === 'facture' ? 'e' : ''} avec succès !`);
       await fetchInvoices();
     } catch (error) {
       console.error('Erreur lors de la suppression:', error);
-      alert('❌ Erreur lors de la suppression du devis');
+      alert(`❌ Erreur lors de la suppression ${docType === 'devis' ? 'du' : 'de la'} ${docType}`);
     }
   };
 
@@ -699,10 +705,10 @@ function MobileInvoiceCard({ doc, index, viewMode }: { doc: Invoice; index: numb
               </button>
             )}
 
-            {/* Bouton Supprimer - Devis brouillon uniquement */}
-            {isQuote && doc.status === 'draft' && (
+            {/* Bouton Supprimer - Devis et factures brouillon uniquement */}
+            {doc.status === 'draft' && (
               <button
-                onClick={() => handleDeleteQuote(doc)}
+                onClick={() => handleDeleteDocument(doc)}
                 className="p-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
                 title="Supprimer"
               >
