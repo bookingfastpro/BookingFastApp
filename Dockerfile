@@ -28,6 +28,9 @@ RUN npm run build
 
 FROM nginx:alpine
 
+# Installer curl pour le healthcheck (requis par Coolify)
+RUN apk add --no-cache curl
+
 # COPIER nginx.conf DANS LE BON DOSSIER
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
@@ -44,7 +47,8 @@ RUN ls -la /usr/share/nginx/html && \
 
 EXPOSE 80
 
+# Healthcheck pour Coolify (utilise curl qui est maintenant installé)
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost:80/ || exit 1
+    CMD curl -f http://localhost:80/ || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]

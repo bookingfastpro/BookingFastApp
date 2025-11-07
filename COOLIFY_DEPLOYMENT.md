@@ -85,11 +85,29 @@ wget -O- http://localhost:80
 - Redéployez complètement (ne pas juste restart)
 - Vérifiez les logs du container
 
+### "New container is not healthy, rolling back"
+✅ **RÉSOLU** : Le Dockerfile installe maintenant `curl` pour le healthcheck de Coolify
+- Si vous voyez encore ce message, vérifiez que vous utilisez la dernière version du Dockerfile
+- Le healthcheck utilise `curl -f http://localhost:80/`
+
 ### Build échoue avec "vite: not found"
-- Le Dockerfile a été mis à jour pour utiliser `npm ci` au lieu de `npm ci --only=production`
+✅ **RÉSOLU** : Le Dockerfile utilise maintenant `npm ci` au lieu de `npm ci --only=production`
 - Assurez-vous d'avoir la dernière version du repository
 
 ### Variables d'environnement non prises en compte
 - Les variables Vite DOIVENT être préfixées par `VITE_`
 - Elles DOIVENT être définies comme "Available at Buildtime"
 - Elles sont compilées dans le code JavaScript (pas de runtime)
+
+## Changelog des corrections
+
+### 2025-11-07 - Fix "Bad Gateway" et Healthcheck
+- ✅ Ajout de `curl` dans l'image nginx pour le healthcheck Coolify
+- ✅ Ajout de `VITE_SUPABASE_SERVICE_ROLE_KEY` dans les ARG
+- ✅ Ajout d'une vérification que `index.html` existe après le build
+- ✅ Optimisation de la commande ENV
+- ✅ Toutes les variables sont maintenant optionnelles avec valeurs par défaut
+
+### 2025-11-07 - Fix Build Docker
+- ✅ Changement de `npm ci --only=production` vers `npm ci` pour inclure vite
+- ✅ Ajout des ARG pour passer les variables d'environnement au build
