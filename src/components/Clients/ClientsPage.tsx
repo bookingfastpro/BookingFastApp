@@ -14,7 +14,7 @@ interface ClientsPageProps {
 }
 
 export function ClientsPage({ onEditClient }: ClientsPageProps) {
-  const { clients, loading, deleteClient } = useClients();
+  const { clients, loading, deleteClient, updateClient } = useClients();
   const { bookings } = useBookings();
   const { hasPermission } = useTeam();
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
@@ -25,7 +25,15 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
+  const [clientToEdit, setClientToEdit] = useState<Client | null>(null);
+  const [editForm, setEditForm] = useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    phone: ''
+  });
 
   const itemsPerPage = 12;
 
@@ -105,13 +113,37 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
 
   const handleDeleteConfirm = async () => {
     if (!clientToDelete) return;
-    
+
     try {
       await deleteClient(clientToDelete.id);
       setShowDeleteModal(false);
       setClientToDelete(null);
     } catch (error) {
       alert(`Erreur lors de la suppression: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
+    }
+  };
+
+  const handleEditClick = (client: Client) => {
+    setClientToEdit(client);
+    setEditForm({
+      firstname: client.firstname,
+      lastname: client.lastname,
+      email: client.email,
+      phone: client.phone
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!clientToEdit) return;
+
+    try {
+      await updateClient(clientToEdit.id, editForm);
+      setShowEditModal(false);
+      setClientToEdit(null);
+    } catch (error) {
+      alert(`Erreur lors de la modification: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
     }
   };
 
@@ -328,15 +360,13 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
                                 <Eye className="w-4 h-4" />
                               </button>
                               <PermissionGate permission="manage_clients" showMessage={false}>
-                                {onEditClient && (
-                                  <button
-                                    onClick={() => onEditClient(client)}
-                                    className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors transform hover:scale-110"
-                                    title="Modifier"
-                                  >
-                                    <Edit className="w-4 h-4" />
-                                  </button>
-                                )}
+                                <button
+                                  onClick={() => handleEditClick(client)}
+                                  className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors transform hover:scale-110"
+                                  title="Modifier"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </button>
                               </PermissionGate>
                               <PermissionGate permission="manage_clients" showMessage={false}>
                                 <button
@@ -390,15 +420,13 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
                             <Eye className="w-4 h-4" />
                           </button>
                           <PermissionGate permission="manage_clients" showMessage={false}>
-                            {onEditClient && (
-                              <button
-                                onClick={() => onEditClient(client)}
-                                className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors mobile-tap-target"
-                                title="Modifier"
-                              >
-                                <Edit className="w-4 h-4" />
-                              </button>
-                            )}
+                            <button
+                              onClick={() => handleEditClick(client)}
+                              className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors mobile-tap-target"
+                              title="Modifier"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
                           </PermissionGate>
                           <PermissionGate permission="manage_clients" showMessage={false}>
                             <button
@@ -676,18 +704,16 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
                 Fermer
               </Button>
               <PermissionGate permission="manage_clients" showMessage={false}>
-                {onEditClient && (
-                  <Button
-                    onClick={() => {
-                      setShowDetailsModal(false);
-                      onEditClient(selectedClient);
-                    }}
-                    className="flex-1"
-                  >
-                    <Edit className="w-4 h-4" />
-                    Modifier
-                  </Button>
-                )}
+                <Button
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    handleEditClick(selectedClient);
+                  }}
+                  className="flex-1"
+                >
+                  <Edit className="w-4 h-4" />
+                  Modifier
+                </Button>
               </PermissionGate>
             </div>
           </div>
@@ -716,7 +742,7 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
                 ⚠️ Cette action est irréversible !
               </p>
             </div>
-            
+
             <div className="flex gap-3">
               <Button
                 variant="secondary"
@@ -735,6 +761,90 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
               </Button>
             </div>
           </div>
+        </Modal>
+      )}
+
+      {/* Modal d'édition */}
+      {showEditModal && clientToEdit && (
+        <Modal
+          isOpen={showEditModal}
+          onClose={() => setShowEditModal(false)}
+          title="Modifier le client"
+          size="md"
+        >
+          <form onSubmit={handleEditSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Prénom *
+                </label>
+                <input
+                  type="text"
+                  value={editForm.firstname}
+                  onChange={(e) => setEditForm({ ...editForm, firstname: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nom *
+                </label>
+                <input
+                  type="text"
+                  value={editForm.lastname}
+                  onChange={(e) => setEditForm({ ...editForm, lastname: e.target.value })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Email *
+              </label>
+              <input
+                type="email"
+                value={editForm.email}
+                onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Téléphone *
+              </label>
+              <input
+                type="tel"
+                value={editForm.phone}
+                onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300"
+                required
+              />
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setShowEditModal(false)}
+                className="flex-1"
+              >
+                Annuler
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1"
+              >
+                <Edit className="w-4 h-4" />
+                Enregistrer
+              </Button>
+            </div>
+          </form>
         </Modal>
       )}
     </>
