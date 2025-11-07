@@ -228,66 +228,84 @@ export function BookingsList({ onEditBooking }: BookingsListProps) {
         </div>
 
         <div className="space-y-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <input
-              type="text"
-              placeholder="Rechercher par nom, email, service..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
-            />
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Rechercher par nom, email, service..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
+              />
+            </div>
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-300 ${
+                showFilters
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                  : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <Filter className="w-5 h-5" />
+              <span className="hidden sm:inline">Filtres</span>
+              {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Statut</label>
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as any)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-              >
-                <option value="all">Tous les statuts</option>
-                <option value="confirmed">Confirmées</option>
-                <option value="pending">En attente</option>
-                <option value="cancelled">Annulées</option>
-              </select>
-            </div>
+          {showFilters && (
+            <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-lg animate-fadeIn">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Statut</label>
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value as any)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                  >
+                    <option value="all">Tous les statuts</option>
+                    <option value="confirmed">Confirmées</option>
+                    <option value="pending">En attente</option>
+                    <option value="cancelled">Annulées</option>
+                  </select>
+                </div>
 
-            <div>
-              <label className="block text-xs font-medium text-gray-700 mb-1">Période</label>
-              <select
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value as any)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-              >
-                <option value="all">Toutes les dates</option>
-                <option value="today">Aujourd'hui</option>
-                <option value="week">Cette semaine</option>
-                <option value="month">Ce mois</option>
-              </select>
-            </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Période</label>
+                  <select
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value as any)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                  >
+                    <option value="all">Toutes les dates</option>
+                    <option value="today">Aujourd'hui</option>
+                    <option value="week">Cette semaine</option>
+                    <option value="month">Ce mois</option>
+                  </select>
+                </div>
 
-            {shouldShowTeamFilter && (
-              <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Membre</label>
-                <select
-                  value={selectedTeamMember}
-                  onChange={(e) => setSelectedTeamMember(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
-                  disabled={membersLoading}
-                >
-                  <option value="all">Tous les membres</option>
-                  {teamMembers.map(member => (
-                    <option key={member.user_id} value={member.user_id}>
-                      {getMemberDisplayName(member)}
-                    </option>
-                  ))}
-                  <option value="unassigned">Non assigné</option>
-                </select>
+                {shouldShowTeamFilter && (
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Membre</label>
+                    <select
+                      value={selectedTeamMember}
+                      onChange={(e) => setSelectedTeamMember(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm"
+                      disabled={membersLoading}
+                    >
+                      <option value="all">Tous les membres</option>
+                      {teamMembers.map(member => (
+                        <option key={member.user_id} value={member.user_id}>
+                          {getMemberDisplayName(member)}
+                        </option>
+                      ))}
+                      <option value="unassigned">Non assigné</option>
+                    </select>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
           {(searchTerm || statusFilter !== 'all' || dateFilter !== 'all' || selectedTeamMember !== 'all') && (
             <div className="flex items-center gap-2 flex-wrap">
