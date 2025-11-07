@@ -173,41 +173,29 @@ export function PaymentSection({
 
   const copyPaymentLink = async (transaction: Transaction) => {
     if (transaction.method !== 'stripe' || transaction.status !== 'pending') return;
-    
+
     try {
-      // Récupérer le lien complet depuis la note de la transaction
-      const noteMatch = transaction.note.match(/Lien: (https?:\/\/[^\s)]+)/);
       let fullPaymentLink = '';
-      
-      if (noteMatch) {
-        fullPaymentLink = noteMatch[1];
-        console.log('🔗 Lien trouvé dans la note:', fullPaymentLink);
-      } else {
-        // Fallback: reconstituer le lien complet avec TOUS les paramètres
-        console.log('🔄 Reconstitution du lien complet...');
-        const expiryMinutes = settings?.payment_link_expiry_minutes || 30;
-        const expiresAt = new Date(transaction.created_at).getTime() + (expiryMinutes * 60 * 1000);
-        const paymentUrl = new URL('/payment', window.location.origin);
-        
-        // Ajouter TOUS les paramètres nécessaires
-        paymentUrl.searchParams.set('amount', transaction.amount.toString());
-        paymentUrl.searchParams.set('service', serviceName);
-        paymentUrl.searchParams.set('client', `${selectedClient?.firstname || ''} ${selectedClient?.lastname || ''}`);
-        paymentUrl.searchParams.set('email', clientEmail);
-        paymentUrl.searchParams.set('phone', selectedClient?.phone || '');
-        paymentUrl.searchParams.set('date', bookingDate);
-        paymentUrl.searchParams.set('time', bookingTime);
-        paymentUrl.searchParams.set('expires', expiresAt.toString());
-        
-        // Ajouter l'user_id si disponible
-        if (user?.id) {
-          paymentUrl.searchParams.set('user_id', user.id);
-        }
-        
-        fullPaymentLink = paymentUrl.toString();
-        console.log('🔗 Lien reconstitué:', fullPaymentLink);
+
+      // 🔥 PRIORITÉ 1 : Utiliser le payment_link_id de la transaction
+      if (transaction.payment_link_id) {
+        const baseUrl = window.location.origin;
+        fullPaymentLink = `${baseUrl}/payment?link_id=${transaction.payment_link_id}`;
+        console.log('✅ Lien généré avec payment_link_id:', fullPaymentLink);
       }
-      
+      // Fallback : chercher le lien dans la note
+      else {
+        const noteMatch = transaction.note.match(/Lien: (https?:\/\/[^\s)]+)/);
+        if (noteMatch) {
+          fullPaymentLink = noteMatch[1];
+          console.log('🔗 Lien trouvé dans la note:', fullPaymentLink);
+        } else {
+          console.error('❌ Aucun payment_link_id et aucun lien dans la note');
+          alert('Erreur : Impossible de récupérer le lien de paiement');
+          return;
+        }
+      }
+
       await navigator.clipboard.writeText(fullPaymentLink);
       alert('Lien de paiement copié dans le presse-papiers !');
     } catch (error) {

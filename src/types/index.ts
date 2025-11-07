@@ -158,3 +158,80 @@ export interface InvoicePayment {
   notes?: string;
   created_at: string;
 }
+
+export interface Transaction {
+  id: string;
+  amount: number;
+  method: 'cash' | 'card' | 'transfer' | 'stripe';
+  note: string;
+  status: 'pending' | 'completed' | 'cancelled';
+  created_at: string;
+  payment_link_id?: string;
+}
+
+export interface Booking {
+  id: string;
+  user_id: string;
+  service_id: string;
+  date: string;
+  time: string;
+  duration_minutes: number;
+  quantity: number;
+  client_name: string;
+  client_firstname: string;
+  client_email: string;
+  client_phone: string;
+  total_amount: number;
+  payment_status: 'pending' | 'partial' | 'paid';
+  payment_amount: number;
+  transactions?: Transaction[];
+  booking_status: 'pending' | 'confirmed' | 'cancelled';
+  assigned_user_id?: string | null;
+  notes?: string | null;
+  payment_link?: string;
+  stripe_session_id?: string;
+  custom_service_data?: {
+    name: string;
+    price: number;
+    duration: number;
+  } | null;
+  created_at: string;
+  updated_at?: string;
+  service?: Service;
+}
+
+export interface Service {
+  id: string;
+  user_id: string;
+  name: string;
+  description: string;
+  price_ht: number;
+  price_ttc: number;
+  duration_minutes: number;
+  capacity: number;
+  unit_name?: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BusinessSettings {
+  id: string;
+  user_id: string;
+  business_name: string;
+  business_email?: string;
+  business_phone?: string;
+  business_address?: string;
+  timezone: string;
+  currency: string;
+  date_format: string;
+  time_format: '12h' | '24h';
+  week_start_day: number;
+  minimum_booking_delay_hours: number;
+  stripe_enabled: boolean;
+  stripe_public_key?: string;
+  stripe_secret_key?: string;
+  payment_link_expiry_minutes?: number;
+  created_at: string;
+  updated_at: string;
+}
