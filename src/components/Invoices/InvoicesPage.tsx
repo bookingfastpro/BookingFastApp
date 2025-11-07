@@ -292,75 +292,84 @@ export function InvoicesPage() {
 
         {/* Barre compacte : Onglets + Actions */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-2 mb-4">
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="grid grid-cols-2 sm:flex gap-2">
             {/* Onglets Devis/Factures */}
-            <div className="flex gap-2 flex-1">
-              <button
-                onClick={() => setViewMode('quotes')}
-                className={`flex-1 sm:flex-initial sm:px-6 py-2.5 rounded-lg font-semibold transition-all ${
-                  viewMode === 'quotes'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <FileText className="w-4 h-4" />
-                  <span className="text-sm">Devis ({quotes.length})</span>
-                </div>
-              </button>
-              <button
-                onClick={() => setViewMode('invoices')}
-                className={`flex-1 sm:flex-initial sm:px-6 py-2.5 rounded-lg font-semibold transition-all ${
-                  viewMode === 'invoices'
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <div className="flex items-center justify-center gap-2">
-                  <FileCheck className="w-4 h-4" />
-                  <span className="text-sm">Factures ({invoices.length})</span>
-                </div>
-              </button>
-            </div>
+            <button
+              onClick={() => setViewMode('quotes')}
+              className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${
+                viewMode === 'quotes'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              <FileText className="w-4 h-4" />
+              <span className="text-sm">Devis ({quotes.length})</span>
+            </button>
+
+            <button
+              onClick={() => setViewMode('invoices')}
+              className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${
+                viewMode === 'invoices'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              <FileCheck className="w-4 h-4" />
+              <span className="text-sm">Factures ({invoices.length})</span>
+            </button>
 
             {/* Boutons d'actions */}
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowCustomizationModal(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all font-medium"
-                title="Personnaliser PDF"
-              >
-                <Palette className="w-4 h-4" />
-                <span className="hidden sm:inline text-sm">PDF</span>
-              </button>
-              <button
-                onClick={() => setShowCreateModal(true)}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-lg transition-all font-medium shadow-lg"
-              >
-                <Plus className="w-4 h-4" />
-                <span className="text-sm">Nouveau</span>
-              </button>
-            </div>
+            <button
+              onClick={() => setShowCustomizationModal(true)}
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all font-semibold"
+              title="Personnaliser PDF"
+            >
+              <Palette className="w-4 h-4" />
+              <span className="text-sm">PDF</span>
+            </button>
+
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-lg transition-all font-semibold shadow-lg"
+            >
+              <Plus className="w-4 h-4" />
+              <span className="text-sm">Nouveau</span>
+            </button>
           </div>
         </div>
 
         {/* Barre de recherche et filtres compacts */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 mb-6">
           <div className="flex flex-col sm:flex-row gap-3">
-            {/* Barre de recherche */}
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Rechercher..."
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 text-sm"
-              />
+            {/* Barre de recherche + Bouton Filtres */}
+            <div className="flex gap-3 flex-1">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Rechercher..."
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 text-sm"
+                />
+              </div>
+
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-300 whitespace-nowrap ${
+                  showFilters
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                    : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <Filter className="w-5 h-5" />
+                <span className="hidden sm:inline">Filtres</span>
+                {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
             </div>
 
             {/* Total */}
-            <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg px-4 py-2.5">
+            <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg px-4 py-2.5 whitespace-nowrap">
               <div className="text-sm font-bold text-purple-600">
                 {currentDocuments.reduce((sum, doc) => sum + doc.total_ttc, 0).toFixed(2)}€
               </div>
@@ -368,20 +377,6 @@ export function InvoicesPage() {
                 {viewMode === 'quotes' ? 'Total devis' : 'Total facturé'}
               </div>
             </div>
-
-            {/* Bouton Filtres */}
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-300 whitespace-nowrap ${
-                showFilters
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                  : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              <Filter className="w-5 h-5" />
-              <span className="hidden sm:inline">Filtres</span>
-              {showFilters ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            </button>
           </div>
 
           {/* Panneau de filtres déroulant */}
