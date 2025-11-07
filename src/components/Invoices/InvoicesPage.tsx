@@ -144,8 +144,8 @@ export function InvoicesPage() {
               </button>
             )}
             
-            {/* Bouton Convertir en facture - Devis payé */}
-            {viewMode === 'quotes' && actualStatus === 'paid' && (
+            {/* Bouton Convertir en facture - Devis (tous sauf brouillon) */}
+            {viewMode === 'quotes' && doc.status !== 'draft' && (
               <button
                 onClick={() => handleConvertToInvoice(doc)}
                 className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
@@ -678,8 +678,8 @@ function MobileInvoiceCard({ doc, index, viewMode }: { doc: Invoice; index: numb
               </button>
             )}
             
-            {/* 🔥 CORRECTION : Bouton Convertir en facture maintenant visible sur mobile */}
-            {isQuote && actualStatus === 'paid' && (
+            {/* Bouton Convertir en facture - Devis (tous sauf brouillon) */}
+            {isQuote && doc.status !== 'draft' && (
               <button
                 onClick={() => handleConvertToInvoice(doc)}
                 className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
