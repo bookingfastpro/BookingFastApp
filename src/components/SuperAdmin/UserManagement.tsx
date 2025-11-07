@@ -12,9 +12,7 @@ export function UserManagement() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [formData, setFormData] = useState({
     full_name: '',
-    is_super_admin: false,
-    subscription_status: 'trial' as const,
-    trial_ends_at: ''
+    is_super_admin: false
   });
 
   const filteredUsers = users.filter(user =>
@@ -26,22 +24,18 @@ export function UserManagement() {
     setEditingUser(user);
     setFormData({
       full_name: user.full_name || '',
-      is_super_admin: user.is_super_admin,
-      subscription_status: user.subscription_status,
-      trial_ends_at: user.trial_ends_at ? user.trial_ends_at.split('T')[0] : ''
+      is_super_admin: user.is_super_admin
     });
     setShowEditModal(true);
   };
 
   const handleSaveUser = async () => {
     if (!editingUser) return;
-    
+
     try {
       await updateUserStatus(editingUser.id, {
         full_name: formData.full_name,
-        is_super_admin: formData.is_super_admin,
-        subscription_status: formData.subscription_status,
-        trial_ends_at: formData.trial_ends_at ? new Date(formData.trial_ends_at).toISOString() : undefined
+        is_super_admin: formData.is_super_admin
       });
       setShowEditModal(false);
       setEditingUser(null);
@@ -342,36 +336,6 @@ export function UserManagement() {
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Statut d'abonnement
-                </label>
-                <select
-                  value={formData.subscription_status}
-                  onChange={(e) => setFormData(prev => ({ ...prev, subscription_status: e.target.value as any }))}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300"
-                >
-                  <option value="trial">Essai gratuit</option>
-                  <option value="active">Abonné actif</option>
-                  <option value="expired">Expiré</option>
-                  <option value="cancelled">Annulé</option>
-                </select>
-              </div>
-
-              {formData.subscription_status === 'trial' && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Fin de l'essai gratuit
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.trial_ends_at}
-                    onChange={(e) => setFormData(prev => ({ ...prev, trial_ends_at: e.target.value }))}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300"
-                  />
-                </div>
-              )}
-
               <div className="flex items-center gap-3">
                 <input
                   type="checkbox"
@@ -384,6 +348,12 @@ export function UserManagement() {
                   <Crown className="w-4 h-4 text-purple-600" />
                   Super Administrateur
                 </label>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <p className="text-sm text-blue-800">
+                  💡 Pour modifier le statut d'abonnement, utilisez la section "Gestion des abonnements"
+                </p>
               </div>
             </div>
 
