@@ -114,40 +114,38 @@ function AppRoutes() {
   // 🎯 Pages protégées (dashboard, services, etc.)
   return (
     <ProtectedRoute>
-      <div className="flex flex-col h-full bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      <div className="flex flex-col w-full h-full bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
         <Navbar />
-        <main className="scroll-container">
-          <div className="scroll-content">
-            <Suspense fallback={<LoadingSpinner />}>
-              <Routes>
-                <Route path="/dashboard" element={<DashboardPage />} />
-                <Route path="/calendar" element={<CalendarPage />} />
-                <Route path="/bookings-list" element={<CalendarPage view="list" />} />
-                <Route path="/clients" element={<ClientsPage />} />
-                <Route path="/services" element={<ServicesPage />} />
-                <Route path="/invoices" element={<InvoicesPage />} />
-                <Route path="/emails" element={<EmailWorkflowPage />} />
-                <Route path="/admin" element={<AdminPage />} />
-                <Route path="/reports" element={
-                  <PluginGuard pluginSlug="reports">
-                    <ReportsPage />
-                  </PluginGuard>
-                } />
-                <Route path="/multi-user" element={
-                  <PluginGuard pluginSlug="multi-user">
-                    <MultiUserSettingsPage />
-                  </PluginGuard>
-                } />
-                <Route path="/pos" element={
-                  <PluginGuard pluginSlug="pos">
-                    <POSPage />
-                  </PluginGuard>
-                } />
-                <Route path="/plugins" element={<PluginsPage />} />
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
-              </Routes>
-            </Suspense>
-          </div>
+        <main className="flex-1 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <Suspense fallback={<LoadingSpinner />}>
+            <Routes>
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/calendar" element={<CalendarPage />} />
+              <Route path="/bookings-list" element={<CalendarPage view="list" />} />
+              <Route path="/clients" element={<ClientsPage />} />
+              <Route path="/services" element={<ServicesPage />} />
+              <Route path="/invoices" element={<InvoicesPage />} />
+              <Route path="/emails" element={<EmailWorkflowPage />} />
+              <Route path="/admin" element={<AdminPage />} />
+              <Route path="/reports" element={
+                <PluginGuard pluginSlug="reports">
+                  <ReportsPage />
+                </PluginGuard>
+              } />
+              <Route path="/multi-user" element={
+                <PluginGuard pluginSlug="multi-user">
+                  <MultiUserSettingsPage />
+                </PluginGuard>
+              } />
+              <Route path="/pos" element={
+                <PluginGuard pluginSlug="pos">
+                  <POSPage />
+                </PluginGuard>
+              } />
+              <Route path="/plugins" element={<PluginsPage />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </Suspense>
         </main>
       </div>
     </ProtectedRoute>
