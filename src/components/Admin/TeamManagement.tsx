@@ -510,91 +510,186 @@ export function TeamManagement() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-6">
+        <div className="bg-white rounded-2xl shadow-lg p-3 md:p-6">
           {filteredMembers.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {filteredMembers.map((member, index) => {
                 const memberRole = getRoleInfo(member.role_name);
                 const RoleIcon = getRoleIcon(member.role_name);
                 const gradient = getRoleGradient(member.role_name);
                 const bgGradient = getRoleBgGradient(member.role_name);
                 const borderColor = getRoleBorderColor(member.role_name);
-                
+
                 return (
                   <div
                     key={member.id}
-                    className={`flex items-center justify-between p-4 bg-gradient-to-r ${bgGradient} rounded-xl border-2 ${borderColor} hover:shadow-md transition-all duration-300 animate-fadeIn`}
+                    className={`bg-gradient-to-r ${bgGradient} rounded-xl border-2 ${borderColor} hover:shadow-md transition-all duration-300 animate-fadeIn overflow-hidden`}
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 bg-gradient-to-r ${gradient} rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
-                        {(member.email || 'U').charAt(0).toUpperCase()}
+                    {/* Desktop View */}
+                    <div className="hidden md:flex items-center justify-between p-4">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 bg-gradient-to-r ${gradient} rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
+                          {(member.email || 'U').charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                          <div className="font-bold text-gray-900 flex items-center gap-2">
+                            {member.full_name || member.email}
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r ${gradient} text-white shadow-md flex items-center gap-1`}>
+                              <RoleIcon className="w-3 h-3" />
+                              {memberRole.name}
+                            </span>
+                          </div>
+                          <div className="text-sm text-gray-600">{member.email}</div>
+                          <div className="text-xs text-gray-500 flex items-center gap-2">
+                            <span>{member.permissions.length} permission(s)</span>
+                            <span>•</span>
+                            <span className={`font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
+                              Niveau {memberRole.level}
+                            </span>
+                            <span>•</span>
+                            <span>Rejoint le {new Date(member.joined_at || member.created_at).toLocaleDateString('fr-FR')}</span>
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-bold text-gray-900 flex items-center gap-2">
-                          {member.full_name || member.email}
-                          <span className={`px-3 py-1 rounded-full text-xs font-bold bg-gradient-to-r ${gradient} text-white shadow-md flex items-center gap-1`}>
+
+                      <div className="flex items-center gap-3">
+                        <div className={`px-3 py-1 rounded-full text-xs font-bold ${
+                          member.is_active
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-700'
+                        }`}>
+                          {member.is_active ? '✅ Actif' : '❌ Inactif'}
+                        </div>
+
+                        <button
+                          onClick={() => handleManagePluginPermissions(member)}
+                          className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-110"
+                          title="Gérer les accès plugins"
+                        >
+                          <Key className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setEditingMember(member);
+                            setMemberFormData({
+                              email: member.email || '',
+                              full_name: member.full_name || '',
+                              role_name: member.role_name || 'employee',
+                              permissions: member.permissions || []
+                            });
+                            setSelectedRole(member.role_name || 'employee');
+                            setShowMemberModal(true);
+                          }}
+                          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                          title="Modifier"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setMemberToDelete(member);
+                            setShowDeleteModal(true);
+                          }}
+                          className="p-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-110"
+                          title="Supprimer le membre"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Mobile Card View */}
+                    <div className="md:hidden">
+                      {/* Header */}
+                      <div className="p-3 border-b border-gray-200">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className={`w-12 h-12 bg-gradient-to-r ${gradient} rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
+                            {(member.email || 'U').charAt(0).toUpperCase()}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="font-bold text-gray-900 text-sm truncate">
+                              {member.full_name || member.email}
+                            </div>
+                            <div className="text-xs text-gray-600 truncate">{member.email}</div>
+                          </div>
+                          <div className={`px-2 py-1 rounded-full text-xs font-bold ${
+                            member.is_active
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-red-100 text-red-700'
+                          }`}>
+                            {member.is_active ? '✅' : '❌'}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className={`px-2.5 py-1 rounded-full text-xs font-bold bg-gradient-to-r ${gradient} text-white shadow-md flex items-center gap-1`}>
                             <RoleIcon className="w-3 h-3" />
                             {memberRole.name}
                           </span>
-                        </div>
-                        <div className="text-sm text-gray-600">{member.email}</div>
-                        <div className="text-xs text-gray-500 flex items-center gap-2">
-                          <span>{member.permissions.length} permission(s)</span>
-                          <span>•</span>
-                          <span className={`font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
+                          <span className="text-xs text-gray-500">
                             Niveau {memberRole.level}
                           </span>
-                          <span>•</span>
-                          <span>Rejoint le {new Date(member.joined_at || member.created_at).toLocaleDateString('fr-FR')}</span>
                         </div>
                       </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3">
-                      <div className={`px-3 py-1 rounded-full text-xs font-bold ${
-                        member.is_active 
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
-                      }`}>
-                        {member.is_active ? '✅ Actif' : '❌ Inactif'}
+
+                      {/* Details */}
+                      <div className="p-3 space-y-2">
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-gray-600">Permissions</span>
+                          <span className="font-bold text-gray-900">{member.permissions.length}</span>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <span className="text-gray-600">Membre depuis</span>
+                          <span className="font-medium text-gray-900">
+                            {new Date(member.joined_at || member.created_at).toLocaleDateString('fr-FR', {
+                              day: 'numeric',
+                              month: 'short',
+                              year: 'numeric'
+                            })}
+                          </span>
+                        </div>
                       </div>
-                      
-                      <button
-                        onClick={() => handleManagePluginPermissions(member)}
-                        className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-110"
-                        title="Gérer les accès plugins"
-                      >
-                        <Key className="w-4 h-4" />
-                      </button>
-                      
-                      <button
-                        onClick={() => {
-                          setEditingMember(member);
-                          setMemberFormData({
-                            email: member.email || '',
-                            full_name: member.full_name || '',
-                            role_name: member.role_name || 'employee',
-                            permissions: member.permissions || []
-                          });
-                          setSelectedRole(member.role_name || 'employee');
-                          setShowMemberModal(true);
-                        }}
-                        className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                        title="Modifier"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => {
-                          setMemberToDelete(member);
-                          setShowDeleteModal(true);
-                        }}
-                        className="p-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-110"
-                        title="Supprimer le membre"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+
+                      {/* Actions */}
+                      <div className="p-3 border-t border-gray-200 flex gap-2">
+                        <button
+                          onClick={() => handleManagePluginPermissions(member)}
+                          className="flex-1 p-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <Key className="w-3.5 h-3.5" />
+                          Plugins
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setEditingMember(member);
+                            setMemberFormData({
+                              email: member.email || '',
+                              full_name: member.full_name || '',
+                              role_name: member.role_name || 'employee',
+                              permissions: member.permissions || []
+                            });
+                            setSelectedRole(member.role_name || 'employee');
+                            setShowMemberModal(true);
+                          }}
+                          className="flex-1 p-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-xs font-bold flex items-center justify-center gap-1.5"
+                        >
+                          <Edit className="w-3.5 h-3.5" />
+                          Modifier
+                        </button>
+
+                        <button
+                          onClick={() => {
+                            setMemberToDelete(member);
+                            setShowDeleteModal(true);
+                          }}
+                          className="p-2.5 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-300"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 );

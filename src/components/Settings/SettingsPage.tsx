@@ -193,38 +193,38 @@ export function SettingsPage() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 mobile-optimized">
-      <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+    <div className="p-3 md:p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 mobile-optimized">
+      <div className="mb-4 md:mb-6">
+        <h1 className="text-xl md:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
           Paramètres
         </h1>
-        <p className="text-sm sm:text-base text-gray-600 mt-2">
+        <p className="text-xs md:text-base text-gray-600 mt-1 md:mt-2">
           Configurez votre application
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white rounded-xl shadow-lg mb-6 overflow-x-auto">
+      <div className="bg-white rounded-xl shadow-lg mb-4 md:mb-6 overflow-x-auto">
         <div className="flex border-b border-gray-200">
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 px-6 py-4 font-bold transition-all whitespace-nowrap ${
+              className={`flex items-center gap-1.5 md:gap-2 px-3 md:px-6 py-3 md:py-4 font-bold transition-all whitespace-nowrap text-sm md:text-base ${
                 activeTab === tab.id
                   ? 'text-purple-600 border-b-2 border-purple-600 bg-purple-50'
                   : 'text-gray-600 hover:text-purple-600 hover:bg-gray-50'
               }`}
             >
-              <tab.icon className="w-5 h-5" />
-              {tab.label}
+              <tab.icon className="w-4 h-4 md:w-5 md:h-5" />
+              <span className="hidden sm:inline">{tab.label}</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* Contenu des tabs */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="bg-white rounded-xl shadow-lg p-4 md:p-6">
         {activeTab === 'general' && (
           <div className="space-y-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Paramètres généraux</h2>
