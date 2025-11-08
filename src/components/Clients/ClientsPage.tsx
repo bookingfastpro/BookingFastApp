@@ -237,7 +237,7 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
             {/* Statistiques rapides */}
             <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg px-4 py-2.5 whitespace-nowrap">
               <div className="text-sm font-bold text-purple-600">{clients.length}</div>
-              <div className="text-xs text-purple-700 hidden sm:inline">Clients total</div>
+              <div className="text-xs text-purple-700">Clients total</div>
             </div>
           </div>
         </div>
