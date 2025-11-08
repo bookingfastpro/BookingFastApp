@@ -2,9 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Bell, X, Check, CheckCheck, Trash2, Calendar, Clock, AlertCircle } from 'lucide-react';
 import { useNotifications } from '../../hooks/useNotifications';
 import { useNavigate } from 'react-router-dom';
+import { useModal } from '../../contexts/ModalContext';
+import { BookingDetailsModal } from '../Bookings/BookingDetailsModal';
 
 export function NotificationBell() {
   const navigate = useNavigate();
+  const { openModal, closeModal } = useModal();
   const {
     notifications,
     unreadCount,
@@ -47,9 +50,14 @@ export function NotificationBell() {
     // Fermer le dropdown
     setIsOpen(false);
 
-    // Naviguer vers la réservation si elle existe
+    // Ouvrir le modal de détails de la réservation si elle existe
     if (notification.booking_id) {
-      navigate('/calendar');
+      openModal(
+        <BookingDetailsModal
+          bookingId={notification.booking_id}
+          onClose={closeModal}
+        />
+      );
     }
   };
 
