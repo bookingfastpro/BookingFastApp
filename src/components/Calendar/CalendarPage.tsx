@@ -205,15 +205,8 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
   const shouldShowTeamFilter = canViewTeamFilter && isMultiUserActive && teamMembers.length > 0 && view === 'calendar';
 
   return (
-    <div
-      className="flex flex-col"
-      style={{
-        margin: 0, 
-        padding: 0,
-        WebkitOverflowScrolling: 'touch',
-        touchAction: 'pan-y'
-      }}
-    >
+    <div className="flex flex-col">
+
       {shouldShowTeamFilter && (
         <div className="bg-white border-b border-gray-200">
           {/* Bouton Filtres repliable */}
