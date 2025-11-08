@@ -115,9 +115,11 @@ function AppRoutes() {
   return (
     <ProtectedRoute>
       <div
-        className="flex flex-col h-full"
+        className="flex flex-col"
         style={{
-          background: 'linear-gradient(to bottom right, #eff6ff, #faf5ff, #fce7f3)'
+          background: 'linear-gradient(to bottom right, #eff6ff, #faf5ff, #fce7f3)',
+          height: '100%',
+          position: 'relative'
         }}
       >
         <Navbar />
