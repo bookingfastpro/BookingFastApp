@@ -201,22 +201,21 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
         </div>
 
         {/* Filtres et recherche */}
-        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 mb-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Recherche */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Rechercher un client..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 text-sm"
-              />
-            </div>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-3 sm:p-4 mb-6">
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* Barre de recherche + Tri */}
+            <div className="flex gap-3 flex-1">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Rechercher un client..."
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 text-sm"
+                />
+              </div>
 
-            {/* Tri */}
-            <div>
               <select
                 value={`${sortBy}-${sortOrder}`}
                 onChange={(e) => {
@@ -224,7 +223,7 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
                   setSortBy(field as any);
                   setSortOrder(order as any);
                 }}
-                className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 text-sm"
+                className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 text-sm whitespace-nowrap"
               >
                 <option value="created-desc">Plus récent</option>
                 <option value="created-asc">Plus ancien</option>
@@ -236,9 +235,9 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
             </div>
 
             {/* Statistiques rapides */}
-            <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-3 text-center">
-              <div className="text-lg font-bold text-purple-600">{clients.length}</div>
-              <div className="text-xs text-purple-700">Clients total</div>
+            <div className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg px-4 py-2.5 whitespace-nowrap">
+              <div className="text-sm font-bold text-purple-600">{clients.length}</div>
+              <div className="text-xs text-purple-700 hidden sm:inline">Clients total</div>
             </div>
           </div>
         </div>
