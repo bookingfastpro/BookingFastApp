@@ -18,7 +18,7 @@ export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Fermer le dropdown quand on clique à l'extérieur
+  // Fermer le dropdown quand on clique à l'extérieur et gérer le scroll
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -28,10 +28,13 @@ export function NotificationBell() {
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      // Empêcher le scroll sur mobile quand le panneau est ouvert
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = '';
     };
   }, [isOpen]);
 
@@ -113,9 +116,17 @@ export function NotificationBell() {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-96 max-w-[calc(100vw-2rem)] bg-white rounded-xl shadow-2xl border-2 border-gray-200 z-50 overflow-hidden">
+        <>
+          {/* Mobile Overlay */}
+          <div
+            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            onClick={() => setIsOpen(false)}
+          />
+
+          {/* Dropdown Panel */}
+          <div className="fixed inset-x-0 top-16 bottom-0 md:absolute md:inset-auto md:top-full md:right-0 md:left-auto md:mt-2 md:w-96 md:max-h-[600px] bg-white md:rounded-xl shadow-2xl border-t-2 md:border-2 border-gray-200 z-50 flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4">
+          <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-4 flex-shrink-0">
             <div className="flex items-center justify-between">
               <div>
                 <h3 className="text-lg font-bold text-white">Notifications</h3>
@@ -134,27 +145,29 @@ export function NotificationBell() {
 
           {/* Actions */}
           {notifications.length > 0 && (
-            <div className="flex items-center justify-between p-3 bg-gray-50 border-b border-gray-200">
+            <div className="flex items-center justify-between p-3 bg-gray-50 border-b border-gray-200 flex-shrink-0">
               <button
                 onClick={markAllAsRead}
                 disabled={unreadCount === 0}
                 className="text-xs font-bold text-blue-600 hover:text-blue-700 disabled:text-gray-400 disabled:cursor-not-allowed flex items-center gap-1"
               >
                 <CheckCheck className="w-4 h-4" />
-                Tout marquer comme lu
+                <span className="hidden sm:inline">Tout marquer comme lu</span>
+                <span className="sm:hidden">Tout lu</span>
               </button>
               <button
                 onClick={clearAllNotifications}
                 className="text-xs font-bold text-red-600 hover:text-red-700 flex items-center gap-1"
               >
                 <Trash2 className="w-4 h-4" />
-                Tout supprimer
+                <span className="hidden sm:inline">Tout supprimer</span>
+                <span className="sm:hidden">Supprimer</span>
               </button>
             </div>
           )}
 
           {/* Notifications List */}
-          <div className="max-h-[500px] overflow-y-auto">
+          <div className="flex-1 overflow-y-auto">
             {loading ? (
               <div className="p-8 text-center">
                 <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
@@ -237,13 +250,14 @@ export function NotificationBell() {
 
           {/* Footer */}
           {notifications.length > 0 && (
-            <div className="p-3 bg-gray-50 border-t border-gray-200 text-center">
+            <div className="p-3 bg-gray-50 border-t border-gray-200 text-center flex-shrink-0">
               <p className="text-xs text-gray-600">
                 Affichage des 20 dernières notifications
               </p>
             </div>
           )}
-        </div>
+          </div>
+        </>
       )}
     </div>
   );
