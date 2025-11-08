@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur d'icônes PWA - BookingFast</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        canvas {
+            border: 2px solid #ddd;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .icons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .icon-item {
+            text-align: center;
+        }
+        .icon-item h3 {
+            margin: 10px 0;
+            color: #555;
+            font-size: 14px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        .info {
+            background: #f0f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3b82f6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Générateur d'Icônes PWA</h1>
+
+        <div class="info">
+            <strong>Instructions:</strong>
+            <ol>
+                <li>Les icônes sont générées automatiquement ci-dessous</li>
+                <li>Cliquez sur "Télécharger" sous chaque icône</li>
+                <li>Remplacez les fichiers dans le dossier /public/</li>
+            </ol>
+        </div>
+
+        <div class="icons-grid" id="iconsGrid"></div>
+    </div>
+
+    <script>
+        const sizes = [
+            { width: 192, height: 192, name: 'pwa-192x192.png', label: 'PWA 192x192' },
+            { width: 512, height: 512, name: 'pwa-512x512.png', label: 'PWA 512x512' },
+            { width: 180, height: 180, name: 'apple-touch-icon.png', label: 'Apple Touch Icon' },
+            { width: 152, height: 152, name: 'icon-152x152.png', label: 'iPad Icon' },
+            { width: 144, height: 144, name: 'icon-144x144.png', label: 'Windows Tile' },
+            { width: 128, height: 128, name: 'icon-128x128.png', label: 'Chrome Icon' },
+            { width: 96, height: 96, name: 'icon-96x96.png', label: 'Android Icon' },
+            { width: 72, height: 72, name: 'icon-72x72.png', label: 'iPad Mini' },
+        ];
+
+        function createIcon(width, height) {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+
+            // Fond dégradé moderne
+            const gradient = ctx.createLinearGradient(0, 0, width, height);
+            gradient.addColorStop(0, '#3B82F6');
+            gradient.addColorStop(0.5, '#8B5CF6');
+            gradient.addColorStop(1, '#EC4899');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+
+            // Cercle blanc semi-transparent
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.beginPath();
+            ctx.arc(width * 0.7, height * 0.3, width * 0.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Texte "BF"
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${width * 0.4}px Inter, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = 'rgba(0,0,0,0.3)';
+            ctx.shadowBlur = width * 0.02;
+            ctx.shadowOffsetX = width * 0.01;
+            ctx.shadowOffsetY = width * 0.01;
+            ctx.fillText('BF', width / 2, height / 2);
+
+            // Sous-texte
+            ctx.shadowBlur = 0;
+            ctx.font = `${width * 0.08}px Inter, sans-serif`;
+            ctx.fillText('BOOKING', width / 2, height * 0.75);
+
+            return canvas;
+        }
+
+        function downloadCanvas(canvas, filename) {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        const grid = document.getElementById('iconsGrid');
+        sizes.forEach(size => {
+            const div = document.createElement('div');
+            div.className = 'icon-item';
+
+            const canvas = createIcon(size.width, size.height);
+            const h3 = document.createElement('h3');
+            h3.textContent = size.label;
+
+            const btn = document.createElement('button');
+            btn.textContent = '⬇️ Télécharger';
+            btn.onclick = () => downloadCanvas(canvas, size.name);
+
+            div.appendChild(h3);
+            div.appendChild(canvas);
+            div.appendChild(btn);
+            grid.appendChild(div);
+        });
+    </script>
+</body>
+</html>

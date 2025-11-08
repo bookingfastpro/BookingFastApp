@@ -1,50 +1,85 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-    <title>BookingFast - Système de Réservation</title>
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#3B82F6" />
-    <meta name="description" content="Application de gestion de réservations professionnelle" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Viewport optimisé pour tous les appareils -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover" />
+
+    <!-- Title et description -->
+    <title>BookingFast - Réservation & Facturation Professionnelle</title>
+    <meta name="description" content="Application complète de gestion de réservations, facturation et point de vente. Optimisée pour mobile, tablette et desktop." />
+    <meta name="keywords" content="réservation, booking, facturation, invoicing, point de vente, pos, gestion" />
+    <meta name="author" content="BookingFast" />
+
+    <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.webmanifest" />
-    
-    <!-- PWA Meta Tags supplémentaires -->
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="application-name" content="BookingFast" />
+
+    <!-- Theme colors -->
+    <meta name="theme-color" content="#3B82F6" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#3B82F6" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1E3A8A" />
     <meta name="msapplication-TileColor" content="#3B82F6" />
-    <meta name="msapplication-config" content="/browserconfig.xml" />
-    
-    <!-- iOS PWA -->
+    <meta name="msapplication-navbutton-color" content="#3B82F6" />
+
+    <!-- Apple iOS -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="BookingFast" />
     <meta name="apple-touch-fullscreen" content="yes" />
-    <link rel="apple-touch-startup-image" href="/apple-touch-icon.png" />
-    
-    <!-- CRITICAL: Disable ALL caching -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-startup-image" href="/pwa-512x512.png" />
+
+    <!-- Android -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="BookingFast" />
+
+    <!-- Windows -->
+    <meta name="msapplication-starturl" content="/" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- Favicons pour tous les navigateurs -->
+    <link rel="icon" type="image/png" sizes="512x512" href="/pwa-512x512.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/pwa-192x192.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/pwa-192x192.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/pwa-192x192.png" />
+    <link rel="shortcut icon" href="/pwa-192x192.png" />
+
+    <!-- SEO & Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="BookingFast - Gestion de Réservations" />
+    <meta property="og:description" content="Application complète de gestion professionnelle" />
+    <meta property="og:image" content="/pwa-512x512.png" />
+    <meta property="og:url" content="https://bookingfast.app" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="BookingFast" />
+    <meta name="twitter:description" content="Gestion de réservations professionnelle" />
+    <meta name="twitter:image" content="/pwa-512x512.png" />
+
+    <!-- Désactiver le cache -->
     <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <meta http-equiv="Surrogate-Control" content="no-store" />
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/pwa-192x192.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/pwa-192x192.png" />
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="/pwa-192x192.png" as="image" type="image/png" />
+
+    <!-- Preload et preconnect -->
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="/pwa-192x192.png" as="image" type="image/png" />
+
+    <!-- Format detection -->
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="date=no" />
+    <meta name="format-detection" content="address=no" />
+    <meta name="format-detection" content="email=no" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
 
-    <!-- Disable service worker and clear caches -->
+    <!-- PWA Scripts -->
     <script>
       // Désactiver le pull-to-refresh sur mobile
       document.addEventListener('touchstart', function(e) {
@@ -66,7 +101,7 @@
         lastTouchY = touchY;
 
         if (preventPullToRefresh) {
-          // Pour empêcher le pull-to-refresh, on empêche le scroll vers le haut en haut de page
+          // Pour empêcher le pull-to-refresh
           if (touchYDelta > 0) {
             e.preventDefault();
             return;
@@ -74,39 +109,33 @@
         }
       }, { passive: false });
 
-      // Unregister ALL service workers
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for(let registration of registrations) {
-            registration.unregister();
-            console.log('✅ Service Worker unregistered');
-          }
-        });
-      }
-
-      // Clear ALL caches
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          for (let name of names) {
-            caches.delete(name);
-            console.log('✅ Cache deleted:', name);
-          }
-        });
-      }
-
-      // Force reload without cache on every load
-      if (performance.navigation.type !== 1) {
-        console.log('🔄 Force reload without cache');
-      }
-
       // Performance monitoring
       if ('performance' in window) {
         window.addEventListener('load', () => {
           setTimeout(() => {
             const perfData = performance.getEntriesByType('navigation')[0];
-            console.log('⏱️ Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+            if (perfData) {
+              console.log('⏱️ Page load time:', Math.round(perfData.loadEventEnd - perfData.loadEventStart), 'ms');
+            }
           }, 0);
         });
+      }
+
+      // Détection de l'installation PWA
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        window.deferredPrompt = e;
+        console.log('💾 PWA peut être installée');
+      });
+
+      window.addEventListener('appinstalled', () => {
+        console.log('✅ PWA installée avec succès');
+        window.deferredPrompt = null;
+      });
+
+      // Vérifier si l'app est en mode standalone
+      if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+        console.log('📱 Application en mode standalone (PWA)');
       }
     </script>
   </body>
