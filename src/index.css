@@ -14,7 +14,15 @@
     border-color: theme('colors.gray.200');
   }
   
+  html {
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
     background-color: theme('colors.white');
     color: theme('colors.gray.900');
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -24,16 +32,21 @@
     -webkit-touch-callout: none;
   }
 
-  /* Empêcher le body de bouger quand modal ouvert */
   body.modal-open {
     position: fixed !important;
     width: 100% !important;
     overflow: hidden !important;
-    overscroll-behavior: none !important;
     touch-action: none !important;
   }
 
-  /* Empêcher le zoom sur iOS */
+  #root {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
   input[type="text"],
   input[type="email"],
   input[type="tel"],
@@ -47,66 +60,27 @@
     -webkit-appearance: none;
   }
 
-  /* Classes de scroll optimisées */
   .scroll-container {
-    overflow-y: auto;
+    flex: 1;
+    overflow-y: auto !important;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    flex: 1;
-    min-height: 0;
-    padding-left: env(safe-area-inset-left, 0px);
-    padding-right: env(safe-area-inset-right, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    position: relative;
   }
 
   .scroll-content {
     width: 100%;
-    min-height: calc(100% + 1px);
+    min-height: 100%;
   }
 
-  .no-scroll {
-    overflow: hidden !important;
-    touch-action: none !important;
-  }
-
-  /* Améliorer le scroll sur iOS */
-  .scrollable-area {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-  }
-
-  /* Optimisation des touches pour mobile */
   button, a, input, select, textarea {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
   }
 
-  /* Améliorer les interactions tactiles */
   button:active, .button:active {
     transform: scale(0.98);
     transition: transform 0.1s ease;
-  }
-
-  /* Système de scroll optimisé pour mobile */
-  html {
-    height: 100%;
-    overflow: hidden;
-    overscroll-behavior: none;
-    -webkit-text-size-adjust: 100%;
-  }
-
-  body {
-    height: 100%;
-    overflow: hidden;
-    overscroll-behavior: none;
-  }
-
-  #root {
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
   }
 
   /* Safe area pour iOS - Classes utilitaires */

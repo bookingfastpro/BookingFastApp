@@ -121,7 +121,14 @@ function AppRoutes() {
         }}
       >
         <Navbar />
-        <main className="scroll-container">
+        <main
+          className="scroll-container"
+          style={{
+            paddingLeft: 'env(safe-area-inset-left, 0px)',
+            paddingRight: 'env(safe-area-inset-right, 0px)',
+            paddingBottom: 'env(safe-area-inset-bottom, 0px)'
+          }}
+        >
           <div className="scroll-content">
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>
