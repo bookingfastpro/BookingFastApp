@@ -104,95 +104,95 @@ export function LoginPage() {
       </div>
 
       <div className="relative z-10 w-full max-w-md">
-        <div className="text-center mb-6">
-          <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl animate-glow">
-            <Building2 className="w-10 h-10 text-white" />
+        <div className="text-center mb-4 md:mb-6">
+          <div className="w-14 h-14 md:w-20 md:h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto mb-3 md:mb-4 shadow-2xl animate-glow">
+            <Building2 className="w-7 h-7 md:w-10 md:h-10 text-white" />
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-1 md:mb-2">
             BookingFast
           </h1>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 text-sm md:text-lg">
             {isLogin ? 'Connectez-vous à votre compte' : 'Créez votre compte'}
           </p>
         </div>
 
-        <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-8 border border-white/20">
+        <div className="bg-white/90 backdrop-blur-md rounded-2xl md:rounded-3xl shadow-2xl p-4 md:p-8 border border-white/20">
           {isAffiliateSignup && (
-            <div className="mb-6 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-2xl p-4 animate-fadeIn">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                  <Gift className="w-4 h-4 text-white" />
+            <div className="mb-4 md:mb-6 bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl md:rounded-2xl p-3 md:p-4 animate-fadeIn">
+              <div className="flex items-center gap-2 md:gap-3 mb-2">
+                <div className="w-6 h-6 md:w-8 md:h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                  <Gift className="w-3 h-3 md:w-4 md:h-4 text-white" />
                 </div>
-                <h4 className="font-bold text-purple-800">🎉 Offre spéciale parrainage !</h4>
+                <h4 className="font-bold text-purple-800 text-xs md:text-base">🎉 Offre spéciale parrainage !</h4>
               </div>
-              <div className="text-purple-700 text-sm space-y-1">
+              <div className="text-purple-700 text-xs md:text-sm space-y-0.5 md:space-y-1">
                 <div>✨ <strong>15 jours d'essai gratuit</strong> au lieu de 7</div>
-                <div>🎯 Code de parrainage: <span className="font-mono font-bold">{affiliateCode}</span></div>
-                <div>💝 Offre exclusive via un lien de parrainage</div>
+                <div>🎯 Code: <span className="font-mono font-bold">{affiliateCode}</span></div>
+                <div className="hidden md:block">💝 Offre exclusive via un lien de parrainage</div>
               </div>
             </div>
           )}
 
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <Sparkles className="w-5 h-5 text-purple-600" />
-            <h2 className="text-2xl font-bold text-gray-900">
+          <div className="flex items-center justify-center gap-2 mb-4 md:mb-6">
+            <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">
               {isLogin ? 'Connexion' : 'Inscription'}
             </h2>
-            <Sparkles className="w-5 h-5 text-purple-600" />
+            <Sparkles className="w-4 h-4 md:w-5 md:h-5 text-purple-600" />
           </div>
 
           {error && (
-            <div className={`mb-6 p-4 rounded-2xl border-2 animate-fadeIn ${
+            <div className={`mb-4 md:mb-6 p-3 md:p-4 rounded-xl md:rounded-2xl border-2 animate-fadeIn ${
               error.includes('créé') || error.includes('Vérifiez votre email')
-                ? 'bg-green-50 border-green-200 text-green-800' 
+                ? 'bg-green-50 border-green-200 text-green-800'
                 : 'bg-red-50 border-red-200 text-red-800'
             }`}>
               <div className="flex items-center gap-2">
                 {error.includes('créé') || error.includes('Vérifiez votre email') ? '✅' : '❌'}
-                <span className="font-medium">{error}</span>
+                <span className="font-medium text-xs md:text-sm">{error}</span>
               </div>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">
                 Adresse email
               </label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Mail className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 md:w-5 md:h-5" />
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value.toLowerCase())}
                   required
-                  className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 bg-white/80 backdrop-blur-sm"
+                  className="w-full pl-10 md:pl-12 pr-3 md:pr-4 py-3 md:py-4 border border-gray-300 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 bg-white/80 backdrop-blur-sm text-sm md:text-base"
                   placeholder="votre@email.com"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">
                 Mot de passe
               </label>
               <div className="relative">
-                <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Lock className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 md:w-5 md:h-5" />
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  className="w-full pl-12 pr-12 py-4 border border-gray-300 rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 bg-white/80 backdrop-blur-sm"
+                  className="w-full pl-10 md:pl-12 pr-10 md:pr-12 py-3 md:py-4 border border-gray-300 rounded-xl md:rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 bg-white/80 backdrop-blur-sm text-sm md:text-base"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-3 md:right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  {showPassword ? <EyeOff className="w-4 h-4 md:w-5 md:h-5" /> : <Eye className="w-4 h-4 md:w-5 md:h-5" />}
                 </button>
               </div>
               {!isLogin && (
@@ -204,18 +204,18 @@ export function LoginPage() {
 
             {!isLogin && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1.5 md:mb-2">
                   Confirmer le mot de passe
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <Lock className="absolute left-3 md:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 md:w-5 md:h-5" />
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                     minLength={6}
-                    className={`w-full pl-12 pr-12 py-4 border rounded-2xl focus:ring-4 transition-all duration-300 bg-white/80 backdrop-blur-sm ${
+                    className={`w-full pl-10 md:pl-12 pr-10 md:pr-12 py-3 md:py-4 border rounded-xl md:rounded-2xl focus:ring-4 transition-all duration-300 bg-white/80 backdrop-blur-sm text-sm md:text-base ${
                       confirmPassword && password !== confirmPassword
                         ? 'border-red-300 focus:ring-red-200 focus:border-red-500'
                         : 'border-gray-300 focus:ring-purple-200 focus:border-purple-500'
@@ -225,9 +225,9 @@ export function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-3 md:right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4 md:w-5 md:h-5" /> : <Eye className="w-4 h-4 md:w-5 md:h-5" />}
                   </button>
                 </div>
                 {confirmPassword && password !== confirmPassword && (
@@ -248,55 +248,55 @@ export function LoginPage() {
             <button
               type="submit"
               disabled={loading || (!isLogin && password !== confirmPassword)}
-              className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-4 px-6 rounded-2xl font-bold text-lg hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
+              className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-3 md:py-4 px-4 md:px-6 rounded-xl md:rounded-2xl font-bold text-base md:text-lg hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
-                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                  {isLogin ? 'Connexion...' : 'Création...'}
+                  <div className="w-5 h-5 md:w-6 md:h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  <span className="text-sm md:text-base">{isLogin ? 'Connexion...' : 'Création...'}</span>
                 </>
               ) : (
                 <>
-                  {isLogin ? <LogIn className="w-6 h-6" /> : <UserPlus className="w-6 h-6" />}
-                  {isLogin ? 'Se connecter' : 'Créer le compte'}
+                  {isLogin ? <LogIn className="w-5 h-5 md:w-6 md:h-6" /> : <UserPlus className="w-5 h-5 md:w-6 md:h-6" />}
+                  <span className="text-sm md:text-base">{isLogin ? 'Se connecter' : 'Créer le compte'}</span>
                 </>
               )}
             </button>
           </form>
 
           {isLogin && (
-            <div className="mt-4 text-center">
+            <div className="mt-3 md:mt-4 text-center">
               <button
                 type="button"
                 onClick={() => setShowForgotPassword(true)}
-                className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-all duration-300 flex items-center gap-2 mx-auto"
+                className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-all duration-300 flex items-center gap-1.5 md:gap-2 mx-auto text-xs md:text-sm"
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="w-3.5 h-3.5 md:w-4 md:h-4" />
                 Mot de passe oublié ?
               </button>
             </div>
           )}
 
-          <div className="mt-6 text-center">
-            <div className="text-gray-600 mb-3">
+          <div className="mt-4 md:mt-6 text-center">
+            <div className="text-gray-600 mb-2 md:mb-3 text-xs md:text-base">
               {isLogin ? "Vous n'avez pas de compte ?" : "Vous avez déjà un compte ?"}
             </div>
             <button
               type="button"
               onClick={toggleMode}
-              className="text-purple-600 hover:text-purple-800 font-bold text-lg hover:underline transition-all duration-300"
+              className="text-purple-600 hover:text-purple-800 font-bold text-base md:text-lg hover:underline transition-all duration-300"
             >
               {isLogin ? 'Créer un compte' : 'Se connecter'}
             </button>
           </div>
 
-          <div className="mt-4 text-center">
+          <div className="mt-3 md:mt-4 text-center">
             <button
               type="button"
               onClick={() => setShowSecretCode(!showSecretCode)}
-              className="text-purple-600 hover:text-purple-800 font-medium hover:underline transition-all duration-300 flex items-center gap-2 mx-auto"
+              className="text-purple-600 hover:text-purple-800 font-medium hover:underline transition-all duration-300 flex items-center gap-1.5 md:gap-2 mx-auto text-xs md:text-sm"
             >
-              <Gift className="w-4 h-4" />
+              <Gift className="w-3.5 h-3.5 md:w-4 md:h-4" />
               J'ai un code secret
             </button>
           </div>
@@ -320,15 +320,16 @@ export function LoginPage() {
           />
         )}
 
-        <div className="text-center mt-6 text-gray-500 text-sm">
-          <p>© 2025 BookingFast - Système de réservation professionnel</p>
+        <div className="text-center mt-4 md:mt-6 text-gray-500 text-xs md:text-sm">
+          <p className="hidden md:block">© 2025 BookingFast - Système de réservation professionnel</p>
+          <p className="md:hidden">© 2025 BookingFast</p>
           {currentVersion && (
             <>
               <p className="text-xs text-gray-400 mt-1">
-                Version {currentVersion.version} - Build {currentVersion.build}
+                v{currentVersion.version} - Build {currentVersion.build}
               </p>
               {currentVersion.release_notes && (
-                <p className="text-xs text-gray-400 mt-1 max-w-md mx-auto">
+                <p className="text-xs text-gray-400 mt-1 max-w-md mx-auto hidden md:block">
                   {currentVersion.release_notes}
                 </p>
               )}
