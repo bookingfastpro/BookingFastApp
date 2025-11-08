@@ -271,9 +271,8 @@ export function InvoicesPage() {
   }
 
   return (
-    <>
-      {/* 🔥 CORRECTION : Ajout de min-h-[calc(100vh-64px)] pour remplir le viewport */}
-      <div className="min-h-[calc(100vh-64px)] p-4 sm:p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 mobile-optimized">
+    <div className="h-full overflow-y-auto bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      <div className="min-h-full p-4 sm:p-6 mobile-optimized" style={{ paddingBottom: 'max(6rem, calc(6rem + env(safe-area-inset-bottom)))' }}>
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
           <div>
@@ -512,7 +511,7 @@ export function InvoicesPage() {
           onClose={() => setShowCustomizationModal(false)}
         />
       )}
-    </>
+    </div>
   );
 }
 
