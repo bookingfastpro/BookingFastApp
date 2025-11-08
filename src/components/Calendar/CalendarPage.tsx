@@ -205,9 +205,9 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
   const shouldShowTeamFilter = canViewTeamFilter && isMultiUserActive && teamMembers.length > 0 && view === 'calendar';
 
   return (
-    <div 
-      className="h-full flex flex-col overflow-y-auto scrollable-area" 
-      style={{ 
+    <div
+      className="flex flex-col"
+      style={{
         margin: 0, 
         padding: 0,
         WebkitOverflowScrolling: 'touch',

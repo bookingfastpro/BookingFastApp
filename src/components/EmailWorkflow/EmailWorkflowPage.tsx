@@ -113,7 +113,7 @@ export function EmailWorkflowPage() {
 
   return (
     <div 
-      className="p-4 sm:p-6 h-full overflow-y-auto bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 mobile-optimized"
+      className="p-4 sm:p-6 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 mobile-optimized"
       style={{ paddingBottom: 'max(6rem, calc(6rem + env(safe-area-inset-bottom)))' }}
     >
       <div className="mb-6 sm:mb-8">

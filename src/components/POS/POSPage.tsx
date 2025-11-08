@@ -401,7 +401,7 @@ export function POSPage() {
   const hasTTCProducts = cart.some(item => item.product._isTTCPrice);
 
   return (
-    <div className="h-full flex flex-col bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="flex flex-col bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50" style={{ minHeight: '100%' }}>
       {/* Header - Responsive */}
       <div className="bg-white border-b border-gray-200 px-3 sm:px-6 py-3 sm:py-4 flex-shrink-0">
         <div className="flex items-center justify-between">
