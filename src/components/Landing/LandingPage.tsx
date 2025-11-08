@@ -295,14 +295,14 @@ export function LandingPage() {
     <div className="landing-page min-h-screen bg-white">
       {/* Navigation Premium */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/98 backdrop-blur-xl border-b border-gray-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center shadow-xl animate-glow">
-                <Building2 className="w-7 h-7 text-white" />
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 md:h-20">
+            <div className="flex items-center gap-2 md:gap-3">
+              <div className="w-9 h-9 md:w-12 md:h-12 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl md:rounded-2xl flex items-center justify-center shadow-xl animate-glow">
+                <Building2 className="w-5 h-5 md:w-7 md:h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   BookingFast
                 </h1>
                 <p className="text-xs text-gray-500 hidden sm:block font-medium">Réservation professionnelle</p>
@@ -326,11 +326,12 @@ export function LandingPage() {
 
             <button
               onClick={() => navigate('/login')}
-              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-8 py-3 rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 shadow-lg font-bold relative overflow-hidden group"
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-4 md:px-8 py-2 md:py-3 rounded-lg md:rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 shadow-lg font-bold relative overflow-hidden group text-sm md:text-base"
             >
-              <span className="relative z-10 flex items-center gap-2">
-                <Sparkles className="w-5 h-5" />
-                Connexion
+              <span className="relative z-10 flex items-center gap-1.5 md:gap-2">
+                <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="hidden sm:inline">Connexion</span>
+                <span className="sm:hidden">Login</span>
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
@@ -339,7 +340,7 @@ export function LandingPage() {
       </nav>
 
       {/* Hero Section Premium */}
-      <section className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      <section className="pt-20 md:pt-32 pb-12 md:pb-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
@@ -348,67 +349,69 @@ export function LandingPage() {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 items-center">
             {/* Contenu gauche */}
             <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full text-sm font-bold mb-8 shadow-xl animate-glow">
-                <Gift className="w-5 h-5" />
-                Essai gratuit 7 jours - Sans carte bancaire
+              <div className="inline-flex items-center gap-1.5 md:gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 md:px-6 py-2 md:py-3 rounded-full text-xs md:text-sm font-bold mb-4 md:mb-8 shadow-xl animate-glow">
+                <Gift className="w-4 h-4 md:w-5 md:h-5" />
+                <span className="hidden sm:inline">Essai gratuit 7 jours - Sans carte bancaire</span>
+                <span className="sm:hidden">7 jours gratuits</span>
               </div>
-              
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 leading-tight mb-8">
+
+              <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-gray-900 leading-tight mb-4 md:mb-8">
                 Gérez vos réservations
-                <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mt-2">
+                <span className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mt-1 md:mt-2">
                   comme un pro
                 </span>
               </h1>
-              
-              <p className="text-2xl text-gray-700 mb-10 leading-relaxed font-medium">
-                La solution <span className="text-purple-600 font-bold">tout-en-un</span> pour gérer vos rendez-vous, encaisser vos paiements et fidéliser vos clients. 
-                <span className="block mt-2 text-xl text-gray-600">Simple. Puissant. Professionnel.</span>
+
+              <p className="text-base md:text-2xl text-gray-700 mb-6 md:mb-10 leading-relaxed font-medium">
+                La solution <span className="text-purple-600 font-bold">tout-en-un</span> pour gérer vos rendez-vous, encaisser vos paiements et fidéliser vos clients.
+                <span className="block mt-1 md:mt-2 text-sm md:text-xl text-gray-600">Simple. Puissant. Professionnel.</span>
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4 mb-10">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mb-6 md:mb-10">
                 <button
                   onClick={() => navigate('/login')}
-                  className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-10 py-5 rounded-2xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 shadow-xl font-black text-xl flex items-center justify-center gap-3 group relative overflow-hidden"
+                  className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-6 md:px-10 py-3 md:py-5 rounded-xl md:rounded-2xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 shadow-xl font-black text-base md:text-xl flex items-center justify-center gap-2 md:gap-3 group relative overflow-hidden"
                 >
-                  <span className="relative z-10 flex items-center gap-3">
-                    <Rocket className="w-7 h-7 group-hover:rotate-12 transition-transform" />
+                  <span className="relative z-10 flex items-center gap-2 md:gap-3">
+                    <Rocket className="w-5 h-5 md:w-7 md:h-7 group-hover:rotate-12 transition-transform" />
                     Commencer
-                    <ArrowRight className="w-7 h-7 group-hover:translate-x-2 transition-transform" />
+                    <ArrowRight className="w-5 h-5 md:w-7 md:h-7 group-hover:translate-x-2 transition-transform" />
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </button>
-                
+
                 <button
                   onClick={() => scrollToSection('how-it-works')}
-                  className="bg-white text-gray-900 px-10 py-5 rounded-2xl hover:bg-gray-50 transition-all duration-300 border-2 border-gray-300 font-bold text-xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
+                  className="bg-white text-gray-900 px-6 md:px-10 py-3 md:py-5 rounded-xl md:rounded-2xl hover:bg-gray-50 transition-all duration-300 border-2 border-gray-300 font-bold text-base md:text-xl flex items-center justify-center gap-2 md:gap-3 shadow-lg hover:shadow-xl"
                 >
-                  <Play className="w-6 h-6" />
-                  Voir la démo
+                  <Play className="w-5 h-5 md:w-6 md:h-6" />
+                  <span className="hidden sm:inline">Voir la démo</span>
+                  <span className="sm:hidden">Démo</span>
                 </button>
               </div>
 
               {/* Trust indicators premium */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="flex flex-col items-center gap-2 bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-lg">
-                  <Shield className="w-8 h-8 text-green-500" />
-                  <span className="text-sm font-bold text-gray-900">Sécurisé SSL</span>
+              <div className="grid grid-cols-3 gap-2 md:gap-4">
+                <div className="flex flex-col items-center gap-1 md:gap-2 bg-white/80 backdrop-blur-sm p-2 md:p-4 rounded-xl md:rounded-2xl shadow-lg">
+                  <Shield className="w-5 h-5 md:w-8 md:h-8 text-green-500" />
+                  <span className="text-xs md:text-sm font-bold text-gray-900">Sécurisé</span>
                 </div>
-                <div className="flex flex-col items-center gap-2 bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-lg">
-                  <CheckCircle className="w-8 h-8 text-blue-500" />
-                  <span className="text-sm font-bold text-gray-900">RGPD Conforme</span>
+                <div className="flex flex-col items-center gap-1 md:gap-2 bg-white/80 backdrop-blur-sm p-2 md:p-4 rounded-xl md:rounded-2xl shadow-lg">
+                  <CheckCircle className="w-5 h-5 md:w-8 md:h-8 text-blue-500" />
+                  <span className="text-xs md:text-sm font-bold text-gray-900">RGPD</span>
                 </div>
-                <div className="flex flex-col items-center gap-2 bg-white/80 backdrop-blur-sm p-4 rounded-2xl shadow-lg">
-                  <Star className="w-8 h-8 text-yellow-500" />
-                  <span className="text-sm font-bold text-gray-900">Support 24/7</span>
+                <div className="flex flex-col items-center gap-1 md:gap-2 bg-white/80 backdrop-blur-sm p-2 md:p-4 rounded-xl md:rounded-2xl shadow-lg">
+                  <Star className="w-5 h-5 md:w-8 md:h-8 text-yellow-500" />
+                  <span className="text-xs md:text-sm font-bold text-gray-900">Support</span>
                 </div>
               </div>
             </div>
 
             {/* Image droite - Dashboard Premium */}
-            <div className="relative">
+            <div className="relative hidden lg:block">
               <div className="relative z-10">
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl border-8 border-white transform hover:scale-105 transition-all duration-500">
                   <img 
@@ -451,18 +454,18 @@ export function LandingPage() {
           </div>
 
           {/* Stats Section Premium */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-24">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mt-12 md:mt-24">
             {stats.map((stat, index) => (
               <div
                 key={index}
-                className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 text-center shadow-xl border-2 border-gray-100 transform hover:scale-110 transition-all duration-300 animate-fadeIn hover:shadow-2xl group"
+                className="bg-white/90 backdrop-blur-sm rounded-2xl md:rounded-3xl p-4 md:p-8 text-center shadow-xl border-2 border-gray-100 transform hover:scale-110 transition-all duration-300 animate-fadeIn hover:shadow-2xl group"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className={`w-16 h-16 bg-gradient-to-r ${stat.color} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform`}>
-                  <stat.icon className="w-8 h-8 text-white" />
+                <div className={`w-10 h-10 md:w-16 md:h-16 bg-gradient-to-r ${stat.color} rounded-xl md:rounded-2xl flex items-center justify-center mx-auto mb-3 md:mb-6 shadow-lg group-hover:scale-110 transition-transform`}>
+                  <stat.icon className="w-5 h-5 md:w-8 md:h-8 text-white" />
                 </div>
-                <div className="text-4xl font-black text-gray-900 mb-3">{stat.number}</div>
-                <div className="text-gray-700 font-bold text-lg">{stat.label}</div>
+                <div className="text-xl md:text-4xl font-black text-gray-900 mb-1 md:mb-3">{stat.number}</div>
+                <div className="text-gray-700 font-bold text-xs md:text-lg">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -470,23 +473,23 @@ export function LandingPage() {
       </section>
 
       {/* How It Works Section - NEW */}
-      <section id="how-it-works" className="py-24 px-4 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
+      <section id="how-it-works" className="py-12 md:py-24 px-3 sm:px-6 lg:px-8 bg-white relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float" style={{ animationDelay: '3s' }}></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-full text-sm font-bold mb-8 shadow-xl">
-              <MousePointer className="w-5 h-5" />
+          <div className="text-center mb-10 md:mb-20">
+            <div className="inline-flex items-center gap-1.5 md:gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-full text-xs md:text-sm font-bold mb-4 md:mb-8 shadow-xl">
+              <MousePointer className="w-4 h-4 md:w-5 md:h-5" />
               Simple et intuitif
             </div>
-            <h2 className="text-5xl font-black text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-3 md:mb-6">
               Comment ça marche ?
             </h2>
-            <p className="text-2xl text-gray-600 max-w-3xl mx-auto font-medium">
-              Démarrez en 4 étapes simples et transformez votre activité
+            <p className="text-base md:text-2xl text-gray-600 max-w-3xl mx-auto font-medium px-4">
+              Démarrez en 4 étapes simples
             </p>
           </div>
 
@@ -495,7 +498,7 @@ export function LandingPage() {
             {/* Connection Line */}
             <div className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 transform -translate-y-1/2 hidden lg:block"></div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 relative">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 relative">
               {howItWorks.map((step, index) => (
                 <div
                   key={index}
@@ -505,9 +508,9 @@ export function LandingPage() {
                   onClick={() => setActiveStep(index)}
                 >
                   {/* Step Card */}
-                  <div className="bg-white rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border-2 border-gray-100">
+                  <div className="bg-white rounded-2xl md:rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden border-2 border-gray-100">
                     {/* Image */}
-                    <div className="relative h-48 overflow-hidden">
+                    <div className="relative h-32 md:h-48 overflow-hidden">
                       <img 
                         src={step.image} 
                         alt={step.title}
@@ -516,11 +519,11 @@ export function LandingPage() {
                       <div className={`absolute inset-0 bg-gradient-to-t ${step.color} opacity-60 group-hover:opacity-40 transition-opacity`}></div>
                       
                       {/* Step Number */}
-                      <div className="absolute top-4 left-4">
-                        <div className={`w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg ${
+                      <div className="absolute top-2 left-2 md:top-4 md:left-4">
+                        <div className={`w-8 h-8 md:w-12 md:h-12 bg-white rounded-xl md:rounded-2xl flex items-center justify-center shadow-lg ${
                           activeStep === index ? 'animate-bounce-soft' : ''
                         }`}>
-                          <span className="text-2xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                          <span className="text-lg md:text-2xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                             {step.step}
                           </span>
                         </div>
@@ -528,16 +531,16 @@ export function LandingPage() {
                     </div>
 
                     {/* Content */}
-                    <div className="p-6">
-                      <div className={`w-14 h-14 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
-                        <step.icon className="w-7 h-7 text-white" />
+                    <div className="p-4 md:p-6">
+                      <div className={`w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br ${step.color} rounded-xl md:rounded-2xl flex items-center justify-center mb-3 md:mb-4 shadow-lg group-hover:scale-110 transition-transform`}>
+                        <step.icon className="w-5 h-5 md:w-7 md:h-7 text-white" />
                       </div>
-                      
-                      <h3 className="text-2xl font-black text-gray-900 mb-3">
+
+                      <h3 className="text-lg md:text-2xl font-black text-gray-900 mb-2 md:mb-3">
                         {step.title}
                       </h3>
-                      
-                      <p className="text-gray-600 mb-4 font-medium">
+
+                      <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4 font-medium">
                         {step.description}
                       </p>
 
@@ -569,20 +572,20 @@ export function LandingPage() {
           </div>
 
           {/* Interactive Demo Button */}
-          <div className="text-center mt-16">
+          <div className="text-center mt-8 md:mt-16">
             <button
               onClick={() => navigate('/login')}
-              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-12 py-6 rounded-2xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 shadow-xl font-black text-2xl inline-flex items-center gap-4 group relative overflow-hidden"
+              className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white px-6 md:px-12 py-4 md:py-6 rounded-xl md:rounded-2xl hover:shadow-2xl transition-all duration-300 transform hover:scale-110 shadow-xl font-black text-base md:text-2xl inline-flex items-center gap-2 md:gap-4 group relative overflow-hidden"
             >
-              <span className="relative z-10 flex items-center gap-4">
-                <Laptop className="w-8 h-8 group-hover:rotate-12 transition-transform" />
+              <span className="relative z-10 flex items-center gap-2 md:gap-4">
+                <Laptop className="w-5 h-5 md:w-8 md:h-8 group-hover:rotate-12 transition-transform" />
                 Essayer maintenant
-                <ArrowRight className="w-8 h-8 group-hover:translate-x-2 transition-transform" />
+                <ArrowRight className="w-5 h-5 md:w-8 md:h-8 group-hover:translate-x-2 transition-transform" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </button>
-            <p className="text-gray-600 mt-4 font-medium">
-              ✨ Aucune carte bancaire requise • Configuration en 5 minutes
+            <p className="text-gray-600 mt-3 md:mt-4 font-medium text-xs md:text-base px-4">
+              ✨ Aucune carte bancaire • 5 minutes
             </p>
           </div>
         </div>
@@ -782,7 +785,7 @@ export function LandingPage() {
       </section>
 
       {/* Pricing Section Premium */}
-      <section id="pricing" className="py-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
+      <section id="pricing" className="py-12 md:py-24 px-3 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
         {/* Animated background */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-0 left-0 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
@@ -790,35 +793,35 @@ export function LandingPage() {
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-5xl font-black text-gray-900 mb-6">
+          <div className="text-center mb-10 md:mb-20">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-3 md:mb-6">
               Tarifs transparents
             </h2>
-            <p className="text-2xl text-gray-600 max-w-3xl mx-auto font-medium">
-              Commencez gratuitement, évoluez selon vos besoins
+            <p className="text-base md:text-2xl text-gray-600 max-w-3xl mx-auto font-medium px-4">
+              Évoluez selon vos besoins
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
             {/* Plan Starter */}
-            <div className="bg-white rounded-3xl shadow-2xl border-4 border-green-400 hover:border-green-600 transition-all duration-300 transform hover:scale-105 relative pt-16">
-              <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-30">
-                <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-3 rounded-full text-sm font-black shadow-2xl whitespace-nowrap block">
-                  🚀 Idéal pour démarrer
+            <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl border-4 border-green-400 hover:border-green-600 transition-all duration-300 transform hover:scale-105 relative pt-12 md:pt-16">
+              <div className="absolute -top-3 md:-top-5 left-1/2 transform -translate-x-1/2 z-30">
+                <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 md:px-8 py-2 md:py-3 rounded-full text-xs md:text-sm font-black shadow-2xl whitespace-nowrap block">
+                  🚀 Pour démarrer
                 </span>
               </div>
 
-              <div className="p-10">
-                <div className="text-center mb-10">
-                  <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
-                    <Sparkles className="w-10 h-10 text-white" />
+              <div className="p-6 md:p-10">
+                <div className="text-center mb-6 md:mb-10">
+                  <div className="w-14 h-14 md:w-20 md:h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-xl">
+                    <Sparkles className="w-7 h-7 md:w-10 md:h-10 text-white" />
                   </div>
-                  <h3 className="text-3xl font-black text-gray-900 mb-6">Starter</h3>
-                  <div className="text-6xl font-black text-green-600 mb-3">29,99€</div>
-                  <div className="text-gray-600 font-bold text-lg">par mois</div>
+                  <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 md:mb-6">Starter</h3>
+                  <div className="text-4xl md:text-6xl font-black text-green-600 mb-2 md:mb-3">29,99€</div>
+                  <div className="text-gray-600 font-bold text-sm md:text-lg">par mois</div>
                 </div>
 
-                <div className="space-y-5 mb-10">
+                <div className="space-y-3 md:space-y-5 mb-6 md:mb-10">
                   {[
                     '100 réservations par mois',
                     'Gestion des clients',
@@ -827,16 +830,16 @@ export function LandingPage() {
                     'Support email',
                     'Idéal pour démarrer'
                   ].map((feature, index) => (
-                    <div key={index} className="flex items-center gap-4 bg-green-50 p-4 rounded-2xl">
-                      <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
-                      <span className="text-gray-900 font-bold">{feature}</span>
+                    <div key={index} className="flex items-center gap-2 md:gap-4 bg-green-50 p-2 md:p-4 rounded-xl md:rounded-2xl">
+                      <CheckCircle className="w-4 h-4 md:w-6 md:h-6 text-green-500 flex-shrink-0" />
+                      <span className="text-gray-900 font-bold text-xs md:text-base">{feature}</span>
                     </div>
                   ))}
                 </div>
 
                 <button
                   onClick={() => navigate('/login')}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-xl"
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 md:py-5 px-4 md:px-6 rounded-xl md:rounded-2xl font-black text-base md:text-xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105 shadow-xl"
                 >
                   Commencer
                 </button>
@@ -844,24 +847,24 @@ export function LandingPage() {
             </div>
 
             {/* Plan Pro Mensuel */}
-            <div className="bg-white rounded-3xl shadow-2xl border-4 border-blue-400 hover:border-blue-600 transition-all duration-300 transform hover:scale-110 relative pt-16">
-              <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-30">
-                <span className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-8 py-3 rounded-full text-sm font-black shadow-2xl animate-glow whitespace-nowrap block">
-                  ⭐ Le plus populaire
+            <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl border-4 border-blue-400 hover:border-blue-600 transition-all duration-300 transform hover:scale-110 relative pt-12 md:pt-16">
+              <div className="absolute -top-3 md:-top-5 left-1/2 transform -translate-x-1/2 z-30">
+                <span className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-4 md:px-8 py-2 md:py-3 rounded-full text-xs md:text-sm font-black shadow-2xl animate-glow whitespace-nowrap block">
+                  ⭐ Populaire
                 </span>
               </div>
 
-              <div className="p-10">
-                <div className="text-center mb-10">
-                  <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
-                    <Zap className="w-10 h-10 text-white" />
+              <div className="p-6 md:p-10">
+                <div className="text-center mb-6 md:mb-10">
+                  <div className="w-14 h-14 md:w-20 md:h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-xl">
+                    <Zap className="w-7 h-7 md:w-10 md:h-10 text-white" />
                   </div>
-                  <h3 className="text-3xl font-black text-gray-900 mb-6">Pro Mensuel</h3>
-                  <div className="text-6xl font-black text-blue-600 mb-3">49,99€</div>
-                  <div className="text-gray-600 font-bold text-lg">par mois</div>
+                  <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 md:mb-6">Pro Mensuel</h3>
+                  <div className="text-4xl md:text-6xl font-black text-blue-600 mb-2 md:mb-3">49,99€</div>
+                  <div className="text-gray-600 font-bold text-sm md:text-lg">par mois</div>
                 </div>
 
-                <div className="space-y-5 mb-10">
+                <div className="space-y-3 md:space-y-5 mb-6 md:mb-10">
                   {[
                     'Réservations illimitées',
                     'Paiements en ligne Stripe',
@@ -870,16 +873,16 @@ export function LandingPage() {
                     'Support prioritaire',
                     'Rapports avancés'
                   ].map((feature, index) => (
-                    <div key={index} className="flex items-center gap-4 bg-blue-50 p-4 rounded-2xl">
-                      <CheckCircle className="w-6 h-6 text-blue-500 flex-shrink-0" />
-                      <span className="text-gray-900 font-bold">{feature}</span>
+                    <div key={index} className="flex items-center gap-2 md:gap-4 bg-blue-50 p-2 md:p-4 rounded-xl md:rounded-2xl">
+                      <CheckCircle className="w-4 h-4 md:w-6 md:h-6 text-blue-500 flex-shrink-0" />
+                      <span className="text-gray-900 font-bold text-xs md:text-base">{feature}</span>
                     </div>
                   ))}
                 </div>
 
                 <button
                   onClick={() => navigate('/login')}
-                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 transform hover:scale-105 shadow-xl"
+                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white py-3 md:py-5 px-4 md:px-6 rounded-xl md:rounded-2xl font-black text-base md:text-xl hover:from-blue-700 hover:to-cyan-700 transition-all duration-300 transform hover:scale-105 shadow-xl"
                 >
                   Commencer
                 </button>
@@ -887,27 +890,27 @@ export function LandingPage() {
             </div>
 
             {/* Plan Pro Annuel */}
-            <div className="bg-white rounded-3xl shadow-2xl border-4 border-purple-400 hover:border-purple-600 transition-all duration-300 transform hover:scale-105 relative pt-16">
-              <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 z-30">
-                <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full text-sm font-black shadow-2xl whitespace-nowrap block">
-                  🎉 Économisez 17%
+            <div className="bg-white rounded-2xl md:rounded-3xl shadow-2xl border-4 border-purple-400 hover:border-purple-600 transition-all duration-300 transform hover:scale-105 relative pt-12 md:pt-16 md:col-span-2 lg:col-span-1">
+              <div className="absolute -top-3 md:-top-5 left-1/2 transform -translate-x-1/2 z-30">
+                <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 md:px-8 py-2 md:py-3 rounded-full text-xs md:text-sm font-black shadow-2xl whitespace-nowrap block">
+                  🎉 -17%
                 </span>
               </div>
 
-              <div className="p-10">
-                <div className="text-center mb-10">
-                  <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl">
-                    <Crown className="w-10 h-10 text-white" />
+              <div className="p-6 md:p-10">
+                <div className="text-center mb-6 md:mb-10">
+                  <div className="w-14 h-14 md:w-20 md:h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl md:rounded-3xl flex items-center justify-center mx-auto mb-4 md:mb-6 shadow-xl">
+                    <Crown className="w-7 h-7 md:w-10 md:h-10 text-white" />
                   </div>
-                  <h3 className="text-3xl font-black text-gray-900 mb-6">Pro Annuel</h3>
-                  <div className="text-6xl font-black text-purple-600 mb-3">41,66€</div>
-                  <div className="text-gray-600 font-bold text-lg">par mois</div>
-                  <div className="text-sm text-green-600 font-black mt-3 bg-green-50 px-4 py-2 rounded-full inline-block">
+                  <h3 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 md:mb-6">Pro Annuel</h3>
+                  <div className="text-4xl md:text-6xl font-black text-purple-600 mb-2 md:mb-3">41,66€</div>
+                  <div className="text-gray-600 font-bold text-sm md:text-lg">par mois</div>
+                  <div className="text-xs md:text-sm text-green-600 font-black mt-2 md:mt-3 bg-green-50 px-3 md:px-4 py-1.5 md:py-2 rounded-full inline-block">
                     Soit 499,99€/an
                   </div>
                 </div>
 
-                <div className="space-y-5 mb-10">
+                <div className="space-y-3 md:space-y-5 mb-6 md:mb-10">
                   {[
                     'Tout du plan Pro',
                     '2 mois gratuits',
@@ -916,16 +919,16 @@ export function LandingPage() {
                     'Accès aux bêtas',
                     'Formation personnalisée'
                   ].map((feature, index) => (
-                    <div key={index} className="flex items-center gap-4 bg-purple-50 p-4 rounded-2xl">
-                      <CheckCircle className="w-6 h-6 text-purple-500 flex-shrink-0" />
-                      <span className="text-gray-900 font-bold">{feature}</span>
+                    <div key={index} className="flex items-center gap-2 md:gap-4 bg-purple-50 p-2 md:p-4 rounded-xl md:rounded-2xl">
+                      <CheckCircle className="w-4 h-4 md:w-6 md:h-6 text-purple-500 flex-shrink-0" />
+                      <span className="text-gray-900 font-bold text-xs md:text-base">{feature}</span>
                     </div>
                   ))}
                 </div>
 
                 <button
                   onClick={() => navigate('/login')}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-5 px-6 rounded-2xl font-black text-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-xl"
+                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 md:py-5 px-4 md:px-6 rounded-xl md:rounded-2xl font-black text-base md:text-xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-xl"
                 >
                   Commencer
                 </button>
