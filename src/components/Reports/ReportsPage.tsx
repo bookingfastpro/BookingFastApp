@@ -294,7 +294,7 @@ export function ReportsPage() {
   }
 
   return (
-    <div className=" bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+    <div className="h-full overflow-y-auto bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
       <div className="p-4 sm:p-6 space-y-6 sm:space-y-8" style={{ paddingBottom: 'max(6rem, calc(6rem + env(safe-area-inset-bottom)))' }}>
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white">

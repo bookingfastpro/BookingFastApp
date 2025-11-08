@@ -25,9 +25,9 @@ export function BookingDetailsModal({ booking, onClose, onUpdate }: BookingDetai
 
   // Bloquer le scroll du body quand le modal est ouvert
   useEffect(() => {
-    document.body.classList.add('modal-open');
+    document.body.style.overflow = 'hidden';
     return () => {
-      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
     };
   }, []);
 
@@ -204,7 +204,7 @@ export function BookingDetailsModal({ booking, onClose, onUpdate }: BookingDetai
             </div>
 
             {/* Contenu scrollable */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto overscroll-contain">
               <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
                 {/* Statuts */}
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">

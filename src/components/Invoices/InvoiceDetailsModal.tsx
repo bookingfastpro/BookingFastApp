@@ -39,8 +39,8 @@ export function InvoiceDetailsModal({ invoice, isOpen, onClose }: InvoiceDetails
   useEffect(() => {
     if (isOpen) {
       // Bloquer le scroll du body
-      // Use modal-open class
-      document.body.classList.add('modal-open');
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = 'hidden';
       
       // Créer le conteneur modal-root s'il n'existe pas
       if (!document.getElementById('modal-root')) {
@@ -50,7 +50,7 @@ export function InvoiceDetailsModal({ invoice, isOpen, onClose }: InvoiceDetails
       }
 
       return () => {
-        document.body.classList.remove('modal-open');
+        document.body.style.overflow = originalStyle;
       };
     }
   }, [isOpen]);

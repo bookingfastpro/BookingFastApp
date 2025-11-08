@@ -30,11 +30,11 @@ export function BookingHistoryModal({ isOpen, onClose, bookingId, clientName }: 
       loadHistory();
       
       // Bloquer le scroll du body
-      // Use modal-open class
-      document.body.classList.add('modal-open');
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = 'hidden';
       
       return () => {
-        document.body.classList.remove('modal-open');
+        document.body.style.overflow = originalStyle;
       };
     }
   }, [isOpen, bookingId]);

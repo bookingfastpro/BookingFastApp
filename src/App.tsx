@@ -114,9 +114,23 @@ function AppRoutes() {
   // 🎯 Pages protégées (dashboard, services, etc.)
   return (
     <ProtectedRoute>
-      <div className="flex flex-col w-full h-full bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
+      <div 
+        className="app-container flex flex-col overflow-hidden" 
+        style={{ 
+          background: 'linear-gradient(to bottom right, #eff6ff, #faf5ff, #fce7f3)',
+          height: 'calc(var(--vh, 1vh) * 100)'
+        }}
+      >
         <Navbar />
-        <main className="flex-1 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <main 
+          className="flex-1 overflow-y-auto scrollable-area"
+          style={{ 
+            paddingTop: 0,
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-y',
+            background: 'transparent'
+          }}
+        >
           <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/dashboard" element={<DashboardPage />} />

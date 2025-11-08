@@ -8,7 +8,6 @@ ARG VITE_STRIPE_PUBLIC_KEY=""
 ARG VITE_BREVO_API_KEY=""
 ARG VITE_GOOGLE_CLIENT_ID=""
 ARG VITE_GOOGLE_CLIENT_SECRET=""
-ARG CACHEBUST=1
 
 # Définir les variables d'environnement pour le build
 ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
@@ -26,9 +25,6 @@ RUN npm ci
 
 COPY . .
 RUN npm run build
-
-# Vider le cache des fichiers statiques en ajoutant un timestamp
-RUN find /app/dist -type f \( -name "*.js" -o -name "*.css" \) -exec sed -i "s/\$CACHEBUST/${CACHEBUST}/g" {} \;
 
 FROM nginx:alpine
 

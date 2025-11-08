@@ -1,42 +1,28 @@
 {
-  "name": "BookingFast - Système de Réservation Professionnel",
+  "name": "BookingFast - Système de Réservation",
   "short_name": "BookingFast",
-  "description": "Application complète de gestion de réservations, facturation et point de vente",
+  "description": "Application de gestion de réservations professionnelle",
   "start_url": "/",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
-  "background_color": "#ffffff",
+  "background_color": "#3B82F6",
   "theme_color": "#3B82F6",
-  "orientation": "any",
+  "orientation": "portrait-primary",
   "scope": "/",
   "lang": "fr",
-  "dir": "ltr",
-  "categories": ["business", "productivity", "finance"],
+  "categories": ["business", "productivity"],
   "prefer_related_applications": false,
   "icons": [
     {
       "src": "/pwa-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/pwa-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "/pwa-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/pwa-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     },
     {
       "src": "/apple-touch-icon.png",
@@ -48,53 +34,25 @@
   "shortcuts": [
     {
       "name": "Nouveau rendez-vous",
-      "short_name": "RDV",
-      "description": "Créer une nouvelle réservation rapidement",
-      "url": "/calendar?action=new",
-      "icons": [
-        {
-          "src": "/pwa-192x192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Calendrier",
-      "short_name": "Agenda",
-      "description": "Voir l'agenda des réservations",
+      "short_name": "Nouveau RDV",
+      "description": "Créer une nouvelle réservation",
       "url": "/calendar",
       "icons": [
         {
           "src": "/pwa-192x192.png",
-          "sizes": "192x192",
-          "type": "image/png"
+          "sizes": "192x192"
         }
       ]
     },
     {
       "name": "Dashboard",
-      "short_name": "Accueil",
-      "description": "Tableau de bord principal",
+      "short_name": "Dashboard",
+      "description": "Vue d'ensemble",
       "url": "/dashboard",
       "icons": [
         {
           "src": "/pwa-192x192.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Clients",
-      "short_name": "Clients",
-      "description": "Gérer les clients",
-      "url": "/clients",
-      "icons": [
-        {
-          "src": "/pwa-192x192.png",
-          "sizes": "192x192",
-          "type": "image/png"
+          "sizes": "192x192"
         }
       ]
     }
@@ -104,33 +62,14 @@
       "src": "/pwa-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Vue mobile de BookingFast"
-    },
-    {
-      "src": "/pwa-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
       "form_factor": "wide",
-      "label": "Vue desktop de BookingFast"
+      "label": "Interface principale BookingPro"
     }
   ],
-  "related_applications": [],
   "edge_side_panel": {
-    "preferred_width": 480
+    "preferred_width": 400
   },
   "launch_handler": {
     "client_mode": "navigate-existing"
-  },
-  "protocol_handlers": [],
-  "share_target": {
-    "action": "/share",
-    "method": "GET",
-    "enctype": "application/x-www-form-urlencoded",
-    "params": {
-      "title": "title",
-      "text": "text",
-      "url": "url"
-    }
   }
 }

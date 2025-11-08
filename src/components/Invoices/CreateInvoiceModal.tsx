@@ -38,8 +38,8 @@ export function CreateInvoiceModal({ isOpen, onClose, onInvoiceCreated }: Create
   useEffect(() => {
     if (isOpen) {
       // Bloquer le scroll du body
-      // Use modal-open class
-      document.body.classList.add('modal-open');
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = 'hidden';
       
       // Créer le conteneur modal-root s'il n'existe pas
       if (!document.getElementById('modal-root')) {
@@ -49,7 +49,7 @@ export function CreateInvoiceModal({ isOpen, onClose, onInvoiceCreated }: Create
       }
 
       return () => {
-        document.body.classList.remove('modal-open');
+        document.body.style.overflow = originalStyle;
       };
     }
   }, [isOpen]);

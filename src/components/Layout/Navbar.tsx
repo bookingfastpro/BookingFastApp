@@ -62,15 +62,13 @@ export function Navbar() {
 
   return (
     <>
-      <nav
-        className="bg-white border-b border-gray-200 shadow-sm"
-        style={{
-          position: 'sticky',
+      <nav 
+        className="bg-white border-b border-gray-200 shadow-sm" 
+        style={{ 
+          position: 'sticky', 
           top: 0,
           zIndex: 40,
-          paddingTop: 'max(env(safe-area-inset-top, 0px), 0px)',
-          paddingLeft: 'env(safe-area-inset-left, 0px)',
-          paddingRight: 'env(safe-area-inset-right, 0px)'
+          paddingTop: 'env(safe-area-inset-top, 0px)'
         }}
       >
         <div className="px-4 sm:px-6">
@@ -265,7 +263,9 @@ export function Navbar() {
             width: '100%',
             height: '100%',
             overflow: 'auto',
-            WebkitOverflowScrolling: 'touch'
+            WebkitOverflowScrolling: 'touch',
+            touchAction: 'pan-y',
+            overscrollBehavior: 'contain'
           }}
         >
           {/* Bouton de fermeture en haut à droite */}
@@ -277,10 +277,12 @@ export function Navbar() {
             <X className="w-6 h-6 text-white" />
           </button>
 
-          <div
+          <div 
             className="h-full overflow-y-auto p-6 pt-20 scrollable-area"
             style={{
-              WebkitOverflowScrolling: 'touch'
+              WebkitOverflowScrolling: 'touch',
+              touchAction: 'pan-y',
+              overscrollBehavior: 'contain'
             }}
           >
             <div className="max-w-md mx-auto space-y-3">
