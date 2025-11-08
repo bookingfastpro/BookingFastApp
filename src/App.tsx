@@ -114,18 +114,7 @@ function AppRoutes() {
   // 🎯 Pages protégées (dashboard, services, etc.)
   return (
     <ProtectedRoute>
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          background: 'linear-gradient(to bottom right, #eff6ff, #faf5ff, #fce7f3)'
-        }}
-      >
+      <div className="flex flex-col h-full bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50">
         <Navbar />
         <main className="scroll-container">
           <div className="scroll-content">

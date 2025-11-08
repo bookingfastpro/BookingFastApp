@@ -74,10 +74,6 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg', headerGra
       >
         <div
           className={`bg-white w-full sm:${sizeClasses[size]} max-h-full sm:max-h-[90vh] sm:rounded-3xl shadow-2xl flex flex-col pointer-events-auto transition-transform duration-300 ease-out`}
-          style={{
-            transform: 'translateY(0)',
-            touchAction: 'pan-y'
-          }}
         >
           {/* Header avec safe area pour mobile */}
           <div

@@ -579,14 +579,7 @@ export function CalendarGrid({
 
   return (
     <>
-      <div 
-        className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 h-full flex flex-col"
-        style={{
-          overflowX: 'hidden',
-          overflowY: 'auto',
-          touchAction: 'pan-y'
-        }}
-      >
+      <div className="bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 h-full flex flex-col overflow-y-auto">
         <div className="bg-white/90 backdrop-blur-md border-b border-gray-100 shadow-lg p-3 sm:p-4 flex-shrink-0">
           {/* HEADER - Masqué sur mobile */}
           <div className="hidden md:flex items-center justify-between mb-3 sm:mb-4">
@@ -682,10 +675,9 @@ export function CalendarGrid({
               <ChevronLeft className="w-5 h-5 text-gray-600" />
             </button>
             
-            <div 
+            <div
               ref={scrollContainerRef}
               className="flex-1 overflow-x-auto scrollbar-hide px-1 sm:px-2 scroll-smooth mobile-optimized"
-              style={{ touchAction: 'pan-x' }}
             >
               <div className="flex gap-2 sm:gap-3" style={{ width: 'max-content' }}>
                 {days.map((day, index) => {
@@ -739,11 +731,10 @@ export function CalendarGrid({
 
         <div 
           className="flex-1 overflow-y-auto" 
-          ref={timeGridRef} 
-          style={{ 
+          ref={timeGridRef}
+          style={{
             paddingBottom: 'max(6rem, calc(6rem + env(safe-area-inset-bottom)))',
-            overflowX: 'hidden',
-            touchAction: 'pan-y'
+            overflowX: 'hidden'
           }}
         >
           {isDayClosed() ? (
