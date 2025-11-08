@@ -22,8 +22,8 @@ export function InvoicePreviewModal({ invoice, isOpen, onClose }: InvoicePreview
   useEffect(() => {
     if (isOpen) {
       // Bloquer le scroll du body
-      const originalStyle = window.getComputedStyle(document.body).overflow;
-      document.body.style.overflow = 'hidden';
+      // Use modal-open class
+      document.body.classList.add('modal-open');
       
       // Créer le conteneur modal-root s'il n'existe pas
       if (!document.getElementById('modal-root')) {
@@ -38,7 +38,7 @@ export function InvoicePreviewModal({ invoice, isOpen, onClose }: InvoicePreview
       }
 
       return () => {
-        document.body.style.overflow = originalStyle;
+        document.body.classList.remove('modal-open');
         setPdfDataUrl(null);
       };
     }

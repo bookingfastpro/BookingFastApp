@@ -9,20 +9,26 @@
     --foreground: 222.2 84% 4.9%;
     --border: 214.3 31.8% 91.4%;
   }
-  
+
   * {
     border-color: theme('colors.gray.200');
   }
-  
+
   html {
+    width: 100%;
     height: 100%;
+    position: fixed;
+    overflow: hidden;
     -webkit-text-size-adjust: 100%;
   }
 
   body {
+    width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
+    position: fixed;
+    overflow: hidden;
     background-color: theme('colors.white');
     color: theme('colors.gray.900');
     font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -40,7 +46,7 @@
   }
 
   #root {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -66,29 +72,19 @@
   }
 
   .scroll-container {
-    flex: 1 1 auto;
-    overflow-y: scroll !important;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
     position: relative;
-    min-height: 0;
-    max-height: 100%;
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
   }
 
   .scroll-content {
     width: 100%;
-    min-height: calc(100% + 1px);
-    position: relative;
   }
 
-  /* Fix spécifique pour iOS Safari */
-  @supports (-webkit-touch-callout: none) {
-    .scroll-container {
-      overflow-y: scroll !important;
-      -webkit-overflow-scrolling: touch !important;
-      transform: translateZ(0);
-      will-change: scroll-position;
-    }
+  .no-scroll {
+    overflow: hidden !important;
   }
 
   button, a, input, select, textarea {
@@ -133,18 +129,6 @@
     padding-left: env(safe-area-inset-left);
   }
 
-  /* Container pour l'app */
-  .app-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-
   /* Portail pour les modals - z-index maximum */
   #modal-root {
     position: fixed !important;
@@ -164,31 +148,18 @@
 @layer utilities {
   /* Masquer la scrollbar tout en gardant la fonctionnalité */
   .scrollbar-hide {
-    -ms-overflow-style: none;  /* IE et Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   .scrollbar-hide::-webkit-scrollbar {
-    display: none;  /* Chrome, Safari et Opera */
-  }
-
-  /* Override de la classe px-1 avec padding vertical personnalisé */
-  .px-1 {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-    padding-top: 0.25rem;
-    padding-bottom: 0.45rem;
+    display: none;
   }
 
   /* Animations personnalisées */
-  /* Optimiser les animations pour mobile avec hardware acceleration */
   @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 
   @keyframes slideUp {
@@ -213,107 +184,16 @@
     }
   }
 
-  @keyframes shimmer {
-    0% {
-      transform: translate3d(-100%, 0, 0) skewX(-12deg);
-    }
-    100% {
-      transform: translate3d(200%, 0, 0) skewX(-12deg);
-    }
-  }
-
-  @keyframes pulse-soft {
-    0%, 100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.8;
-    }
-  }
-
-  @keyframes bounce-soft {
-    0%, 100% {
-      transform: translate3d(0, 0, 0);
-    }
-    50% {
-      transform: translate3d(0, -5px, 0);
-    }
-  }
-
   .animate-fadeIn {
     animation: fadeIn 0.2s ease-out;
-    will-change: opacity;
   }
 
   .animate-slideUp {
     animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform, opacity;
   }
 
   .animate-slideDown {
     animation: slideDown 0.2s ease-out;
-    will-change: transform, opacity;
-  }
-
-  .animate-shimmer {
-    animation: shimmer 2s infinite;
-    will-change: transform;
-  }
-
-  .animate-pulse-soft {
-    animation: pulse-soft 2s ease-in-out infinite;
-    will-change: opacity;
-  }
-
-  .animate-bounce-soft {
-    animation: bounce-soft 1s ease-in-out infinite;
-    will-change: transform;
-  }
-
-  /* Désactiver les animations complexes sur mobile pour améliorer performance */
-  @media (max-width: 640px) {
-    .animate-shimmer {
-      animation: none;
-    }
-
-    /* Réduire la durée des animations sur mobile */
-    .animate-slideUp {
-      animation-duration: 0.25s;
-    }
-
-    .animate-fadeIn {
-      animation-duration: 0.15s;
-    }
-  }
-
-  /* Optimisation du rendu pour mobile */
-  @media (max-width: 640px) {
-    * {
-      /* Force hardware acceleration sur mobile */
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0);
-    }
-
-    /* Optimiser les transitions */
-    * {
-      transition-duration: 0.2s !important;
-    }
-
-    /* Réduire les ombres pour améliorer performance */
-    .shadow-lg, .shadow-xl, .shadow-2xl {
-      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
-    }
-  }
-
-  /* Styles pour les graphiques */
-  .recharts-wrapper {
-    width: 100% !important;
-    height: 100% !important;
-  }
-
-  .recharts-wrapper svg {
-    width: 100% !important;
-    height: 100% !important;
   }
 
   /* Scrollbar personnalisée */
@@ -330,18 +210,6 @@
     @apply bg-gray-400 rounded-full hover:bg-gray-500;
   }
 
-  /* Masquer les scrollbars sur mobile */
-  @media (max-width: 768px) {
-    .hide-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    
-    .hide-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-  }
-
   /* Grille responsive */
   .grid-auto-fill {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -350,15 +218,6 @@
   /* Effets de verre */
   .glass {
     @apply bg-white/80 backdrop-blur-lg;
-  }
-
-  .glass-dark {
-    @apply bg-gray-900/80 backdrop-blur-lg;
-  }
-
-  /* Boutons flottants */
-  .floating-button {
-    @apply fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110;
   }
 
   /* Cards avec effet de survol */
@@ -402,25 +261,6 @@
     @apply bg-blue-100 text-blue-800;
   }
 
-  /* Dividers */
-  .divider {
-    @apply relative flex items-center;
-  }
-
-  .divider::before,
-  .divider::after {
-    @apply flex-1 h-px bg-gray-200;
-    content: '';
-  }
-
-  .divider::before {
-    @apply mr-4;
-  }
-
-  .divider::after {
-    @apply ml-4;
-  }
-
   /* Loading skeleton */
   .skeleton {
     @apply bg-gray-200 animate-pulse rounded;
@@ -438,10 +278,6 @@
     display: none !important;
   }
 
-  .print-only {
-    display: block !important;
-  }
-
   body {
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
@@ -451,163 +287,4 @@
     margin: 1cm;
     size: A4;
   }
-}
-
-/* Styles pour le calendrier */
-.fc-theme-standard .fc-scrollgrid {
-  border: none !important;
-}
-
-.fc-theme-standard td,
-.fc-theme-standard th {
-  border: 1px solid #e5e7eb !important;
-}
-
-.fc-col-header-cell {
-  background: linear-gradient(to right, #f3f4f6, #f9fafb) !important;
-  font-weight: 600 !important;
-}
-
-.fc-daygrid-day-number {
-  color: #374151 !important;
-  font-weight: 500 !important;
-}
-
-.fc-daygrid-day.fc-day-today {
-  background-color: #eff6ff !important;
-}
-
-.fc-event {
-  border: none !important;
-  padding: 2px 4px !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  border-radius: 4px !important;
-}
-
-.fc-h-event .fc-event-main {
-  padding: 2px 4px !important;
-}
-
-.fc-timegrid-slot {
-  height: 60px !important;
-}
-
-.fc-timegrid-slot-minor {
-  border-top-style: dotted !important;
-}
-
-/* Responsive adjustments */
-@media (max-width: 640px) {
-  .fc-toolbar {
-    flex-direction: column !important;
-    gap: 0.5rem !important;
-  }
-
-  .fc-toolbar-title {
-    font-size: 1.25rem !important;
-  }
-
-  .fc-button {
-    padding: 0.25rem 0.5rem !important;
-    font-size: 0.875rem !important;
-  }
-
-  .fc-event {
-    font-size: 11px !important;
-  }
-}
-
-/* Animations pour les transitions de page */
-.page-enter {
-  opacity: 0;
-  transform: translateX(20px);
-}
-
-.page-enter-active {
-  opacity: 1;
-  transform: translateX(0);
-  transition: opacity 300ms, transform 300ms;
-}
-
-.page-exit {
-  opacity: 1;
-}
-
-.page-exit-active {
-  opacity: 0;
-  transform: translateX(-20px);
-  transition: opacity 300ms, transform 300ms;
-}
-
-/* Styles pour les tooltips */
-.tooltip {
-  @apply absolute z-50 px-2 py-1 text-xs text-white bg-gray-900 rounded shadow-lg pointer-events-none;
-}
-
-.tooltip::after {
-  content: '';
-  @apply absolute w-0 h-0 border-4 border-transparent;
-}
-
-.tooltip-top::after {
-  @apply -bottom-2 left-1/2 transform -translate-x-1/2 border-t-gray-900;
-}
-
-.tooltip-bottom::after {
-  @apply -top-2 left-1/2 transform -translate-x-1/2 border-b-gray-900;
-}
-
-.tooltip-left::after {
-  @apply -right-2 top-1/2 transform -translate-y-1/2 border-l-gray-900;
-}
-
-.tooltip-right::after {
-  @apply -left-2 top-1/2 transform -translate-y-1/2 border-r-gray-900;
-}
-
-/* Styles pour les notifications */
-.notification-enter {
-  transform: translateX(100%);
-  opacity: 0;
-}
-
-.notification-enter-active {
-  transform: translateX(0);
-  opacity: 1;
-  transition: transform 300ms ease-out, opacity 300ms ease-out;
-}
-
-.notification-exit {
-  transform: translateX(0);
-  opacity: 1;
-}
-
-.notification-exit-active {
-  transform: translateX(100%);
-  opacity: 0;
-  transition: transform 300ms ease-in, opacity 300ms ease-in;
-}
-
-/* Styles pour les dropdowns */
-.dropdown-enter {
-  opacity: 0;
-  transform: scale(0.95) translateY(-10px);
-}
-
-.dropdown-enter-active {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-  transition: opacity 200ms ease-out, transform 200ms ease-out;
-}
-
-.dropdown-exit {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-}
-
-.dropdown-exit-active {
-  opacity: 0;
-  transform: scale(0.95) translateY(-10px);
-  transition: opacity 150ms ease-in, transform 150ms ease-in;
 }

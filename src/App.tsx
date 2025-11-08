@@ -115,22 +115,19 @@ function AppRoutes() {
   return (
     <ProtectedRoute>
       <div
-        className="flex flex-col"
         style={{
-          background: 'linear-gradient(to bottom right, #eff6ff, #faf5ff, #fce7f3)',
-          height: '100%',
-          position: 'relative'
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          background: 'linear-gradient(to bottom right, #eff6ff, #faf5ff, #fce7f3)'
         }}
       >
         <Navbar />
-        <main
-          className="scroll-container"
-          style={{
-            paddingLeft: 'env(safe-area-inset-left, 0px)',
-            paddingRight: 'env(safe-area-inset-right, 0px)',
-            paddingBottom: 'env(safe-area-inset-bottom, 0px)'
-          }}
-        >
+        <main className="scroll-container">
           <div className="scroll-content">
             <Suspense fallback={<LoadingSpinner />}>
               <Routes>

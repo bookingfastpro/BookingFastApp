@@ -25,9 +25,9 @@ export function BookingDetailsModal({ booking, onClose, onUpdate }: BookingDetai
 
   // Bloquer le scroll du body quand le modal est ouvert
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-open');
     return () => {
-      document.body.style.overflow = '';
+      document.body.classList.remove('modal-open');
     };
   }, []);
 

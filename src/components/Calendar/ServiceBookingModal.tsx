@@ -41,11 +41,8 @@ export function ServiceBookingModal({
 
   useEffect(() => {
     if (isOpen) {
-      // Bloquer le scroll du body
-      const originalStyle = window.getComputedStyle(document.body).overflow;
-      document.body.style.overflow = 'hidden';
-      
-      // Créer le conteneur modal-root s'il n'existe pas
+      document.body.classList.add('modal-open');
+
       if (!document.getElementById('modal-root')) {
         const modalRoot = document.createElement('div');
         modalRoot.id = 'modal-root';
@@ -53,7 +50,7 @@ export function ServiceBookingModal({
       }
 
       return () => {
-        document.body.style.overflow = originalStyle;
+        document.body.classList.remove('modal-open');
       };
     }
   }, [isOpen]);
