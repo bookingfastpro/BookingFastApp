@@ -2,6 +2,7 @@ import React, { lazy, Suspense, useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { TeamProvider } from './contexts/TeamContext';
 import { AuthProvider } from './contexts/AuthContext';
+import { ModalProvider } from './contexts/ModalContext';
 import { Navbar } from './components/Layout/Navbar';
 import { LoadingSpinner } from './components/UI/LoadingSpinner';
 import { GoogleCalendarCallback } from './components/Admin/GoogleCalendarCallback';
@@ -33,7 +34,9 @@ function App() {
   return (
     <AuthProvider>
       <TeamProvider>
-        <AppRoutes />
+        <ModalProvider>
+          <AppRoutes />
+        </ModalProvider>
       </TeamProvider>
     </AuthProvider>
   );
