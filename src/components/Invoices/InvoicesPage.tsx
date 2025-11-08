@@ -292,45 +292,47 @@ export function InvoicesPage() {
 
         {/* Barre compacte : Onglets + Actions */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-2 mb-4">
-          <div className="grid grid-cols-2 sm:flex gap-2">
-            {/* Onglets Devis/Factures */}
-            <button
-              onClick={() => setViewMode('quotes')}
-              className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${
-                viewMode === 'quotes'
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <FileText className="w-4 h-4" />
-              <span className="text-sm">Devis ({quotes.length})</span>
-            </button>
+          <div className="grid grid-cols-2 sm:flex sm:justify-between gap-2">
+            {/* Groupe gauche : Onglets + PDF */}
+            <div className="contents sm:flex sm:gap-2">
+              <button
+                onClick={() => setViewMode('quotes')}
+                className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${
+                  viewMode === 'quotes'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+                <span className="text-sm">Devis ({quotes.length})</span>
+              </button>
 
-            <button
-              onClick={() => setViewMode('invoices')}
-              className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${
-                viewMode === 'invoices'
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              <FileCheck className="w-4 h-4" />
-              <span className="text-sm">Factures ({invoices.length})</span>
-            </button>
+              <button
+                onClick={() => setViewMode('invoices')}
+                className={`flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold transition-all ${
+                  viewMode === 'invoices'
+                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                }`}
+              >
+                <FileCheck className="w-4 h-4" />
+                <span className="text-sm">Factures ({invoices.length})</span>
+              </button>
 
-            {/* Boutons d'actions */}
-            <button
-              onClick={() => setShowCustomizationModal(true)}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all font-semibold"
-              title="Personnaliser PDF"
-            >
-              <Palette className="w-4 h-4" />
-              <span className="text-sm">PDF</span>
-            </button>
+              <button
+                onClick={() => setShowCustomizationModal(true)}
+                className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all font-semibold"
+                title="Personnaliser PDF"
+              >
+                <Palette className="w-4 h-4" />
+                <span className="text-sm">PDF</span>
+              </button>
+            </div>
 
+            {/* Bouton Nouveau à droite */}
             <button
               onClick={() => setShowCreateModal(true)}
-              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-lg transition-all font-semibold shadow-lg"
+              className="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white rounded-lg transition-all font-semibold shadow-lg col-span-2 sm:col-span-1"
             >
               <Plus className="w-4 h-4" />
               <span className="text-sm">Nouveau</span>
