@@ -43,9 +43,37 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    
+
     <!-- Disable service worker and clear caches -->
     <script>
+      // Désactiver le pull-to-refresh sur mobile
+      document.addEventListener('touchstart', function(e) {
+        if (e.touches.length > 1) return;
+      }, { passive: true });
+
+      let lastTouchY = 0;
+      let preventPullToRefresh = false;
+
+      document.addEventListener('touchstart', function(e) {
+        if (e.touches.length !== 1) return;
+        lastTouchY = e.touches[0].clientY;
+        preventPullToRefresh = window.pageYOffset === 0;
+      }, { passive: true });
+
+      document.addEventListener('touchmove', function(e) {
+        const touchY = e.touches[0].clientY;
+        const touchYDelta = touchY - lastTouchY;
+        lastTouchY = touchY;
+
+        if (preventPullToRefresh) {
+          // Pour empêcher le pull-to-refresh, on empêche le scroll vers le haut en haut de page
+          if (touchYDelta > 0) {
+            e.preventDefault();
+            return;
+          }
+        }
+      }, { passive: false });
+
       // Unregister ALL service workers
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
@@ -55,7 +83,7 @@
           }
         });
       }
-      
+
       // Clear ALL caches
       if ('caches' in window) {
         caches.keys().then(function(names) {
@@ -65,12 +93,12 @@
           }
         });
       }
-      
+
       // Force reload without cache on every load
       if (performance.navigation.type !== 1) {
         console.log('🔄 Force reload without cache');
       }
-      
+
       // Performance monitoring
       if ('performance' in window) {
         window.addEventListener('load', () => {
