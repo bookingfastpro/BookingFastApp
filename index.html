@@ -137,6 +137,35 @@
       if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
         console.log('📱 Application en mode standalone (PWA)');
       }
+
+      // Force le rechargement du Service Worker à chaque chargement
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', async () => {
+          try {
+            const registration = await navigator.serviceWorker.getRegistration();
+            if (registration) {
+              // Force la mise à jour du service worker
+              await registration.update();
+              console.log('🔄 Service Worker mis à jour');
+
+              // Vider le cache sur nouvelle version
+              if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(
+                  cacheNames.map(cacheName => {
+                    if (!cacheName.includes(Date.now().toString().substring(0, 8))) {
+                      console.log('🗑️ Suppression ancien cache:', cacheName);
+                      return caches.delete(cacheName);
+                    }
+                  })
+                );
+              }
+            }
+          } catch (error) {
+            console.error('❌ Erreur mise à jour Service Worker:', error);
+          }
+        });
+      }
     </script>
   </body>
 </html>

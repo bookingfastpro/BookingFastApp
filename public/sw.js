@@ -1,5 +1,5 @@
-// Service Worker optimisé pour BookingFast
-const CACHE_VERSION = 'v1.0.0';
+// Service Worker optimisé pour BookingFast avec cache-busting
+const CACHE_VERSION = `v${Date.now()}`;
 const CACHE_NAME = `bookingfast-${CACHE_VERSION}`;
 
 // Ressources à mettre en cache lors de l'installation
@@ -122,9 +122,15 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Assets statiques: Cache First
+  // JS et CSS: toujours du réseau (pas de cache)
+  if (url.pathname.match(/\.(js|css)$/)) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  // Images et fonts: Cache First
   if (
-    url.pathname.match(/\.(js|css|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/) ||
+    url.pathname.match(/\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)$/) ||
     url.hostname.includes('googleapis') ||
     url.hostname.includes('gstatic')
   ) {
