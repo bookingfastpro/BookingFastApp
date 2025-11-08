@@ -64,13 +64,11 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg', headerGra
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998] transition-opacity duration-200"
         onClick={onClose}
-        style={{ touchAction: 'none' }}
       />
 
       {/* Modal */}
       <div
         className="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4 z-[9999] pointer-events-none"
-        style={{ touchAction: 'none' }}
       >
         <div
           className={`bg-white w-full sm:${sizeClasses[size]} max-h-full sm:max-h-[90vh] sm:rounded-3xl shadow-2xl flex flex-col pointer-events-auto transition-transform duration-300 ease-out`}

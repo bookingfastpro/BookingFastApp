@@ -266,7 +266,6 @@ export function Navbar() {
             height: '100%',
             overflow: 'auto',
             WebkitOverflowScrolling: 'touch',
-            touchAction: 'pan-y',
             overscrollBehavior: 'contain'
           }}
         >
@@ -279,11 +278,10 @@ export function Navbar() {
             <X className="w-6 h-6 text-white" />
           </button>
 
-          <div 
+          <div
             className="h-full overflow-y-auto p-6 pt-20 scrollable-area"
             style={{
               WebkitOverflowScrolling: 'touch',
-              touchAction: 'pan-y',
               overscrollBehavior: 'contain'
             }}
           >
