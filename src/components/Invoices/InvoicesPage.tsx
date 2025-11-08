@@ -372,7 +372,7 @@ export function InvoicesPage() {
               <div className="text-sm font-bold text-purple-600">
                 {currentDocuments.reduce((sum, doc) => sum + doc.total_ttc, 0).toFixed(2)}€
               </div>
-              <div className="text-xs text-purple-700 hidden sm:inline">
+              <div className="text-xs text-purple-700">
                 {viewMode === 'quotes' ? 'Total devis' : 'Total facturé'}
               </div>
             </div>
