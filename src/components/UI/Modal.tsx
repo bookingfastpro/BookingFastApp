@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
@@ -12,19 +12,18 @@ interface ModalProps {
 }
 
 export function Modal({ isOpen, onClose, title, children, size = 'lg', headerGradient }: ModalProps) {
-  const scrollPositionRef = useRef(0);
-
   useEffect(() => {
     if (isOpen) {
-      // Sauvegarder la position de scroll actuelle
-      scrollPositionRef.current = window.pageYOffset || document.documentElement.scrollTop;
+      // Bloquer le scroll du main content
+      const mainElement = document.querySelector('main.scroll-container') as HTMLElement;
+      const rootElement = document.getElementById('root');
 
-      // Bloquer complètement le scroll
-      document.body.classList.add('modal-open');
-      document.body.style.top = `-${scrollPositionRef.current}px`;
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.overflow = 'hidden';
+      if (mainElement) {
+        mainElement.classList.add('no-scroll');
+      }
+      if (rootElement) {
+        rootElement.classList.add('no-scroll');
+      }
 
       // Créer le conteneur modal-root s'il n'existe pas
       if (!document.getElementById('modal-root')) {
@@ -35,14 +34,12 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg', headerGra
 
       return () => {
         // Restaurer le scroll
-        document.body.classList.remove('modal-open');
-        document.body.style.position = '';
-        document.body.style.top = '';
-        document.body.style.width = '';
-        document.body.style.overflow = '';
-
-        // Restaurer la position de scroll
-        window.scrollTo(0, scrollPositionRef.current);
+        if (mainElement) {
+          mainElement.classList.remove('no-scroll');
+        }
+        if (rootElement) {
+          rootElement.classList.remove('no-scroll');
+        }
       };
     }
   }, [isOpen]);

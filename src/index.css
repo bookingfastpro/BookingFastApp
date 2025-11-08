@@ -61,6 +61,26 @@
     -webkit-appearance: none;
   }
 
+  /* Classes de scroll optimisées */
+  .scroll-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .scroll-content {
+    width: 100%;
+    min-height: min-content;
+  }
+
+  .no-scroll {
+    overflow: hidden !important;
+    touch-action: none !important;
+  }
+
   /* Améliorer le scroll sur iOS */
   .scrollable-area {
     -webkit-overflow-scrolling: touch;
@@ -79,24 +99,26 @@
     transition: transform 0.1s ease;
   }
 
-  /* Prévenir le scroll bounce sur iOS et désactiver pull-to-refresh */
-  html, body {
-    position: fixed;
-    overflow: hidden;
-    width: 100%;
+  /* Système de scroll optimisé pour mobile */
+  html {
     height: 100%;
-    overscroll-behavior-y: none;
-    overscroll-behavior-x: none;
+    overflow: hidden;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
   }
 
   #root {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: none;
-    overscroll-behavior-x: none;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
     overscroll-behavior: none;
   }
 
