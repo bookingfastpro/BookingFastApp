@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Calendar, Settings, LayoutDashboard, Package, Mail, BarChart3, Users, ShoppingCart, LogOut, Menu, X, ChevronDown, ChevronRight, Puzzle, List, UserCircle, FileText } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { usePlugins } from '../../hooks/usePlugins';
+import { NotificationBell } from './NotificationBell';
 
 export function Navbar() {
   const navigate = useNavigate();
@@ -231,6 +232,8 @@ export function Navbar() {
             </div>
 
             <div className="flex items-center gap-2">
+              <NotificationBell />
+
               <button
                 onClick={signOut}
                 className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-red-600 hover:bg-red-50 transition-colors"
