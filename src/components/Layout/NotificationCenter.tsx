@@ -514,8 +514,6 @@ export function NotificationCenter() {
                             <button
                               onClick={() => removeNotification(notification.id)}
                               className="p-1 text-gray-400 hover:text-gray-600 rounded transition-colors"
-                              onMouseDown={(e) => e.stopPropagation()}
-                              onTouchStart={(e) => e.stopPropagation()}
                             >
                               <X className="w-3 h-3" />
                             </button>
@@ -534,8 +532,6 @@ export function NotificationCenter() {
                               <button
                                 onClick={() => markAsRead(notification.id)}
                                 className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                                onMouseDown={(e) => e.stopPropagation()}
-                                onTouchStart={(e) => e.stopPropagation()}
                               >
                                 Marquer comme lu
                               </button>

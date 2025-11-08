@@ -265,8 +265,7 @@ export function Navbar() {
             width: '100%',
             height: '100%',
             overflow: 'auto',
-            WebkitOverflowScrolling: 'touch',
-            overscrollBehavior: 'contain'
+            WebkitOverflowScrolling: 'touch'
           }}
         >
           {/* Bouton de fermeture en haut à droite */}
@@ -281,8 +280,7 @@ export function Navbar() {
           <div
             className="h-full overflow-y-auto p-6 pt-20 scrollable-area"
             style={{
-              WebkitOverflowScrolling: 'touch',
-              overscrollBehavior: 'contain'
+              WebkitOverflowScrolling: 'touch'
             }}
           >
             <div className="max-w-md mx-auto space-y-3">

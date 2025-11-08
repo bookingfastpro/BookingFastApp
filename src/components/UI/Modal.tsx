@@ -98,7 +98,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'lg', headerGra
 
           {/* Content scrollable avec safe area pour mobile */}
           <div
-            className="flex-1 overflow-y-auto overscroll-contain"
+            className="flex-1 overflow-y-auto"
             style={{
               paddingBottom: 'env(safe-area-inset-bottom, 0px)',
               WebkitOverflowScrolling: 'touch'
