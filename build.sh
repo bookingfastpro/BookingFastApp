@@ -5,6 +5,11 @@
 
 echo "🔨 Building BookingFast with environment variables..."
 
+# Générer un timestamp unique pour le cache busting
+export BUILD_TIMESTAMP=$(date +%Y%m%d%H%M%S)
+export VITE_APP_VERSION=$BUILD_TIMESTAMP
+echo "📅 Build timestamp: $BUILD_TIMESTAMP"
+
 # Vérifier que le fichier .env existe
 if [ ! -f .env ]; then
     echo "❌ Fichier .env manquant!"

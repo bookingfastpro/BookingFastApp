@@ -4,6 +4,9 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.VITE_APP_VERSION || Date.now().toString())
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -41,9 +44,18 @@ export default defineConfig({
           'chart-vendor': ['recharts'],
           'icons-vendor': ['lucide-react']
         },
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        chunkFileNames: (chunkInfo) => {
+          const version = process.env.VITE_APP_VERSION || Date.now().toString();
+          return `assets/[name]-${version}-[hash].js`;
+        },
+        entryFileNames: (chunkInfo) => {
+          const version = process.env.VITE_APP_VERSION || Date.now().toString();
+          return `assets/[name]-${version}-[hash].js`;
+        },
+        assetFileNames: (assetInfo) => {
+          const version = process.env.VITE_APP_VERSION || Date.now().toString();
+          return `assets/[name]-${version}-[hash].[ext]`;
+        }
       },
       onwarn(warning, warn) {
         if (warning.code === 'MODULE_LEVEL_DIRECTIVE') return;

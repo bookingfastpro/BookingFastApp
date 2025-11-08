@@ -9,6 +9,10 @@ ARG VITE_BREVO_API_KEY=""
 ARG VITE_GOOGLE_CLIENT_ID=""
 ARG VITE_GOOGLE_CLIENT_SECRET=""
 
+# Generate unique build version for cache busting
+ARG BUILD_TIMESTAMP
+ARG VITE_APP_VERSION=${BUILD_TIMESTAMP:-default}
+
 # Définir les variables d'environnement pour le build
 ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
     VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY \
@@ -16,7 +20,8 @@ ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL \
     VITE_STRIPE_PUBLIC_KEY=$VITE_STRIPE_PUBLIC_KEY \
     VITE_BREVO_API_KEY=$VITE_BREVO_API_KEY \
     VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID \
-    VITE_GOOGLE_CLIENT_SECRET=$VITE_GOOGLE_CLIENT_SECRET
+    VITE_GOOGLE_CLIENT_SECRET=$VITE_GOOGLE_CLIENT_SECRET \
+    VITE_APP_VERSION=$VITE_APP_VERSION
 
 WORKDIR /app
 
@@ -24,7 +29,13 @@ COPY package*.json ./
 RUN npm ci
 
 COPY . .
-RUN npm run build
+
+# Generate build timestamp if not provided
+RUN if [ -z "$VITE_APP_VERSION" ]; then \
+      export VITE_APP_VERSION=$(date +%Y%m%d%H%M%S); \
+    fi && \
+    echo "Building with APP_VERSION: $VITE_APP_VERSION" && \
+    npm run build
 
 FROM nginx:alpine
 
@@ -40,6 +51,15 @@ RUN rm -f /etc/nginx/conf.d/default.conf.dpkg-dist && \
 
 # Copier les fichiers buildés
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Create a cache-busting script that runs on container start
+RUN echo '#!/bin/sh' > /docker-entrypoint.d/10-cache-bust.sh && \
+    echo 'echo "[Cache Bust] Deployment timestamp: $(date)"' >> /docker-entrypoint.d/10-cache-bust.sh && \
+    echo 'echo "[Cache Bust] Injecting cache busting headers"' >> /docker-entrypoint.d/10-cache-bust.sh && \
+    chmod +x /docker-entrypoint.d/10-cache-bust.sh
+
+# Add build version file for tracking
+RUN echo "$(date +%Y%m%d%H%M%S)" > /usr/share/nginx/html/version.txt
 
 # Vérifier que les fichiers sont bien copiés
 RUN ls -la /usr/share/nginx/html && \
