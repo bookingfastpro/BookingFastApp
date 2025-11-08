@@ -62,13 +62,15 @@ export function Navbar() {
 
   return (
     <>
-      <nav 
-        className="bg-white border-b border-gray-200 shadow-sm" 
-        style={{ 
-          position: 'sticky', 
+      <nav
+        className="bg-white border-b border-gray-200 shadow-sm"
+        style={{
+          position: 'sticky',
           top: 0,
           zIndex: 40,
-          paddingTop: 'env(safe-area-inset-top, 0px)'
+          paddingTop: 'max(env(safe-area-inset-top, 0px), 0px)',
+          paddingLeft: 'env(safe-area-inset-left, 0px)',
+          paddingRight: 'env(safe-area-inset-right, 0px)'
         }}
       >
         <div className="px-4 sm:px-6">

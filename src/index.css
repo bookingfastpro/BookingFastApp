@@ -26,16 +26,6 @@
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     -webkit-overflow-scrolling: touch;
-
-    /* CRITICAL: Safe areas pour PWA iOS - avec fallback pour anciennes versions */
-    padding-top: constant(safe-area-inset-top);
-    padding-top: env(safe-area-inset-top);
-    padding-right: constant(safe-area-inset-right);
-    padding-right: env(safe-area-inset-right);
-    padding-bottom: constant(safe-area-inset-bottom);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: constant(safe-area-inset-left);
-    padding-left: env(safe-area-inset-left);
   }
 
   /* Empêcher le body de bouger quand modal ouvert */
@@ -69,6 +59,9 @@
     overscroll-behavior: contain;
     flex: 1;
     min-height: 0;
+    padding-left: env(safe-area-inset-left, 0px);
+    padding-right: env(safe-area-inset-right, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .scroll-content {
