@@ -121,19 +121,19 @@ export function TimeSlotPicker({
             : 'border-gray-300 bg-white hover:border-blue-400 hover:shadow-md'
         }`}
       >
-        <div className="flex items-center gap-3 min-w-0 flex-1">
-          <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 flex-shrink-0 ${
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+          <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition-all duration-300 flex-shrink-0 ${
             selectedTime ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white' : 'bg-gray-100 text-gray-400'
           }`}>
-            <Clock className="w-5 h-5" />
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
           </div>
           <div className="text-left min-w-0 flex-1">
-            <div className="font-medium text-gray-900 truncate">
+            <div className="font-medium text-gray-900 text-sm sm:text-base truncate">
               {selectedTime ? formatTime(selectedTime) : 'Sélectionner une heure'}
             </div>
           </div>
         </div>
-        <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform duration-300 flex-shrink-0 ml-2 ${
+        <ChevronDown className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 transition-transform duration-300 flex-shrink-0 ml-2 ${
           isOpen ? 'rotate-180' : ''
         }`} />
       </button>
