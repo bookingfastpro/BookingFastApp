@@ -292,7 +292,7 @@ export function InvoicesPage() {
 
         {/* Barre compacte : Onglets + Actions */}
         <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-2 mb-4">
-          <div className="grid grid-cols-2 gap-2 sm:flex sm:justify-between">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:gap-2">
             {/* Boutons */}
             <button
               onClick={() => setViewMode('quotes')}
