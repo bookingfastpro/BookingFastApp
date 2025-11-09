@@ -940,9 +940,10 @@ export function CalendarGrid({
                           totalColumns > 2 ? 'p-1.5' : 'p-2'
                         }`}>
                           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12"></div>
-                          
+
                           <div className="relative z-10 text-center sm:text-left">
-                            <div className={`font-bold break-words ${
+                            {/* Nom du service */}
+                            <div className={`font-bold line-clamp-1 ${
                               totalColumns > 2 ? 'text-xs' : 'text-xs sm:text-sm'
                             }`}>
                               {(() => {
@@ -955,25 +956,46 @@ export function CalendarGrid({
                                 return serviceName;
                               })()}
                             </div>
-                            <div className={`opacity-90 truncate flex items-center justify-center sm:justify-start gap-1 ${
-                              totalColumns > 2 ? 'text-xs' : 'text-xs'
-                            }`}>
-                              <Clock className="w-3 h-3" />
-                              {startTime}
-                            </div>
-                            <div className="mt-0.5 flex flex-col items-center sm:items-start">
-                              <div className="text-xs font-medium text-white leading-tight">
-                                {totalParticipants} {unitName} sur {firstBooking?.service?.capacity || 1}
+
+                            {/* Heure et participants - Affichage adaptatif selon la hauteur */}
+                            {duration < 2 ? (
+                              // Petit bloc (< 1h) : tout sur une ligne
+                              <div className={`opacity-90 flex items-center justify-center sm:justify-start gap-2 ${
+                                totalColumns > 2 ? 'text-xs' : 'text-xs'
+                              }`}>
+                                <div className="flex items-center gap-1">
+                                  <Clock className="w-3 h-3 flex-shrink-0" />
+                                  <span className="whitespace-nowrap">{startTime}</span>
+                                </div>
+                                <span className="text-white/80">•</span>
+                                <span className="font-medium whitespace-nowrap">
+                                  {totalParticipants}/{firstBooking?.service?.capacity || 1}
+                                </span>
                               </div>
-                              <div className="w-10 bg-white/30 rounded-full h-1 overflow-hidden mt-0.5">
-                                <div 
-                                  className="h-full bg-white rounded-full transition-all duration-500"
-                                  style={{ 
-                                    width: `${Math.min((totalParticipants / (firstBooking?.service?.capacity || 1)) * 100, 100)}%` 
-                                  }}
-                                />
-                              </div>
-                            </div>
+                            ) : (
+                              // Grand bloc (>= 1h) : affichage classique
+                              <>
+                                <div className={`opacity-90 flex items-center justify-center sm:justify-start gap-1 ${
+                                  totalColumns > 2 ? 'text-xs' : 'text-xs'
+                                }`}>
+                                  <Clock className="w-3 h-3 flex-shrink-0" />
+                                  <span>{startTime}</span>
+                                </div>
+                                <div className="mt-0.5 flex flex-col items-center sm:items-start">
+                                  <div className="text-xs font-medium text-white leading-tight">
+                                    {totalParticipants} {unitName} sur {firstBooking?.service?.capacity || 1}
+                                  </div>
+                                  <div className="w-10 bg-white/30 rounded-full h-1 overflow-hidden mt-0.5">
+                                    <div
+                                      className="h-full bg-white rounded-full transition-all duration-500"
+                                      style={{
+                                        width: `${Math.min((totalParticipants / (firstBooking?.service?.capacity || 1)) * 100, 100)}%`
+                                      }}
+                                    />
+                                  </div>
+                                </div>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>
