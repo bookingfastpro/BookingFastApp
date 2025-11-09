@@ -61,9 +61,32 @@ export function CalendarGrid({
 }: CalendarGridProps) {
   const today = new Date();
   const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-  
-  const [selectedDate, setSelectedDate] = useState<Date>(today);
-  const [viewMonth, setViewMonth] = useState<Date>(today);
+
+  const getInitialDate = () => {
+    const savedDate = sessionStorage.getItem('calendar_selected_date');
+    if (savedDate) {
+      const date = new Date(savedDate);
+      if (!isNaN(date.getTime())) {
+        console.log('📅 Restauration date sauvegardée:', savedDate);
+        return date;
+      }
+    }
+    return today;
+  };
+
+  const [selectedDate, setSelectedDate] = useState<Date>(getInitialDate());
+  const getInitialMonth = () => {
+    const savedDate = sessionStorage.getItem('calendar_selected_date');
+    if (savedDate) {
+      const date = new Date(savedDate);
+      if (!isNaN(date.getTime())) {
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+      }
+    }
+    return new Date(today.getFullYear(), today.getMonth(), 1);
+  };
+
+  const [viewMonth, setViewMonth] = useState<Date>(getInitialMonth());
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const [selectedServiceBookings, setSelectedServiceBookings] = useState<Booking[]>([]);
   const [selectedServiceName, setSelectedServiceName] = useState('');
@@ -154,10 +177,10 @@ export function CalendarGrid({
   const days = generateDaysForMonth();
 
   useEffect(() => {
-    const now = new Date();
-    setSelectedDate(now);
-    setViewMonth(new Date(now.getFullYear(), now.getMonth(), 1));
-  }, []);
+    const dateString = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
+    sessionStorage.setItem('calendar_selected_date', dateString);
+    console.log('💾 Sauvegarde de la date sélectionnée:', dateString);
+  }, [selectedDate]);
 
   useEffect(() => {
     const handleBookingChange = () => {
