@@ -39,6 +39,8 @@ export function NotificationBell() {
   }, [isOpen]);
 
   const handleNotificationClick = async (notification: any) => {
+    console.log('🔔 Notification cliquée:', notification);
+
     // Marquer comme lu
     if (!notification.is_read) {
       await markAsRead(notification.id);
@@ -49,6 +51,11 @@ export function NotificationBell() {
 
     // Naviguer vers la réservation si elle existe
     if (notification.booking_id) {
+      // Stocker l'ID de la réservation dans sessionStorage
+      sessionStorage.setItem('openBookingId', notification.booking_id);
+      console.log('📦 Booking ID stocké dans sessionStorage:', notification.booking_id);
+
+      // Naviguer vers le calendrier
       navigate('/calendar');
     }
   };
