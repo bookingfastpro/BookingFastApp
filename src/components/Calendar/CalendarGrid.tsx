@@ -709,9 +709,13 @@ export function CalendarGrid({
                       {day.isToday && (
                         <div className="absolute -bottom-1 w-2 h-2 bg-white rounded-full animate-pulse"></div>
                       )}
-                      
-                      {dayBookingsCount > 0 && !day.isPast && (
-                        <div className="absolute -top-1 -right-1 min-w-[16px] h-4 bg-gradient-to-r from-green-400 to-emerald-500 text-white text-xs rounded-full flex items-center justify-center font-bold animate-bounce shadow-lg px-1">
+
+                      {dayBookingsCount > 0 && (
+                        <div className={`absolute -top-1 -right-1 min-w-[18px] h-5 text-white text-xs rounded-full flex items-center justify-center font-bold shadow-lg px-1.5 ${
+                          day.isPast
+                            ? 'bg-gradient-to-r from-gray-400 to-gray-500'
+                            : 'bg-gradient-to-r from-green-400 to-emerald-500 animate-bounce'
+                        }`}>
                           {dayBookingsCount}
                         </div>
                       )}
