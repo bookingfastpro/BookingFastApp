@@ -598,8 +598,12 @@ export function POSPage() {
                       key={product.id}
                       className="group relative"
                     >
-                      {/* Card Container */}
-                      <div className="relative bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg hover:border-purple-300 transition-all duration-300 hover:-translate-y-1">
+                      {/* Card Container - Entièrement cliquable */}
+                      <button
+                        type="button"
+                        onClick={(e) => handleAddToCart(e, product)}
+                        className="relative bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg hover:border-purple-300 transition-all duration-300 hover:-translate-y-1 w-full text-left cursor-pointer"
+                      >
                         {/* Header avec prix */}
                         <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 relative">
                           {/* Edit Button */}
@@ -642,7 +646,7 @@ export function POSPage() {
                         {/* Content */}
                         <div className="p-3 sm:p-4">
                           {/* Badges */}
-                          <div className="flex items-center justify-center gap-2 mb-3 min-h-[24px]">
+                          <div className="flex items-center justify-center gap-2 min-h-[24px]">
                             {product.duration_minutes && (
                               <div className="inline-flex items-center gap-1 bg-purple-100 px-2 py-1 rounded-lg">
                                 <Clock className="w-3 h-3 text-purple-600" />
@@ -662,18 +666,8 @@ export function POSPage() {
                               </span>
                             )}
                           </div>
-
-                          {/* Add to Cart Button */}
-                          <button
-                            type="button"
-                            onClick={(e) => handleAddToCart(e, product)}
-                            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-2.5 sm:py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
-                          >
-                            <Plus className="w-4 h-4" />
-                            <span className="text-sm">Ajouter</span>
-                          </button>
                         </div>
-                      </div>
+                      </button>
                     </div>
                   );
                 })}
