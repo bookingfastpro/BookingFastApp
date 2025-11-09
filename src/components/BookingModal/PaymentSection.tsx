@@ -306,8 +306,8 @@ export function PaymentSection({
             }}
             className={`px-3 py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm font-semibold ${
               showAddTransaction
-                ? 'bg-blue-600 text-white'
-                : 'bg-blue-500 text-white hover:bg-blue-600'
+                ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white'
+                : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600'
             }`}
           >
             {showAddTransaction ? <ChevronUp className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
@@ -325,8 +325,8 @@ export function PaymentSection({
             }}
             className={`px-3 py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm font-semibold ${
               showPaymentLink
-                ? 'bg-purple-600 text-white'
-                : 'bg-purple-500 text-white hover:bg-purple-600'
+                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white'
+                : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-600 hover:to-blue-600'
             }`}
           >
             {showPaymentLink ? <ChevronUp className="w-4 h-4" /> : <Link className="w-4 h-4" />}
@@ -496,11 +496,11 @@ export function PaymentSection({
 
       {/* Section Lien de Paiement - VERSION COMPACTE */}
       {showPaymentLink && (
-        <div className="bg-white border-2 border-purple-200 rounded-xl p-3 space-y-3">
+        <div className="bg-white border-2 border-cyan-200 rounded-xl p-3 space-y-3">
           {/* Header compact */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 bg-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
                 <Link className="w-4 h-4 text-white" />
               </div>
               <span className="text-sm font-bold text-gray-900">Lien de paiement</span>
@@ -515,11 +515,11 @@ export function PaymentSection({
           </div>
 
           {/* Info expiration + Client compact */}
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-2 text-xs space-y-1">
-            <div className="flex items-center gap-1.5 text-purple-700">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 text-xs space-y-1">
+            <div className="flex items-center gap-1.5 text-blue-700">
               <Clock className="w-3 h-3" />
               <span>Expire dans {settings?.payment_link_expiry_minutes || 30} min</span>
-              <span className="text-purple-600">•</span>
+              <span className="text-blue-600">•</span>
               <Mail className="w-3 h-3" />
               <span className="truncate">{clientEmail}</span>
             </div>
@@ -541,14 +541,14 @@ export function PaymentSection({
                   max={remainingAmount}
                   value={paymentLinkAmount || ''}
                   onChange={(e) => setPaymentLinkAmount(parseFloat(e.target.value) || 0)}
-                  className="w-full px-3 py-2 border-2 border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-500 text-base font-bold"
+                  className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-base font-bold"
                   placeholder="0.00"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => setPaymentLinkAmount(remainingAmount)}
-                className="px-3 py-2 bg-purple-100 text-purple-700 rounded-lg text-xs font-semibold hover:bg-purple-200 border border-purple-300 whitespace-nowrap"
+                className="px-3 py-2 bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold hover:bg-blue-200 border border-blue-300 whitespace-nowrap"
               >
                 Restant
               </button>
@@ -567,7 +567,7 @@ export function PaymentSection({
                   key={index}
                   type="button"
                   onClick={() => setPaymentLinkAmount(item.value)}
-                  className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-medium hover:bg-purple-100 border border-purple-200"
+                  className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium hover:bg-blue-100 border border-blue-200"
                 >
                   {item.label}
                 </button>
@@ -588,7 +588,7 @@ export function PaymentSection({
               type="button"
               onClick={handleGenerateLink}
               disabled={paymentLinkAmount <= 0 || !isStripeConfigured}
-              className="flex-1 bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold flex items-center justify-center gap-1.5"
+              className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-2 rounded-lg hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold flex items-center justify-center gap-1.5"
             >
               <Send className="w-4 h-4" />
               Générer
