@@ -20,6 +20,7 @@ interface CalendarGridProps {
   onDeleteBooking: (bookingId: string) => void;
   onDeleteUnavailability: (unavailabilityId: string) => void;
   onAddUnavailability: (date?: string) => void;
+  filterButton?: React.ReactNode;
 }
 
 interface ServiceGroup {
@@ -46,16 +47,17 @@ interface ColumnLayout {
   group: ServiceGroup;
 }
 
-export function CalendarGrid({ 
-  currentDate, 
-  onTimeSlotClick, 
-  onBookingClick, 
-  bookings: allBookings, 
+export function CalendarGrid({
+  currentDate,
+  onTimeSlotClick,
+  onBookingClick,
+  bookings: allBookings,
   unavailabilities,
-  loading, 
+  loading,
   onDeleteBooking,
   onDeleteUnavailability,
-  onAddUnavailability 
+  onAddUnavailability,
+  filterButton
 }: CalendarGridProps) {
   const today = new Date();
   const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
@@ -625,7 +627,7 @@ export function CalendarGrid({
               >
                 <ChevronLeft className="w-4 h-4 text-gray-600" />
               </button>
-              
+
               <button
                 ref={monthButtonRef}
                 onClick={() => setShowDatePicker(true)}
@@ -634,14 +636,21 @@ export function CalendarGrid({
                 <div className="flex items-center gap-2">
                   <CalendarIcon className="w-4 h-4 text-gray-600" />
                   <span className="text-base sm:text-lg font-bold text-gray-900 capitalize">
-                    {viewMonth.toLocaleDateString('fr-FR', { 
-                      month: 'long', 
-                      year: 'numeric' 
+                    {viewMonth.toLocaleDateString('fr-FR', {
+                      month: 'long',
+                      year: 'numeric'
                     })}
                   </span>
                 </div>
               </button>
-              
+
+              {/* Bouton filtre sur mobile uniquement */}
+              {filterButton && (
+                <div className="sm:hidden">
+                  {filterButton}
+                </div>
+              )}
+
               <button
                 onClick={() => changeMonth('next')}
                 className="hidden sm:flex p-2 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 transform hover:scale-110"
