@@ -494,90 +494,71 @@ export function PaymentSection({
         </div>
       )}
 
-      {/* Section Lien de Paiement (Expandable) */}
+      {/* Section Lien de Paiement - VERSION COMPACTE */}
       {showPaymentLink && (
-        <div className="bg-white border-2 border-purple-200 rounded-2xl p-6 space-y-6 animate-slideDown shadow-lg">
-          {/* Header */}
+        <div className="bg-white border-2 border-purple-200 rounded-xl p-3 space-y-3">
+          {/* Header compact */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white">
-                <Link className="w-5 h-5" />
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 bg-purple-600 rounded-lg flex items-center justify-center">
+                <Link className="w-4 h-4 text-white" />
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">Lien de paiement</h3>
-                <p className="text-sm text-gray-600">Créer un lien sécurisé pour le client</p>
-              </div>
+              <span className="text-sm font-bold text-gray-900">Lien de paiement</span>
             </div>
             <button
               type="button"
               onClick={() => setShowPaymentLink(false)}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-1 text-gray-400 hover:text-gray-600 rounded"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Timer d'expiration */}
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-3">
-            <div className="flex items-center gap-2 text-purple-700">
-              <Clock className="w-4 h-4" />
-              <span className="text-sm font-medium">
-                Le lien expirera dans {settings?.payment_link_expiry_minutes || 30} minutes
-              </span>
+          {/* Info expiration + Client compact */}
+          <div className="bg-purple-50 border border-purple-200 rounded-lg p-2 text-xs space-y-1">
+            <div className="flex items-center gap-1.5 text-purple-700">
+              <Clock className="w-3 h-3" />
+              <span>Expire dans {settings?.payment_link_expiry_minutes || 30} min</span>
+              <span className="text-purple-600">•</span>
+              <Mail className="w-3 h-3" />
+              <span className="truncate">{clientEmail}</span>
             </div>
           </div>
 
-          {/* Informations de la réservation */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <User className="w-5 h-5 text-blue-600" />
-              <span className="font-bold text-blue-800">Détails de la réservation</span>
-            </div>
-            <div className="text-sm text-blue-800 space-y-2">
-              <div className="flex items-center gap-2">
-                <Mail className="w-4 h-4" />
-                <span><strong>Client:</strong> {clientEmail}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Package className="w-4 h-4" />
-                <span><strong>Service:</strong> {serviceName}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                <span><strong>Date:</strong> {new Date(bookingDate).toLocaleDateString('fr-FR')} à {bookingTime}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Montant */}
+          {/* Montant rapide */}
           <div>
-            <label className="block text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
-              <Euro className="w-4 h-4 text-green-600 flex-shrink-0" />
-              Montant à payer (€)
+            <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex items-center gap-1">
+              <Euro className="w-3 h-3" />
+              Montant (€)
             </label>
-            
-            <div className="relative mb-3">
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
-                <Euro className="w-4 h-4 text-white" />
+
+            <div className="flex gap-2 mb-2">
+              <div className="relative flex-1">
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  max={remainingAmount}
+                  value={paymentLinkAmount || ''}
+                  onChange={(e) => setPaymentLinkAmount(parseFloat(e.target.value) || 0)}
+                  className="w-full px-3 py-2 border-2 border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-500 text-base font-bold"
+                  placeholder="0.00"
+                />
               </div>
-              <input
-                type="number"
-                step="0.01"
-                min="0.01"
-                max={remainingAmount}
-                value={paymentLinkAmount || ''}
-                onChange={(e) => setPaymentLinkAmount(parseFloat(e.target.value) || 0)}
-                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-purple-200 focus:border-purple-500 transition-all duration-300 text-xl font-bold bg-white shadow-inner"
-                placeholder="0.00"
-              />
+              <button
+                type="button"
+                onClick={() => setPaymentLinkAmount(remainingAmount)}
+                className="px-3 py-2 bg-purple-100 text-purple-700 rounded-lg text-xs font-semibold hover:bg-purple-200 border border-purple-300 whitespace-nowrap"
+              >
+                Restant
+              </button>
             </div>
-            
-            {/* Suggestions de montants */}
-            <div className="flex flex-wrap gap-2">
+
+            {/* Suggestions rapides */}
+            <div className="flex flex-wrap gap-1.5">
               {[
-                { label: 'Montant restant', value: remainingAmount },
-                { label: 'Acompte 30%', value: totalAmount * 0.3 },
-                { label: 'Acompte 50%', value: totalAmount * 0.5 },
+                { label: '30%', value: totalAmount * 0.3 },
+                { label: '50%', value: totalAmount * 0.5 },
                 { label: '20€', value: 20 },
                 { label: '50€', value: 50 },
                 { label: '100€', value: 100 }
@@ -586,7 +567,7 @@ export function PaymentSection({
                   key={index}
                   type="button"
                   onClick={() => setPaymentLinkAmount(item.value)}
-                  className="px-3 py-2 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-xl text-sm font-medium hover:from-purple-200 hover:to-pink-200 transition-all duration-300 transform hover:scale-105 border border-purple-200"
+                  className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-medium hover:bg-purple-100 border border-purple-200"
                 >
                   {item.label}
                 </button>
@@ -594,28 +575,12 @@ export function PaymentSection({
             </div>
           </div>
 
-          {/* Guide d'utilisation */}
-          <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-xs">i</span>
-              </div>
-              <span className="font-bold text-blue-800">Comment ça marche</span>
-            </div>
-            <div className="text-xs text-blue-700 space-y-1">
-              <div>1. Le lien sera copié dans votre presse-papiers</div>
-              <div>2. Envoyez-le au client par email ou SMS</div>
-              <div>3. Le client clique et paie en ligne</div>
-              <div>4. Le paiement est automatiquement enregistré</div>
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex gap-3 pt-4 border-t border-gray-200">
+          {/* Actions compactes */}
+          <div className="flex gap-2 pt-2 border-t">
             <button
               type="button"
               onClick={() => setShowPaymentLink(false)}
-              className="flex-1 px-6 py-4 text-gray-600 hover:bg-gray-100 rounded-2xl transition-all duration-300 font-bold border-2 border-gray-200 hover:border-gray-300"
+              className="flex-1 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg text-sm font-semibold border border-gray-200"
             >
               Annuler
             </button>
@@ -623,10 +588,10 @@ export function PaymentSection({
               type="button"
               onClick={handleGenerateLink}
               disabled={paymentLinkAmount <= 0 || !isStripeConfigured}
-              className="flex-1 bg-gradient-to-r from-purple-600 via-pink-600 to-red-500 text-white px-6 py-4 rounded-2xl hover:from-purple-700 hover:via-pink-700 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-bold flex items-center justify-center gap-2 transform hover:scale-105 shadow-lg"
+              className="flex-1 bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold flex items-center justify-center gap-1.5"
             >
-              <Send className="w-5 h-5" />
-              Générer le lien
+              <Send className="w-4 h-4" />
+              Générer
             </button>
           </div>
         </div>
