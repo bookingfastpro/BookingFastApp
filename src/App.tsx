@@ -1,9 +1,10 @@
-import React, { lazy, Suspense, useEffect } from 'react';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { TeamProvider } from './contexts/TeamContext';
 import { AuthProvider } from './contexts/AuthContext';
 import { Navbar } from './components/Layout/Navbar';
 import { LoadingSpinner } from './components/UI/LoadingSpinner';
+import { UpdateModal } from './components/UI/UpdateModal';
 import { GoogleCalendarCallback } from './components/Admin/GoogleCalendarCallback';
 import { PluginGuard } from './components/Plugins/PluginGuard';
 import { IframeBookingPage } from './components/IframeBooking/IframeBookingPage';
@@ -15,6 +16,7 @@ import { LandingPage } from './components/Landing/LandingPage';
 import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { PublicRoute } from './components/Auth/PublicRoute';
 import { isPWA } from './utils/pwaDetection';
+import { CacheBuster } from './utils/cacheBuster';
 
 const DashboardPage = lazy(() => import('./components/Dashboard/DashboardPage').then(m => ({ default: m.DashboardPage })));
 const CalendarPage = lazy(() => import('./components/Calendar/CalendarPage').then(m => ({ default: m.CalendarPage })));
@@ -30,9 +32,22 @@ const LoginPage = lazy(() => import('./components/Auth/LoginPage').then(m => ({ 
 const InvoicesPage = lazy(() => import('./components/Invoices/InvoicesPage').then(m => ({ default: m.InvoicesPage })));
 
 function App() {
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+
+  useEffect(() => {
+    CacheBuster.startVersionCheck(() => {
+      setShowUpdateModal(true);
+    });
+
+    return () => {
+      CacheBuster.stopVersionCheck();
+    };
+  }, []);
+
   return (
     <AuthProvider>
       <TeamProvider>
+        <UpdateModal isOpen={showUpdateModal} />
         <AppRoutes />
       </TeamProvider>
     </AuthProvider>

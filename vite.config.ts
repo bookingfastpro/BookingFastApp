@@ -1,9 +1,24 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import fs from 'fs';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'version-file-plugin',
+      closeBundle() {
+        const version = process.env.VITE_APP_VERSION || Date.now().toString();
+        const distPath = path.resolve(__dirname, 'dist');
+        const versionFilePath = path.join(distPath, 'version.txt');
+
+        fs.mkdirSync(distPath, { recursive: true });
+        fs.writeFileSync(versionFilePath, version);
+        console.log(`\n✅ Version file created: ${version}`);
+      }
+    }
+  ],
   define: {
     __APP_VERSION__: JSON.stringify(process.env.VITE_APP_VERSION || Date.now().toString())
   },

@@ -7,7 +7,17 @@ import './styles/modal-safe-area.css';
 import { initCacheBuster } from './utils/cacheBuster';
 
 // Initialize cache buster before rendering
-initCacheBuster().then(() => {
+initCacheBuster().then(async (hasNewVersion) => {
+  if (hasNewVersion) {
+    console.log('🔄 First load with new version detected, updating...');
+    const { CacheBuster } = await import('./utils/cacheBuster');
+    await CacheBuster.clearAllCaches();
+    await CacheBuster.updateVersion();
+    console.log('✅ Version updated, reloading...');
+    window.location.reload();
+    return;
+  }
+
   // Créer le conteneur pour les modals s'il n'existe pas
   if (!document.getElementById('modal-root')) {
     const modalRoot = document.createElement('div');

@@ -30,12 +30,14 @@ RUN npm ci
 
 COPY . .
 
-# Generate build timestamp if not provided
-RUN if [ -z "$VITE_APP_VERSION" ]; then \
-      export VITE_APP_VERSION=$(date +%Y%m%d%H%M%S); \
-    fi && \
+# Generate build timestamp if not provided and build
+RUN BUILD_TIME=$(date +%Y%m%d%H%M%S) && \
+    export VITE_APP_VERSION=${VITE_APP_VERSION:-$BUILD_TIME} && \
     echo "Building with APP_VERSION: $VITE_APP_VERSION" && \
-    npm run build
+    npm run build && \
+    echo "Verifying version.txt exists..." && \
+    ls -la /app/dist/version.txt && \
+    cat /app/dist/version.txt
 
 FROM nginx:alpine
 
@@ -58,12 +60,11 @@ RUN echo '#!/bin/sh' > /docker-entrypoint.d/10-cache-bust.sh && \
     echo 'echo "[Cache Bust] Injecting cache busting headers"' >> /docker-entrypoint.d/10-cache-bust.sh && \
     chmod +x /docker-entrypoint.d/10-cache-bust.sh
 
-# Add build version file for tracking
-RUN echo "$(date +%Y%m%d%H%M%S)" > /usr/share/nginx/html/version.txt
-
-# Vérifier que les fichiers sont bien copiés
+# Verify version.txt was copied from build
 RUN ls -la /usr/share/nginx/html && \
-    test -f /usr/share/nginx/html/index.html || (echo "ERROR: index.html not found!" && exit 1)
+    test -f /usr/share/nginx/html/index.html || (echo "ERROR: index.html not found!" && exit 1) && \
+    test -f /usr/share/nginx/html/version.txt || (echo "ERROR: version.txt not found!" && exit 1) && \
+    echo "Deployed version: $(cat /usr/share/nginx/html/version.txt)"
 
 EXPOSE 80
 
