@@ -206,144 +206,135 @@ export function BookingDetailsModal({ booking, onClose, onUpdate }: BookingDetai
             {/* Contenu scrollable */}
             <div className="flex-1 overflow-y-auto overscroll-contain">
               <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
-                {/* Statuts */}
-                <div className="grid grid-cols-2 gap-3 sm:gap-4">
-                  <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 border-2 border-gray-200">
-                    <p className="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2">Statut réservation</p>
-                    <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border-2 ${getStatusColor(booking.booking_status)}`}>
-                      {getStatusLabel(booking.booking_status)}
-                    </span>
-                  </div>
-                  <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 border-2 border-gray-200">
-                    <p className="text-xs sm:text-sm text-gray-600 mb-1 sm:mb-2">Statut paiement</p>
-                    <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border-2 ${getPaymentStatusColor(booking.payment_status)}`}>
-                      {getPaymentStatusLabel(booking.payment_status)}
-                    </span>
-                  </div>
-                </div>
 
-                {/* Informations client */}
-                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-blue-200">
-                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
-                    <User className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                    Informations client
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center">
-                        <User className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                      </div>
-                      <div>
-                        <p className="text-xs sm:text-sm text-gray-600">Nom</p>
-                        <p className="font-semibold text-gray-900 text-sm sm:text-base">{booking.client_firstname} {booking.client_name}</p>
-                      </div>
+                {/* Informations client - Version compacte */}
+                <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 border-2 border-blue-200">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                      <User className="w-4 h-4 text-white" />
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-lg sm:rounded-xl flex items-center justify-center">
-                        <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
-                      </div>
-                      <div>
-                        <p className="text-xs sm:text-sm text-gray-600">Email</p>
-                        <p className="font-semibold text-gray-900 text-sm sm:text-base">{booking.client_email}</p>
-                      </div>
+                    <h3 className="text-sm font-bold text-gray-900">Informations client</h3>
+                  </div>
+
+                  <div className="space-y-1.5 text-sm">
+                    <div className="flex items-start gap-2">
+                      <span className="text-gray-600 min-w-[80px]">Nom complet</span>
+                      <span className="font-semibold text-gray-900">{booking.client_firstname} {booking.client_name}</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-gray-600 min-w-[80px]">Email</span>
+                      <span className="font-medium text-gray-900 break-all">{booking.client_email}</span>
                     </div>
                     {booking.client_phone && (
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg sm:rounded-xl flex items-center justify-center">
-                          <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                        </div>
-                        <div>
-                          <p className="text-xs sm:text-sm text-gray-600">Téléphone</p>
-                          <p className="font-semibold text-gray-900 text-sm sm:text-base">{booking.client_phone}</p>
-                        </div>
+                      <div className="flex items-start gap-2">
+                        <span className="text-gray-600 min-w-[80px]">Téléphone</span>
+                        <span className="font-medium text-gray-900">{booking.client_phone}</span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* Détails réservation */}
-                <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-green-200">
-                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
-                    Détails de la réservation
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg sm:rounded-xl flex items-center justify-center">
-                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
+                {/* Récapitulatif - Version compacte */}
+                <div className="bg-gradient-to-br from-green-50 to-teal-50 rounded-xl p-4 border-2 border-green-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+                        <Euro className="w-4 h-4 text-white" />
                       </div>
-                      <div>
-                        <p className="text-xs sm:text-sm text-gray-600">Date</p>
-                        <p className="font-semibold text-gray-900 text-sm sm:text-base">
-                          {format(new Date(booking.date), 'EEEE d MMMM yyyy', { locale: fr })}
-                        </p>
-                      </div>
+                      <h3 className="text-sm font-bold text-gray-900">Récapitulatif</h3>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-teal-100 rounded-lg sm:rounded-xl flex items-center justify-center">
-                        <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
-                      </div>
-                      <div>
-                        <p className="text-xs sm:text-sm text-gray-600">Heure</p>
-                        <p className="font-semibold text-gray-900 text-sm sm:text-base">{formatTime(booking.time)}</p>
-                      </div>
-                    </div>
+                  </div>
+
+                  <div className="space-y-2 text-sm">
                     {booking.service_name && (
-                      <div className="flex items-center gap-3 md:col-span-2">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center">
-                          <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
-                        </div>
-                        <div>
-                          <p className="text-xs sm:text-sm text-gray-600">Service</p>
-                          <p className="font-semibold text-gray-900 text-sm sm:text-base">{booking.service_name}</p>
-                        </div>
+                      <div className="flex justify-between items-start">
+                        <span className="text-gray-600">Service</span>
+                        <span className="font-semibold text-gray-900 text-right">{booking.service_name}</span>
                       </div>
                     )}
-                    {booking.location && (
-                      <div className="flex items-center gap-3 md:col-span-2">
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg sm:rounded-xl flex items-center justify-center">
-                          <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
-                        </div>
-                        <div>
-                          <p className="text-xs sm:text-sm text-gray-600">Lieu</p>
-                          <p className="font-semibold text-gray-900 text-sm sm:text-base">{booking.location}</p>
-                        </div>
+                    <div className="flex justify-between items-start">
+                      <span className="text-gray-600">Prix unitaire</span>
+                      <span className="font-semibold text-gray-900">{(booking.total_amount / (booking.quantity || 1)).toFixed(2)}€</span>
+                    </div>
+                    {booking.quantity > 1 && (
+                      <div className="flex justify-between items-start">
+                        <span className="text-gray-600">Quantité</span>
+                        <span className="font-semibold text-gray-900">{booking.quantity} {booking.service?.unit_name || 'unité(s)'}</span>
                       </div>
                     )}
-                  </div>
-                </div>
-
-                {/* Informations financières */}
-                <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-yellow-200">
-                  <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
-                    <Euro className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600" />
-                    Informations financières
-                  </h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center pb-3 border-b border-yellow-200">
-                      <span className="text-gray-700 font-medium text-sm sm:text-base">Montant total</span>
-                      <span className="text-lg sm:text-xl font-bold text-gray-900">{booking.total_amount.toFixed(2)}€</span>
+                    <div className="flex justify-between items-start">
+                      <span className="text-gray-600">Durée</span>
+                      <span className="font-semibold text-gray-900">{booking.duration_minutes} minutes</span>
                     </div>
-                    <div className="flex justify-between items-center pb-3 border-b border-yellow-200">
-                      <span className="text-gray-700 font-medium text-sm sm:text-base">Montant payé</span>
-                      <span className="text-lg sm:text-xl font-bold text-green-600">{(booking.payment_amount || 0).toFixed(2)}€</span>
-                    </div>
-                    <div className="flex justify-between items-center pt-2">
-                      <span className="text-gray-900 font-bold text-sm sm:text-base">Solde restant</span>
-                      <span className="text-xl sm:text-2xl font-bold text-orange-600">
-                        {(booking.total_amount - (booking.payment_amount || 0)).toFixed(2)}€
+                    <div className="flex justify-between items-start">
+                      <span className="text-gray-600">Date et heure</span>
+                      <span className="font-semibold text-gray-900 text-right">
+                        {format(new Date(booking.date), 'dd/MM/yyyy', { locale: fr })} à {formatTime(booking.time)}
                       </span>
                     </div>
+
+                    <div className="h-px bg-green-300 my-2" />
+
+                    <div className="flex justify-between items-center pt-1">
+                      <span className="font-bold text-gray-900">Total</span>
+                      <span className="text-xl font-bold text-green-600">{booking.total_amount.toFixed(2)}€</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Statut de la réservation - Version compacte */}
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+                      <Calendar className="w-4 h-4 text-white" />
+                    </div>
+                    <h3 className="text-sm font-bold text-gray-900">Statut de la réservation</h3>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2">
+                    <button
+                      className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all ${
+                        booking.booking_status === 'pending'
+                          ? 'bg-yellow-100 border-yellow-400'
+                          : 'bg-white border-gray-200'
+                      }`}
+                    >
+                      <div className="text-2xl mb-1">⏳</div>
+                      <span className="text-xs font-semibold text-gray-700">En attente</span>
+                    </button>
+                    <button
+                      className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all ${
+                        booking.booking_status === 'confirmed'
+                          ? 'bg-green-100 border-green-400'
+                          : 'bg-white border-gray-200'
+                      }`}
+                    >
+                      <div className="text-2xl mb-1">✅</div>
+                      <span className="text-xs font-semibold text-gray-700">Confirmée</span>
+                    </button>
+                    <button
+                      className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all ${
+                        booking.booking_status === 'cancelled'
+                          ? 'bg-red-100 border-red-400'
+                          : 'bg-white border-gray-200'
+                      }`}
+                    >
+                      <div className="text-2xl mb-1">❌</div>
+                      <span className="text-xs font-semibold text-gray-700">Annulée</span>
+                    </button>
                   </div>
 
                   {booking.payment_status !== 'paid' && booking.payment_status !== 'completed' && (
-                    <button
-                      onClick={() => setShowPaymentLinkModal(true)}
-                      className="w-full mt-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
-                    >
-                      <LinkIcon className="w-4 h-4 sm:w-5 sm:h-5" />
-                      Créer un lien de paiement
-                    </button>
+                    <>
+                      <div className="h-px bg-purple-300 my-3" />
+                      <button
+                        onClick={() => setShowPaymentLinkModal(true)}
+                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2.5 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all flex items-center justify-center gap-2 text-sm"
+                      >
+                        <LinkIcon className="w-4 h-4" />
+                        Créer un lien de paiement
+                      </button>
+                    </>
                   )}
                 </div>
 
@@ -407,33 +398,33 @@ export function BookingDetailsModal({ booking, onClose, onUpdate }: BookingDetai
                 )}
 
                 {displayTransactions.length > 0 && (
-                  <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-indigo-200">
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4 flex items-center gap-2">
-                      <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-600" />
-                      Historique des paiements ({displayTransactions.length})
-                    </h3>
-                    <div className="space-y-3">
+                  <div className="bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl p-4 border-2 border-indigo-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                        <CreditCard className="w-4 h-4 text-white" />
+                      </div>
+                      <h3 className="text-sm font-bold text-gray-900">Historique des paiements ({displayTransactions.length})</h3>
+                    </div>
+                    <div className="space-y-2">
                       {displayTransactions.map((transaction, index) => (
-                        <div key={index} className="bg-white rounded-xl p-3 sm:p-4 border-2 border-indigo-200 flex items-center justify-between">
-                          <div>
-                            <p className="font-semibold text-gray-900 text-sm sm:text-base">
-                              {transaction.amount > 0 ? '+' : ''}{transaction.amount.toFixed(2)}€
-                            </p>
-                            <p className="text-xs sm:text-sm text-gray-600">
-                              {transaction.method === 'stripe' ? 'Stripe' : 
-                               transaction.method === 'cash' ? 'Espèces' : 
-                               transaction.method === 'card' ? 'Carte' : 
-                               transaction.method}
-                            </p>
-                            {transaction.date && (
-                              <p className="text-xs text-gray-500">
-                                {format(new Date(transaction.date), 'dd/MM/yyyy à HH:mm', { locale: fr })}
+                        <div key={index} className="bg-white rounded-lg p-3 border border-indigo-200 flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between">
+                              <p className="font-bold text-gray-900 text-sm">
+                                {transaction.amount > 0 ? '+' : ''}{transaction.amount.toFixed(2)}€
                               </p>
-                            )}
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getPaymentStatusColor(transaction.status)}`}>
+                                {getPaymentStatusLabel(transaction.status)}
+                              </span>
+                            </div>
+                            <p className="text-xs text-gray-600 mt-0.5">
+                              {transaction.method === 'stripe' ? 'Stripe' :
+                               transaction.method === 'cash' ? 'Espèces' :
+                               transaction.method === 'card' ? 'Carte' :
+                               transaction.method}
+                              {transaction.date && ` • ${format(new Date(transaction.date), 'dd/MM/yyyy à HH:mm', { locale: fr })}`}
+                            </p>
                           </div>
-                          <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border-2 ${getPaymentStatusColor(transaction.status)}`}>
-                            {getPaymentStatusLabel(transaction.status)}
-                          </span>
                         </div>
                       ))}
                     </div>
@@ -441,11 +432,11 @@ export function BookingDetailsModal({ booking, onClose, onUpdate }: BookingDetai
                 )}
 
                 {booking.notes && (
-                  <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-gray-200">
-                    <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2">
-                      <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-                      Notes
-                    </h3>
+                  <div className="bg-gray-50 rounded-xl p-4 border-2 border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <FileText className="w-4 h-4 text-gray-600" />
+                      <h3 className="text-sm font-bold text-gray-900">Notes</h3>
+                    </div>
                     <p className="text-gray-700 whitespace-pre-wrap text-sm">{booking.notes}</p>
                   </div>
                 )}
