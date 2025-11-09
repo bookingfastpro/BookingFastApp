@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, X, Clock, CreditCard, AlertTriangle, CheckCircle, Calendar, CreditCard as Edit, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useBookings } from '../../hooks/useBookings';
 import { useServices } from '../../hooks/useServices';
 import { bookingEvents } from '../../lib/bookingEvents';
@@ -18,6 +19,7 @@ interface Notification {
 }
 
 export function NotificationCenter() {
+  const navigate = useNavigate();
   const { bookings } = useBookings();
   const { services } = useServices();
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -426,6 +428,24 @@ export function NotificationCenter() {
     return 'À l\'instant';
   };
 
+  const handleNotificationClick = (notification: Notification) => {
+    // Marquer comme lue
+    markAsRead(notification.id);
+
+    // Fermer le panneau de notifications
+    setIsOpen(false);
+
+    // Naviguer vers le calendrier
+    navigate('/calendar');
+
+    // Émettre un événement pour ouvrir le modal de détail de la réservation
+    setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('openBookingDetails', {
+        detail: { booking: notification.booking }
+      }));
+    }, 100);
+  };
+
   return (
     <div className="relative">
       {/* Bouton de notification */}
@@ -494,7 +514,8 @@ export function NotificationCenter() {
                   {notifications.slice(0, 10).map((notification, index) => (
                     <div
                       key={notification.id}
-                      className={`p-4 hover:bg-gray-50 transition-colors animate-fadeIn ${
+                      onClick={() => handleNotificationClick(notification)}
+                      className={`p-4 hover:bg-gray-50 transition-colors animate-fadeIn cursor-pointer ${
                         !notification.read ? 'bg-blue-50' : ''
                       }`}
                       style={{ animationDelay: `${index * 50}ms` }}
@@ -512,10 +533,11 @@ export function NotificationCenter() {
                               {notification.title}
                             </h4>
                             <button
-                              onClick={() => removeNotification(notification.id)}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                removeNotification(notification.id);
+                              }}
                               className="p-1 text-gray-400 hover:text-gray-600 rounded transition-colors"
-                              onMouseDown={(e) => e.stopPropagation()}
-                              onTouchStart={(e) => e.stopPropagation()}
                             >
                               <X className="w-3 h-3" />
                             </button>
@@ -532,10 +554,11 @@ export function NotificationCenter() {
                             
                             {!notification.read && (
                               <button
-                                onClick={() => markAsRead(notification.id)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  markAsRead(notification.id);
+                                }}
                                 className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                                onMouseDown={(e) => e.stopPropagation()}
-                                onTouchStart={(e) => e.stopPropagation()}
                               >
                                 Marquer comme lu
                               </button>

@@ -45,12 +45,22 @@ export function CalendarPage() {
       refetchUnavailabilities();
     };
 
+    const handleOpenBookingDetails = (event: CustomEvent) => {
+      console.log('📢 CalendarPage - Événement openBookingDetails reçu', event.detail);
+      const { booking } = event.detail;
+      if (booking) {
+        handleBookingClick(booking);
+      }
+    };
+
     window.addEventListener('refreshBookings', handleRefreshBookings);
     window.addEventListener('refreshUnavailabilities', handleRefreshUnavailabilities);
+    window.addEventListener('openBookingDetails', handleOpenBookingDetails as EventListener);
 
     return () => {
       window.removeEventListener('refreshBookings', handleRefreshBookings);
       window.removeEventListener('refreshUnavailabilities', handleRefreshUnavailabilities);
+      window.removeEventListener('openBookingDetails', handleOpenBookingDetails as EventListener);
     };
   }, [refetchBookings, refetchUnavailabilities]);
 
