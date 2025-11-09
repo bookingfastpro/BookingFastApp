@@ -590,85 +590,82 @@ export function POSPage() {
                 </div>
               </div>
 
-              {/* Grille de services - DESIGN MODERNE */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
+              {/* Liste de services - DESIGN MODERNE */}
+              <div className="space-y-3 sm:space-y-4">
                 {filteredProducts.map(product => {
                   return (
-                    <div
+                    <button
                       key={product.id}
-                      className="group relative"
+                      type="button"
+                      onClick={(e) => handleAddToCart(e, product)}
+                      className="w-full bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 border-2 border-purple-200 hover:border-purple-400 hover:shadow-lg transition-all duration-300 text-left group"
                     >
-                      {/* Card Container - Entièrement cliquable */}
-                      <button
-                        type="button"
-                        onClick={(e) => handleAddToCart(e, product)}
-                        className="relative bg-white rounded-2xl overflow-hidden border-2 border-purple-200 shadow-sm hover:shadow-lg hover:border-purple-400 transition-all duration-300 hover:-translate-y-1 w-full text-left cursor-pointer"
-                      >
-                        {/* Header avec prix */}
-                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 relative">
-                          {/* Edit Button */}
-                          {!product._isBookingService && (
-                            <button
-                              type="button"
-                              onClick={(e) => handleEditProduct(e, product)}
-                              className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm hover:bg-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10 shadow-sm"
-                            >
-                              <Edit className="w-3 h-3 text-purple-600" />
-                            </button>
-                          )}
-
-                          {/* Booking Badge */}
-                          {product._isBookingService && (
-                            <div className="absolute top-2 right-2 bg-purple-100 px-2 py-1 rounded-lg z-10">
-                              <Calendar className="w-3 h-3 text-purple-600" />
+                      <div className="flex items-start justify-between gap-3 sm:gap-4">
+                        <div className="flex-1 min-w-0">
+                          {/* Service info */}
+                          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0">
+                              {product._isBookingService ? (
+                                <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                              ) : (
+                                <Package className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                              )}
                             </div>
-                          )}
-
-                          {/* Prix principal */}
-                          <div className="text-center mb-3">
-                            <div className="flex items-baseline justify-center gap-1">
-                              <span className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                                {product.price.toFixed(0)}
-                              </span>
-                              <span className="text-xl font-bold text-gray-400">
-                                .{(product.price % 1).toFixed(2).split('.')[1]}
-                              </span>
-                              <span className="text-sm font-bold text-gray-500">€</span>
+                            <div className="min-w-0 flex-1">
+                              <div className="font-bold text-gray-900 text-sm sm:text-base truncate">
+                                {product.name}
+                              </div>
+                              {product.duration_minutes && (
+                                <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-600">
+                                  <Clock className="w-3 h-3 text-purple-500" />
+                                  <span>{product.duration_minutes}min</span>
+                                </div>
+                              )}
                             </div>
+
+                            {/* Edit Button */}
+                            {!product._isBookingService && (
+                              <button
+                                type="button"
+                                onClick={(e) => handleEditProduct(e, product)}
+                                className="flex-shrink-0 bg-gray-100 hover:bg-gray-200 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                              >
+                                <Edit className="w-3 h-3 text-gray-600" />
+                              </button>
+                            )}
                           </div>
 
-                          {/* Service Name */}
-                          <h3 className="text-gray-900 font-bold text-sm sm:text-base leading-tight line-clamp-2 text-center min-h-[2.5rem] flex items-center justify-center">
-                            {product.name}
-                          </h3>
-                        </div>
-
-                        {/* Content */}
-                        <div className="p-3 sm:p-4">
                           {/* Badges */}
-                          <div className="flex items-center justify-center gap-2 min-h-[24px]">
-                            {product.duration_minutes && (
-                              <div className="inline-flex items-center gap-1 bg-purple-100 px-2 py-1 rounded-lg">
-                                <Clock className="w-3 h-3 text-purple-600" />
-                                <span className="text-xs font-semibold text-purple-700">
-                                  {product.duration_minutes}min
-                                </span>
-                              </div>
-                            )}
+                          <div className="flex flex-wrap items-center gap-2">
                             {product._isTTCPrice && (
-                              <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded-lg">
+                              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium border bg-gray-100 text-gray-700 border-gray-200">
                                 TTC
                               </span>
                             )}
                             {product.track_stock && (
-                              <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">
-                                {product.stock}
+                              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium border bg-blue-50 text-blue-700 border-blue-200">
+                                Stock: {product.stock}
+                              </span>
+                            )}
+                            {product._isBookingService && (
+                              <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium border bg-purple-100 text-purple-700 border-purple-200">
+                                Service de réservation
                               </span>
                             )}
                           </div>
                         </div>
-                      </button>
-                    </div>
+
+                        {/* Prix et flèche */}
+                        <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                          <div className="text-right">
+                            <div className="text-base sm:text-lg font-bold text-purple-600">
+                              {product.price.toFixed(2)}€
+                            </div>
+                          </div>
+                          <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 group-hover:text-purple-600 transition-colors" />
+                        </div>
+                      </div>
+                    </button>
                   );
                 })}
               </div>
