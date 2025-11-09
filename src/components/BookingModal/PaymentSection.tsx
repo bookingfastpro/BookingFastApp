@@ -337,11 +337,11 @@ export function PaymentSection({
 
       {/* Section Ajouter Transaction - VERSION COMPACTE */}
       {showAddTransaction && (
-        <div className="bg-white border-2 border-blue-200 rounded-xl p-3 lg:p-4 space-y-3">
+        <div className="bg-white border-2 border-green-200 rounded-xl p-3 lg:p-4 space-y-3">
           {/* Header compact */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 lg:w-9 lg:h-9 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+              <div className="w-7 h-7 lg:w-9 lg:h-9 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
                 <Plus className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
               </div>
               <span className="text-sm lg:text-base font-bold text-gray-900">Ajouter un paiement</span>
@@ -374,14 +374,14 @@ export function PaymentSection({
                     ...prev,
                     amount: parseFloat(e.target.value) || 0
                   }))}
-                  className="w-full px-3 py-2 lg:py-3 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-base lg:text-lg font-bold"
+                  className="w-full px-3 py-2 lg:py-3 border-2 border-green-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-green-500 text-base lg:text-lg font-bold"
                   placeholder="0.00"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => setNewTransaction(prev => ({ ...prev, amount: remainingAmount }))}
-                className="px-3 py-2 lg:py-3 bg-blue-100 text-blue-700 rounded-lg text-xs lg:text-sm font-semibold hover:bg-blue-200 border border-blue-300 whitespace-nowrap"
+                className="px-3 py-2 lg:py-3 bg-green-100 text-green-700 rounded-lg text-xs lg:text-sm font-semibold hover:bg-green-200 border border-green-300 whitespace-nowrap"
               >
                 Restant
               </button>
@@ -400,7 +400,7 @@ export function PaymentSection({
                   key={index}
                   type="button"
                   onClick={() => setNewTransaction(prev => ({ ...prev, amount: item.value }))}
-                  className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium hover:bg-blue-100 border border-blue-200"
+                  className="px-2 py-1 bg-green-50 text-green-700 rounded text-xs font-medium hover:bg-green-100 border border-green-200"
                 >
                   {item.label}
                 </button>
@@ -428,8 +428,8 @@ export function PaymentSection({
                   onClick={() => setNewTransaction(prev => ({ ...prev, method: method.value as any }))}
                   className={`p-2 lg:p-3 rounded-lg border transition-all ${
                     newTransaction.method === method.value
-                      ? 'bg-blue-500 text-white border-blue-600'
-                      : 'bg-white border-gray-200 text-gray-700 hover:border-blue-300'
+                      ? 'bg-green-500 text-white border-green-600'
+                      : 'bg-white border-gray-200 text-gray-700 hover:border-green-300'
                   }`}
                 >
                   <div className="flex flex-col items-center justify-center text-center gap-0.5">
@@ -454,7 +454,7 @@ export function PaymentSection({
                 ...prev,
                 note: e.target.value
               }))}
-              className="w-full px-3 py-2 lg:py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-sm lg:text-base"
+              className="w-full px-3 py-2 lg:py-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-green-500 text-sm lg:text-base"
               placeholder="Référence..."
             />
           </div>
@@ -472,7 +472,7 @@ export function PaymentSection({
               type="button"
               onClick={handleAddTransaction}
               disabled={newTransaction.amount <= 0}
-              className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-2 lg:py-3 rounded-lg hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm lg:text-base font-semibold flex items-center justify-center gap-1.5"
+              className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white px-3 py-2 lg:py-3 rounded-lg hover:from-green-600 hover:to-emerald-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm lg:text-base font-semibold flex items-center justify-center gap-1.5"
             >
               <Plus className="w-4 h-4 lg:w-5 lg:h-5" />
               Ajouter
@@ -483,11 +483,11 @@ export function PaymentSection({
 
       {/* Section Lien de Paiement - VERSION COMPACTE */}
       {showPaymentLink && (
-        <div className="bg-white border-2 border-cyan-200 rounded-xl p-3 lg:p-4 space-y-3">
+        <div className="bg-white border-2 border-purple-200 rounded-xl p-3 lg:p-4 space-y-3">
           {/* Header compact */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 lg:w-9 lg:h-9 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+              <div className="w-7 h-7 lg:w-9 lg:h-9 bg-gradient-to-r from-purple-500 to-violet-500 rounded-lg flex items-center justify-center">
                 <Link className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
               </div>
               <span className="text-sm lg:text-base font-bold text-gray-900">Lien de paiement</span>
@@ -502,11 +502,11 @@ export function PaymentSection({
           </div>
 
           {/* Info expiration + Client compact */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 lg:p-3 text-xs lg:text-sm space-y-1">
-            <div className="flex items-center gap-1.5 text-blue-700">
+          <div className="bg-purple-50 border border-purple-200 rounded-lg p-2 lg:p-3 text-xs lg:text-sm space-y-1">
+            <div className="flex items-center gap-1.5 text-purple-700">
               <Clock className="w-3 h-3 lg:w-4 lg:h-4" />
               <span>Expire dans {settings?.payment_link_expiry_minutes || 30} min</span>
-              <span className="text-blue-600">•</span>
+              <span className="text-purple-600">•</span>
               <Mail className="w-3 h-3 lg:w-4 lg:h-4" />
               <span className="truncate">{clientEmail}</span>
             </div>
@@ -528,14 +528,14 @@ export function PaymentSection({
                   max={remainingAmount}
                   value={paymentLinkAmount || ''}
                   onChange={(e) => setPaymentLinkAmount(parseFloat(e.target.value) || 0)}
-                  className="w-full px-3 py-2 lg:py-3 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-base lg:text-lg font-bold"
+                  className="w-full px-3 py-2 lg:py-3 border-2 border-purple-300 rounded-lg focus:ring-2 focus:ring-purple-400 focus:border-purple-500 text-base lg:text-lg font-bold"
                   placeholder="0.00"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => setPaymentLinkAmount(remainingAmount)}
-                className="px-3 py-2 lg:py-3 bg-blue-100 text-blue-700 rounded-lg text-xs lg:text-sm font-semibold hover:bg-blue-200 border border-blue-300 whitespace-nowrap"
+                className="px-3 py-2 lg:py-3 bg-purple-100 text-purple-700 rounded-lg text-xs lg:text-sm font-semibold hover:bg-purple-200 border border-purple-300 whitespace-nowrap"
               >
                 Restant
               </button>
@@ -554,7 +554,7 @@ export function PaymentSection({
                   key={index}
                   type="button"
                   onClick={() => setPaymentLinkAmount(item.value)}
-                  className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium hover:bg-blue-100 border border-blue-200"
+                  className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-medium hover:bg-purple-100 border border-purple-200"
                 >
                   {item.label}
                 </button>
@@ -575,7 +575,7 @@ export function PaymentSection({
               type="button"
               onClick={handleGenerateLink}
               disabled={paymentLinkAmount <= 0 || !isStripeConfigured}
-              className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-2 lg:py-3 rounded-lg hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm lg:text-base font-semibold flex items-center justify-center gap-1.5"
+              className="flex-1 bg-gradient-to-r from-purple-500 to-violet-500 text-white px-3 py-2 lg:py-3 rounded-lg hover:from-purple-600 hover:to-violet-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm lg:text-base font-semibold flex items-center justify-center gap-1.5"
             >
               <Send className="w-4 h-4 lg:w-5 lg:h-5" />
               Générer
