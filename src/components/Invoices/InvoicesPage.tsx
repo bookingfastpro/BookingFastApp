@@ -104,10 +104,10 @@ export function InvoicesPage() {
           )}
         </td>
         <td className="px-6 py-4">
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 flex-wrap">
             <button
               onClick={() => handlePreviewDocument(doc)}
-              className="p-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="p-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all"
               title="Aperçu"
             >
               <Eye className="w-4 h-4" />
@@ -117,39 +117,39 @@ export function InvoicesPage() {
                 setSelectedInvoice(doc);
                 setShowDetailsModal(true);
               }}
-              className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+              className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all"
               title="Détails"
             >
               <FileText className="w-4 h-4" />
             </button>
-            
+
             {/* Bouton Envoyer - Devis brouillon */}
             {viewMode === 'quotes' && doc.status === 'draft' && (
               <button
                 onClick={() => handleSendDocument(doc)}
-                className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all"
                 title="Envoyer"
               >
                 <Send className="w-4 h-4" />
               </button>
             )}
-            
+
             {/* Bouton Renvoyer - Devis envoyé non payé */}
             {viewMode === 'quotes' && actualStatus === 'sent' && !isPartiallyPaid && (
               <button
                 onClick={() => handleResendDocument(doc)}
-                className="p-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="p-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all"
                 title="Renvoyer"
               >
                 <RefreshCw className="w-4 h-4" />
               </button>
             )}
-            
+
             {/* Bouton Convertir en facture - Tous les devis */}
             {viewMode === 'quotes' && (
               <button
                 onClick={() => handleConvertToInvoice(doc)}
-                className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all"
                 title="Convertir en facture"
               >
                 <FileCheck className="w-4 h-4" />
@@ -163,7 +163,7 @@ export function InvoicesPage() {
                   setSelectedInvoice(doc);
                   setShowDetailsModal(true);
                 }}
-                className="p-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="p-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all"
                 title="Rembourser"
               >
                 <Undo2 className="w-4 h-4" />
@@ -174,7 +174,7 @@ export function InvoicesPage() {
             {(doc.status === 'draft' || (actualStatus === 'sent' && !isPartiallyPaid)) && (
               <button
                 onClick={() => handleDeleteDocument(doc)}
-                className="p-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="p-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all"
                 title="Supprimer"
               >
                 <Trash2 className="w-4 h-4" />
@@ -613,128 +613,148 @@ function MobileInvoiceCard({ doc, index, viewMode }: { doc: Invoice; index: numb
   return (
     <>
       <div
-        className="bg-gradient-to-r from-gray-50 to-purple-50 rounded-xl border border-purple-200 p-4 animate-fadeIn"
+        className="bg-white rounded-xl border-2 border-gray-200 p-4 shadow-sm hover:shadow-md transition-shadow animate-fadeIn"
         style={{ animationDelay: `${index * 100}ms` }}
       >
-        <div className="flex items-center justify-between mb-3">
-          <div>
-            <div className="font-bold text-purple-600">
+        {/* Header: Numéro + Statut */}
+        <div className="flex items-start justify-between mb-3">
+          <div className="flex-1">
+            <div className="text-xs text-gray-500 mb-0.5">
+              {isQuote ? 'Devis' : 'Facture'}
+            </div>
+            <div className="font-bold text-lg text-purple-600">
               {doc.invoice_number || doc.quote_number}
             </div>
-            <div className="text-sm text-gray-600">{formatDate(doc.invoice_date)}</div>
           </div>
           {isPartiallyPaid ? (
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700">
-              Partiellement payé
+            <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-700 whitespace-nowrap">
+              Partiel
             </span>
           ) : (
             getStatusBadge(actualStatus)
           )}
         </div>
 
-        <div className="mb-3">
-          <div className="font-medium text-gray-900">
+        {/* Client Info */}
+        <div className="bg-gray-50 rounded-lg p-3 mb-3">
+          <div className="text-xs text-gray-500 mb-1">Client</div>
+          <div className="font-semibold text-gray-900 text-sm">
             {doc.client?.firstname} {doc.client?.lastname}
           </div>
-          <div className="text-sm text-gray-600">{doc.client?.email}</div>
+          <div className="text-xs text-gray-600 mt-0.5 truncate">{doc.client?.email}</div>
         </div>
 
-        <div className="flex items-center justify-between mb-4">
+        {/* Dates et montant */}
+        <div className="grid grid-cols-2 gap-3 mb-3">
           <div>
-            <div className="font-bold text-gray-900">{doc.total_ttc.toFixed(2)}€</div>
-            {isPartiallyPaid && (
-              <div className="text-xs text-orange-600 font-bold">
-                Payé: {totalPaid.toFixed(2)}€
-              </div>
-            )}
+            <div className="text-xs text-gray-500 mb-1">Date</div>
+            <div className="text-sm font-medium text-gray-900">{formatDate(doc.invoice_date)}</div>
+          </div>
+          <div>
+            <div className="text-xs text-gray-500 mb-1">Échéance</div>
+            <div className="text-sm font-medium text-gray-900">{formatDate(doc.due_date)}</div>
           </div>
         </div>
 
-        {/* Section Actions avec titre */}
-        <div className="border-t border-purple-200 pt-3">
-          <div className="text-xs font-bold text-gray-600 mb-2">Actions</div>
-          <div className="grid grid-cols-3 gap-2">
-            {/* Première ligne : Actions de base toujours visibles */}
+        {/* Montant */}
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-3 mb-4">
+          <div className="flex items-center justify-between">
+            <div className="text-xs text-purple-700 font-medium">Total TTC</div>
+            <div className="text-xl font-bold text-purple-600">{doc.total_ttc.toFixed(2)}€</div>
+          </div>
+          {isPartiallyPaid && (
+            <div className="flex items-center justify-between mt-2 pt-2 border-t border-purple-200">
+              <div className="text-xs text-orange-600 font-medium">Payé</div>
+              <div className="text-sm font-bold text-orange-600">{totalPaid.toFixed(2)}€</div>
+            </div>
+          )}
+        </div>
+
+        {/* Section Actions */}
+        <div className="border-t border-gray-200 pt-3">
+          <div className="grid grid-cols-2 gap-2">
+            {/* Actions de base */}
             <button
               onClick={() => handlePreviewDocument(doc)}
-              className="p-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
+              className="p-2.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg hover:from-indigo-600 hover:to-purple-600 transition-all flex flex-col items-center justify-center gap-1"
               title="Aperçu"
             >
-              <Eye className="w-5 h-5" />
-              <span className="text-[10px] mt-1 font-bold">Aperçu</span>
+              <Eye className="w-4 h-4" />
+              <span className="text-[9px] font-semibold">Aperçu</span>
             </button>
-            
+
             <button
               onClick={() => {
                 setSelectedInvoice(doc);
                 setShowDetailsModal(true);
               }}
-              className="p-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
+              className="p-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all flex flex-col items-center justify-center gap-1"
               title="Détails"
             >
-              <FileText className="w-5 h-5" />
-              <span className="text-[10px] mt-1 font-bold">Détails</span>
+              <FileText className="w-4 h-4" />
+              <span className="text-[9px] font-semibold">Détails</span>
             </button>
-            
-            {/* Bouton conditionnel selon le statut */}
+
+            {/* Bouton Envoyer pour devis brouillon */}
             {isQuote && doc.status === 'draft' && (
               <button
                 onClick={() => handleSendDocument(doc)}
-                className="p-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
+                className="p-2.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all flex flex-col items-center justify-center gap-1"
                 title="Envoyer"
               >
-                <Send className="w-5 h-5" />
-                <span className="text-[10px] mt-1 font-bold">Envoyer</span>
-              </button>
-            )}
-            
-            {isQuote && actualStatus === 'sent' && !isPartiallyPaid && (
-              <button
-                onClick={() => handleSendDocument(doc)}
-                className="p-3 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-xl hover:from-orange-600 hover:to-yellow-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
-                title="Renvoyer"
-              >
-                <RefreshCw className="w-5 h-5" />
-                <span className="text-[10px] mt-1 font-bold">Renvoyer</span>
-              </button>
-            )}
-            
-            {/* Bouton Convertir en facture - Tous les devis */}
-            {isQuote && (
-              <button
-                onClick={() => handleConvertToInvoice(doc)}
-                className="p-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
-                title="Convertir en facture"
-              >
-                <FileCheck className="w-5 h-5" />
-                <span className="text-[10px] mt-1 font-bold">Facturer</span>
+                <Send className="w-4 h-4" />
+                <span className="text-[9px] font-semibold">Envoyer</span>
               </button>
             )}
 
-            {/* Bouton Rembourser pour les factures */}
+            {/* Bouton Renvoyer pour devis envoyé non payé */}
+            {isQuote && actualStatus === 'sent' && !isPartiallyPaid && (
+              <button
+                onClick={() => handleSendDocument(doc)}
+                className="p-2.5 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all flex flex-col items-center justify-center gap-1"
+                title="Renvoyer"
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span className="text-[9px] font-semibold">Renvoyer</span>
+              </button>
+            )}
+
+            {/* Bouton Convertir pour tous les devis */}
+            {isQuote && (
+              <button
+                onClick={() => handleConvertToInvoice(doc)}
+                className="p-2.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all flex flex-col items-center justify-center gap-1"
+                title="Convertir en facture"
+              >
+                <FileCheck className="w-4 h-4" />
+                <span className="text-[9px] font-semibold">Facturer</span>
+              </button>
+            )}
+
+            {/* Bouton Rembourser pour factures avec paiement */}
             {!isQuote && totalPaid > 0 && (
               <button
                 onClick={() => {
                   setSelectedInvoice(doc);
                   setShowDetailsModal(true);
                 }}
-                className="p-3 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
+                className="p-2.5 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all flex flex-col items-center justify-center gap-1"
                 title="Rembourser"
               >
-                <Undo2 className="w-5 h-5" />
-                <span className="text-[10px] mt-1 font-bold">Rembourser</span>
+                <Undo2 className="w-4 h-4" />
+                <span className="text-[9px] font-semibold">Rembourser</span>
               </button>
             )}
 
-            {/* Bouton Supprimer - Devis et factures brouillon ou non payées */}
+            {/* Bouton Supprimer pour brouillon ou non payé */}
             {(doc.status === 'draft' || (actualStatus === 'sent' && !isPartiallyPaid)) && (
               <button
                 onClick={() => handleDeleteDocument(doc)}
-                className="p-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg flex flex-col items-center justify-center"
+                className="p-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all flex flex-col items-center justify-center gap-1"
                 title="Supprimer"
               >
-                <Trash2 className="w-5 h-5" />
-                <span className="text-[10px] mt-1 font-bold">Supprimer</span>
+                <Trash2 className="w-4 h-4" />
+                <span className="text-[9px] font-semibold">Supprimer</span>
               </button>
             )}
           </div>
