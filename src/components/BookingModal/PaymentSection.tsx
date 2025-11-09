@@ -330,7 +330,7 @@ export function PaymentSection({
             }`}
           >
             {showPaymentLink ? <ChevronUp className="w-4 h-4 lg:w-5 lg:h-5" /> : <Link className="w-4 h-4 lg:w-5 lg:h-5" />}
-            Lien
+            Lien de paiement
           </button>
         </div>
       )}
