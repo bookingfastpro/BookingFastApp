@@ -183,6 +183,13 @@ export function CalendarGrid({
   }, [selectedDate]);
 
   useEffect(() => {
+    return () => {
+      sessionStorage.removeItem('calendar_selected_date');
+      console.log('🧹 Nettoyage de la date sauvegardée lors de la sortie du calendrier');
+    };
+  }, []);
+
+  useEffect(() => {
     const handleBookingChange = () => {
       console.log('📅 CalendarGrid - Événement booking détecté, centrage de la date...');
       setRefreshTrigger(prev => prev + 1);

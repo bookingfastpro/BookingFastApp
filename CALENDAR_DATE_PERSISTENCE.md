@@ -82,8 +82,8 @@ Cette fonctionnalité est utile dans plusieurs scénarios :
 
 La date est sauvegardée dans **sessionStorage** :
 - ✅ Persiste lors des rechargements de page
-- ✅ Persiste lors des navigations internes
 - ✅ Persiste lors des suppressions/modifications de réservations
+- ❌ **Nettoyée automatiquement** lors du changement de page (navigation vers Dashboard, Clients, etc.)
 - ❌ **Ne persiste PAS** après fermeture de l'onglet/navigateur
 - ❌ **Ne persiste PAS** dans un nouvel onglet
 
@@ -102,7 +102,8 @@ La date est sauvegardée dans **sessionStorage** :
 
 1. `getInitialDate()` - Récupère la date sauvegardée ou retourne aujourd'hui
 2. `getInitialMonth()` - Récupère le mois de la date sauvegardée pour l'affichage
-3. `useEffect` - Sauvegarde automatique lors du changement de date
+3. `useEffect` (sauvegarde) - Sauvegarde automatique lors du changement de date
+4. `useEffect` (nettoyage) - Nettoie la date sauvegardée lors de la sortie du composant
 
 ### Clé de stockage
 
@@ -114,13 +115,21 @@ Format : `YYYY-MM-DD` (ex: `2025-12-15`)
 
 ## Test
 
-### Test manuel
+### Test manuel - Persistance lors du rechargement
 
 1. Ouvrir le calendrier
 2. Naviguer vers une date future (ex: dans 2 mois)
 3. Noter la date sélectionnée
 4. Supprimer une réservation (si disponible) ou recharger la page (F5)
 5. Vérifier que le calendrier affiche toujours la date sélectionnée
+
+### Test manuel - Nettoyage lors du changement de page
+
+1. Ouvrir le calendrier
+2. Naviguer vers une date future (ex: dans 2 mois)
+3. Cliquer sur "Dashboard" ou une autre page
+4. Revenir sur le calendrier
+5. Vérifier que le calendrier affiche la date d'aujourd'hui (pas la date précédente)
 
 ### Console de débogage
 
@@ -129,6 +138,7 @@ La console affiche les messages suivants :
 ```
 📅 Restauration date sauvegardée: 2025-12-15
 💾 Sauvegarde de la date sélectionnée: 2025-12-15
+🧹 Nettoyage de la date sauvegardée lors de la sortie du calendrier
 ```
 
 ### Inspection manuelle
