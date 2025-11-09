@@ -335,71 +335,61 @@ export function PaymentSection({
         </div>
       )}
 
-      {/* Section Ajouter Transaction (Expandable) */}
+      {/* Section Ajouter Transaction - VERSION COMPACTE */}
       {showAddTransaction && (
-        <div className="bg-white border-2 border-blue-200 rounded-2xl p-6 space-y-6 animate-slideDown shadow-lg">
-          {/* Header */}
+        <div className="bg-white border-2 border-blue-200 rounded-xl p-3 space-y-3">
+          {/* Header compact */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center text-white">
-                <Plus className="w-5 h-5" />
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                <Plus className="w-4 h-4 text-white" />
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-gray-900">Ajouter un paiement</h3>
-                <p className="text-sm text-gray-600">Enregistrer un nouveau paiement reçu</p>
-              </div>
+              <span className="text-sm font-bold text-gray-900">Ajouter un paiement</span>
             </div>
             <button
               type="button"
               onClick={() => setShowAddTransaction(false)}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-1 text-gray-400 hover:text-gray-600 rounded"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
-          </div>
-
-          {/* Stats rapides */}
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-3">
-              <div className="text-blue-600 text-xs font-medium">Montant total</div>
-              <div className="text-lg font-bold text-blue-800">{totalAmount.toFixed(2)}€</div>
-            </div>
-            <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl p-3">
-              <div className="text-orange-600 text-xs font-medium">Restant à payer</div>
-              <div className="text-lg font-bold text-orange-800">{remainingAmount.toFixed(2)}€</div>
-            </div>
           </div>
 
           {/* Montant */}
           <div>
-            <label className="block text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
-              <Euro className="w-4 h-4 text-green-600 flex-shrink-0" />
-              Montant du paiement (€)
+            <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex items-center gap-1">
+              <Euro className="w-3 h-3" />
+              Montant (€)
             </label>
-            
-            <div className="relative mb-3">
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">
-                <Euro className="w-4 h-4 text-white" />
+
+            <div className="flex gap-2 mb-2">
+              <div className="relative flex-1">
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  max={remainingAmount}
+                  value={newTransaction.amount || ''}
+                  onChange={(e) => setNewTransaction(prev => ({
+                    ...prev,
+                    amount: parseFloat(e.target.value) || 0
+                  }))}
+                  className="w-full px-3 py-2 border-2 border-blue-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-base font-bold"
+                  placeholder="0.00"
+                />
               </div>
-              <input
-                type="number"
-                step="0.01"
-                min="0.01"
-                max={remainingAmount}
-                value={newTransaction.amount || ''}
-                onChange={(e) => setNewTransaction(prev => ({
-                  ...prev,
-                  amount: parseFloat(e.target.value) || 0
-                }))}
-                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-300 text-xl font-bold bg-white shadow-inner"
-                placeholder="0.00"
-              />
+              <button
+                type="button"
+                onClick={() => setNewTransaction(prev => ({ ...prev, amount: remainingAmount }))}
+                className="px-3 py-2 bg-blue-100 text-blue-700 rounded-lg text-xs font-semibold hover:bg-blue-200 border border-blue-300 whitespace-nowrap"
+              >
+                Restant
+              </button>
             </div>
-            
-            {/* Suggestions de montants */}
-            <div className="flex flex-wrap gap-2">
+
+            {/* Suggestions rapides */}
+            <div className="flex flex-wrap gap-1.5">
               {[
-                { label: 'Restant', value: remainingAmount },
                 { label: '50%', value: totalAmount * 0.5 },
                 { label: '30%', value: totalAmount * 0.3 },
                 { label: '20€', value: 20 },
@@ -410,7 +400,7 @@ export function PaymentSection({
                   key={index}
                   type="button"
                   onClick={() => setNewTransaction(prev => ({ ...prev, amount: item.value }))}
-                  className="px-3 py-2 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 rounded-xl text-sm font-medium hover:from-blue-200 hover:to-purple-200 transition-all duration-300 transform hover:scale-105 border border-blue-200"
+                  className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium hover:bg-blue-100 border border-blue-200"
                 >
                   {item.label}
                 </button>
@@ -418,42 +408,42 @@ export function PaymentSection({
             </div>
           </div>
 
-          {/* Mode de paiement */}
+          {/* Mode de paiement - Version horizontale compacte */}
           <div>
-            <label className="block text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
-              <CreditCard className="w-4 h-4 text-purple-600" />
-              Mode de paiement
+            <label className="text-xs font-semibold text-gray-700 mb-1.5 block flex items-center gap-1">
+              <CreditCard className="w-3 h-3" />
+              Mode
             </label>
-            
-            <div className="grid grid-cols-2 gap-3">
+
+            <div className="grid grid-cols-4 gap-1.5">
               {[
-                { value: 'cash', label: 'Espèces', icon: '💵', color: 'from-green-500 to-emerald-500' },
-                { value: 'card', label: 'Carte', icon: '💳', color: 'from-blue-500 to-cyan-500' },
-                { value: 'transfer', label: 'Virement', icon: '🏦', color: 'from-purple-500 to-pink-500' },
-                { value: 'stripe', label: 'En ligne', icon: '🔗', color: 'from-orange-500 to-red-500' }
+                { value: 'cash', label: 'Espèces', icon: '💵' },
+                { value: 'card', label: 'Carte', icon: '💳' },
+                { value: 'transfer', label: 'Virement', icon: '🏦' },
+                { value: 'stripe', label: 'En ligne', icon: '🔗' }
               ].map((method) => (
                 <button
                   key={method.value}
                   type="button"
                   onClick={() => setNewTransaction(prev => ({ ...prev, method: method.value as any }))}
-                  className={`p-4 rounded-2xl border-2 transition-all duration-300 transform hover:scale-105 ${
+                  className={`p-2 rounded-lg border transition-all ${
                     newTransaction.method === method.value
-                      ? `bg-gradient-to-r ${method.color} text-white border-transparent shadow-lg`
-                      : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:shadow-md'
+                      ? 'bg-blue-500 text-white border-blue-600'
+                      : 'bg-white border-gray-200 text-gray-700 hover:border-blue-300'
                   }`}
                 >
-                  <div className="flex flex-col items-center justify-center text-center">
-                    <div className="text-2xl mb-1">{method.icon}</div>
-                    <div className="text-sm font-bold">{method.label}</div>
+                  <div className="flex flex-col items-center justify-center text-center gap-0.5">
+                    <div className="text-base">{method.icon}</div>
+                    <div className="text-[10px] font-semibold leading-tight">{method.label}</div>
                   </div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Note */}
+          {/* Note optionnelle */}
           <div>
-            <label className="block text-sm font-bold text-gray-800 mb-3">
+            <label className="text-xs font-semibold text-gray-700 mb-1.5 block">
               Note (optionnel)
             </label>
             <input
@@ -464,20 +454,17 @@ export function PaymentSection({
                 ...prev,
                 note: e.target.value
               }))}
-              className="w-full p-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-200 focus:border-blue-500 transition-all duration-300 bg-white shadow-inner"
-              placeholder="Ajouter une note ou référence..."
+              className="w-full px-3 py-2 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-sm"
+              placeholder="Référence..."
             />
-            <div className="text-xs text-gray-500 mt-1 text-right">
-              {newTransaction.note.length}/100 caractères
-            </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-3 pt-4 border-t border-gray-200">
+          {/* Actions compactes */}
+          <div className="flex gap-2 pt-2 border-t">
             <button
               type="button"
               onClick={() => setShowAddTransaction(false)}
-              className="flex-1 px-6 py-4 text-gray-600 hover:bg-gray-100 rounded-2xl transition-all duration-300 font-bold border-2 border-gray-200 hover:border-gray-300"
+              className="flex-1 px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-lg text-sm font-semibold border border-gray-200"
             >
               Annuler
             </button>
@@ -485,9 +472,9 @@ export function PaymentSection({
               type="button"
               onClick={handleAddTransaction}
               disabled={newTransaction.amount <= 0}
-              className="flex-1 bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 text-white px-6 py-4 rounded-2xl hover:from-blue-700 hover:via-purple-700 hover:to-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-bold transform hover:scale-105 shadow-lg flex items-center justify-center gap-2"
+              className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-2 rounded-lg hover:from-blue-600 hover:to-cyan-600 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold flex items-center justify-center gap-1.5"
             >
-              <Plus className="w-5 h-5" />
+              <Plus className="w-4 h-4" />
               Ajouter
             </button>
           </div>
