@@ -45,24 +45,41 @@ export function CalendarPage() {
       refetchUnavailabilities();
     };
 
-    const handleOpenBookingDetails = (event: CustomEvent) => {
-      console.log('📢 CalendarPage - Événement openBookingDetails reçu', event.detail);
-      const { booking } = event.detail;
-      if (booking) {
-        handleBookingClick(booking);
-      }
-    };
-
     window.addEventListener('refreshBookings', handleRefreshBookings);
     window.addEventListener('refreshUnavailabilities', handleRefreshUnavailabilities);
-    window.addEventListener('openBookingDetails', handleOpenBookingDetails as EventListener);
 
     return () => {
       window.removeEventListener('refreshBookings', handleRefreshBookings);
       window.removeEventListener('refreshUnavailabilities', handleRefreshUnavailabilities);
-      window.removeEventListener('openBookingDetails', handleOpenBookingDetails as EventListener);
     };
   }, [refetchBookings, refetchUnavailabilities]);
+
+  // Vérifier s'il faut ouvrir une réservation depuis une notification
+  useEffect(() => {
+    const openBookingId = sessionStorage.getItem('openBookingId');
+    console.log('🔍 CalendarPage - Vérification sessionStorage openBookingId:', openBookingId);
+    console.log('🔍 CalendarPage - Nombre de bookings chargés:', bookings.length);
+
+    if (openBookingId && bookings.length > 0 && !bookingsLoading) {
+      console.log('🔍 CalendarPage - Recherche du booking:', openBookingId);
+      console.log('🔍 CalendarPage - Liste des IDs disponibles:', bookings.map(b => b.id));
+
+      const booking = bookings.find(b => b.id === openBookingId);
+
+      if (booking) {
+        console.log('✅ CalendarPage - Booking trouvé, ouverture du modal:', booking);
+        // Nettoyer le sessionStorage
+        sessionStorage.removeItem('openBookingId');
+        // Ouvrir le modal immédiatement
+        handleBookingClick(booking);
+      } else {
+        console.log('❌ CalendarPage - Booking non trouvé dans la liste');
+        console.log('❌ CalendarPage - ID recherché:', openBookingId);
+      }
+    } else if (openBookingId && bookings.length === 0) {
+      console.log('⏳ CalendarPage - En attente du chargement des bookings...');
+    }
+  }, [bookings, bookingsLoading]);
 
   const handleTimeSlotClick = (date: string, time: string) => {
     console.log('🔍 CalendarPage.handleTimeSlotClick - Date:', date, 'Time:', time);

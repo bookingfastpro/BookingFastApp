@@ -429,21 +429,21 @@ export function NotificationCenter() {
   };
 
   const handleNotificationClick = (notification: Notification) => {
+    console.log('🔔 Notification cliquée:', notification);
+
     // Marquer comme lue
     markAsRead(notification.id);
 
     // Fermer le panneau de notifications
     setIsOpen(false);
 
+    // Stocker la réservation dans sessionStorage pour la récupérer après navigation
+    sessionStorage.setItem('openBookingId', notification.booking.id);
+
+    console.log('📦 Booking ID stocké dans sessionStorage:', notification.booking.id);
+
     // Naviguer vers le calendrier
     navigate('/calendar');
-
-    // Émettre un événement pour ouvrir le modal de détail de la réservation
-    setTimeout(() => {
-      window.dispatchEvent(new CustomEvent('openBookingDetails', {
-        detail: { booking: notification.booking }
-      }));
-    }, 100);
   };
 
   return (
