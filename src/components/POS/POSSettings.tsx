@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Percent, DollarSign, FileText } from 'lucide-react';
+import { Settings, Percent, DollarSign, FileText, Plus, Edit } from 'lucide-react';
 import { Modal } from '../UI/Modal';
-import { POSSettings as POSSettingsType } from '../../types/pos';
+import { POSSettings as POSSettingsType, POSCategory, POSProduct } from '../../types/pos';
 
 interface POSSettingsProps {
   isOpen: boolean;
   onClose: () => void;
   settings: POSSettingsType;
   onSave: (settings: Partial<POSSettingsType>) => Promise<void>;
+  categories?: POSCategory[];
+  onAddCategory?: () => void;
+  onAddProduct?: () => void;
 }
 
-export function POSSettings({ isOpen, onClose, settings, onSave }: POSSettingsProps) {
+export function POSSettings({ isOpen, onClose, settings, onSave, categories = [], onAddCategory, onAddProduct }: POSSettingsProps) {
   const [formData, setFormData] = useState({
     tax_rate: '',
     currency: 'EUR',
@@ -56,6 +59,29 @@ export function POSSettings({ isOpen, onClose, settings, onSave }: POSSettingsPr
       size="lg"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Gestion des catégories et services */}
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
+          <h3 className="text-sm font-bold text-gray-900 mb-3">Gestion des données</h3>
+          <div className="space-y-2">
+            <button
+              type="button"
+              onClick={onAddCategory}
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-3 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg text-sm flex items-center justify-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Ajouter une catégorie
+            </button>
+            <button
+              type="button"
+              onClick={onAddProduct}
+              className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white px-4 py-3 rounded-lg font-medium hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg text-sm flex items-center justify-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Ajouter un service
+            </button>
+          </div>
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             <Percent className="w-4 h-4 inline mr-2" />

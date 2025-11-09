@@ -528,24 +528,6 @@ export function POSPage() {
                       {filteredProducts.length} services
                     </span>
                   </h2>
-                  <div className="flex gap-1.5">
-                    <button
-                      type="button"
-                      onClick={handleAddCategory}
-                      className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 sm:px-3 py-1.5 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg text-[10px] sm:text-xs"
-                    >
-                      <Plus className="w-3 h-3 inline mr-1" />
-                      <span className="hidden sm:inline">Catégorie</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleAddProduct}
-                      className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-2 sm:px-3 py-1.5 rounded-lg font-medium hover:from-green-600 hover:to-emerald-600 transition-all shadow-lg text-[10px] sm:text-xs"
-                    >
-                      <Plus className="w-3 h-3 inline mr-1" />
-                      <span className="hidden sm:inline">Service</span>
-                    </button>
-                  </div>
                 </div>
 
                 <div className="mb-2 sm:mb-3">
@@ -1388,6 +1370,15 @@ export function POSPage() {
           isOpen={showSettings}
           onClose={() => setShowSettings(false)}
           settings={settings}
+          categories={categories}
+          onAddCategory={() => {
+            setShowSettings(false);
+            handleAddCategory({ preventDefault: () => {}, stopPropagation: () => {} } as React.MouseEvent);
+          }}
+          onAddProduct={() => {
+            setShowSettings(false);
+            handleAddProduct({ preventDefault: () => {}, stopPropagation: () => {} } as React.MouseEvent);
+          }}
           onSave={async (settingsData) => {
             try {
               await updateSettings(settingsData);
