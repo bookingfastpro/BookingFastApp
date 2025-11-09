@@ -259,61 +259,61 @@ export function PaymentSection({
 
   return (
     <div className="space-y-4">
-      {/* Résumé des paiements */}
-      <div className={`bg-gradient-to-r ${getPaymentStatusColor()} rounded-2xl p-4 border-2 animate-fadeIn`}>
-        <div className="flex justify-between items-center mb-3">
-          <span className="font-bold text-gray-800">État du paiement</span>
-          <span className="text-sm font-bold px-3 py-1 bg-white/50 rounded-full">{getPaymentStatusText()}</span>
+      {/* Résumé des paiements - VERSION COMPACTE */}
+      <div className={`bg-gradient-to-r ${getPaymentStatusColor()} rounded-xl p-3 border-2`}>
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm font-bold text-gray-800">État du paiement</span>
+          <span className="text-xs font-bold px-2 py-1 bg-white/60 rounded-full">{getPaymentStatusText()}</span>
         </div>
-        
-        <div className="grid grid-cols-3 gap-4 text-sm">
-          <div className="text-center">
-            <div className="font-bold text-xl text-gray-900">{totalAmount.toFixed(2)}€</div>
-            <div className="text-gray-600 font-medium">Total</div>
+
+        <div className="flex items-center justify-between text-sm mb-2">
+          <div className="flex items-center gap-1">
+            <span className="text-gray-600 text-xs">Total</span>
+            <span className="font-bold text-gray-900">{totalAmount.toFixed(2)}€</span>
           </div>
-          <div className="text-center">
-            <div className="font-bold text-xl text-green-600">{currentPaid.toFixed(2)}€</div>
-            <div className="text-gray-600 font-medium">Payé</div>
+          <div className="flex items-center gap-1">
+            <span className="text-gray-600 text-xs">Payé</span>
+            <span className="font-bold text-green-600">{currentPaid.toFixed(2)}€</span>
           </div>
-          <div className="text-center">
-            <div className="font-bold text-xl text-orange-600">{remainingAmount.toFixed(2)}€</div>
-            <div className="text-gray-600 font-medium">Restant</div>
+          <div className="flex items-center gap-1">
+            <span className="text-gray-600 text-xs">Restant</span>
+            <span className="font-bold text-orange-600">{remainingAmount.toFixed(2)}€</span>
           </div>
         </div>
 
         {/* Barre de progression */}
-        <div className="mt-4">
-          <div className="w-full bg-white/50 rounded-full h-3">
-            <div 
-              className="bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full transition-all duration-1000 ease-out"
+        <div className="flex items-center gap-2">
+          <div className="flex-1 bg-white/50 rounded-full h-2 overflow-hidden">
+            <div
+              className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500"
               style={{ width: `${Math.min((currentPaid / totalAmount) * 100, 100)}%` }}
             />
           </div>
-          <div className="text-xs text-gray-600 mt-1 text-center">
-            {((currentPaid / totalAmount) * 100).toFixed(0)}% payé
-          </div>
+          <span className="text-xs font-semibold text-gray-700 whitespace-nowrap">
+            {((currentPaid / totalAmount) * 100).toFixed(0)}%
+          </span>
         </div>
       </div>
 
-      {/* Actions de paiement */}
+      {/* Actions de paiement - VERSION COMPACTE */}
       {!isFullyPaid && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 animate-slideUp">
+        <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => {
               setShowAddTransaction(!showAddTransaction);
               setShowPaymentLink(false);
             }}
-            className={`px-4 py-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 text-base font-bold transform hover:scale-105 shadow-lg ${
-              showAddTransaction 
-                ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white' 
-                : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600'
+            className={`px-3 py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm font-semibold ${
+              showAddTransaction
+                ? 'bg-blue-600 text-white'
+                : 'bg-blue-500 text-white hover:bg-blue-600'
             }`}
           >
-            {showAddTransaction ? <ChevronUp className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
-            Ajouter paiement
+            {showAddTransaction ? <ChevronUp className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+            Ajouter
           </button>
-          
+
           <button
             type="button"
             onClick={() => {
@@ -323,14 +323,14 @@ export function PaymentSection({
                 setPaymentLinkAmount(remainingAmount);
               }
             }}
-            className={`px-4 py-4 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 text-base font-bold transform hover:scale-105 shadow-lg ${
-              showPaymentLink 
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
-                : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600'
+            className={`px-3 py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm font-semibold ${
+              showPaymentLink
+                ? 'bg-purple-600 text-white'
+                : 'bg-purple-500 text-white hover:bg-purple-600'
             }`}
           >
-            {showPaymentLink ? <ChevronUp className="w-5 h-5" /> : <Link className="w-5 h-5" />}
-            Lien de paiement
+            {showPaymentLink ? <ChevronUp className="w-4 h-4" /> : <Link className="w-4 h-4" />}
+            Lien
           </button>
         </div>
       )}
@@ -632,87 +632,66 @@ export function PaymentSection({
         </div>
       )}
 
-      {/* Liste des transactions */}
+      {/* Liste des transactions - VERSION COMPACTE */}
       {transactions.length > 0 && (
-        <div className="space-y-3 animate-fadeIn">
-          <h4 className="font-bold text-gray-800 flex items-center gap-2 text-lg">
-            <CreditCard className="w-5 h-5 text-blue-600" />
-            Historique des paiements ({transactions.length})
+        <div className="space-y-2">
+          <h4 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+            <CreditCard className="w-4 h-4 text-blue-600" />
+            Historique ({transactions.length})
           </h4>
-          
-          <div className="space-y-3 max-h-64 overflow-y-auto scrollbar-custom">
-            {transactions.map((transaction, index) => (
+
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {transactions.map((transaction) => (
               <div
                 key={transaction.id}
-                className={`flex items-center justify-between p-4 rounded-2xl border-2 hover:border-blue-200 transition-all duration-300 transform hover:scale-[1.02] shadow-sm animate-fadeIn ${
-                  transaction.status === 'pending' 
-                    ? 'bg-gradient-to-r from-orange-50 to-yellow-50 border-orange-200' 
-                    : 'bg-white border-gray-100'
+                className={`flex items-center gap-2 p-2 rounded-lg border ${
+                  transaction.status === 'pending'
+                    ? 'bg-orange-50 border-orange-200'
+                    : transaction.status === 'cancelled'
+                    ? 'bg-red-50 border-red-200'
+                    : 'bg-white border-gray-200'
                 }`}
-                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <span className={`font-bold text-lg ${
-                      transaction.status === 'pending' ? 'text-orange-600' : 
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 text-xs">
+                    <span className={`font-bold ${
+                      transaction.status === 'pending' ? 'text-orange-600' :
                       transaction.status === 'cancelled' ? 'text-red-600' : 'text-green-600'
                     }`}>
                       {transaction.status === 'pending' || transaction.status === 'cancelled' ? '' : '+'}{transaction.amount.toFixed(2)}€
                     </span>
-                    <span className="text-xs bg-gradient-to-r from-gray-100 to-gray-200 px-3 py-1 rounded-full font-medium">
-                      {getPaymentMethodLabel(transaction.method)}
-                    </span>
-                    <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                      transaction.status === 'pending' 
-                        ? 'bg-orange-100 text-orange-700' 
-                        : transaction.status === 'cancelled'
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-green-100 text-green-700'
-                    }`}>
-                      {getTransactionStatusLabel(transaction)}
-                    </span>
-                    {/* Timer pour les liens de paiement */}
+                    <span className="text-gray-600">{getPaymentMethodLabel(transaction.method)}</span>
                     {transaction.method === 'stripe' && transaction.status === 'pending' && (
-                      <PaymentLinkTimer 
-                        createdAt={transaction.created_at} 
+                      <PaymentLinkTimer
+                        createdAt={transaction.created_at}
                         expiryMinutes={settings?.payment_link_expiry_minutes || 30}
                       />
                     )}
                   </div>
                   {transaction.note && (
-                    <div className="text-sm text-gray-600 mb-1 font-medium">{cleanTransactionNote(transaction.note)}</div>
+                    <div className="text-xs text-gray-500 truncate">{cleanTransactionNote(transaction.note)}</div>
                   )}
-                  <div className="text-xs text-gray-400">
-                    {new Date(transaction.created_at).toLocaleDateString('fr-FR', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </div>
                 </div>
-                
-                <div className="flex gap-2">
-                  {/* Bouton copier lien - seulement pour les liens Stripe en attente */}
+
+                <div className="flex gap-1 flex-shrink-0">
                   {transaction.method === 'stripe' && transaction.status === 'pending' && (
                     <button
                       type="button"
                       onClick={() => copyPaymentLink(transaction)}
-                      className="p-3 text-blue-500 hover:bg-blue-50 rounded-xl transition-all duration-300 transform hover:scale-110"
-                      title="Copier le lien de paiement"
+                      className="p-1.5 text-blue-500 hover:bg-blue-50 rounded transition-colors"
+                      title="Copier le lien"
                     >
-                      <Copy className="w-5 h-5" />
+                      <Copy className="w-4 h-4" />
                     </button>
                   )}
-                  
+
                   <button
                     type="button"
                     onClick={() => handleDeleteTransaction(transaction.id)}
-                    className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all duration-300 transform hover:scale-110"
-                    title={transaction.status === 'pending' ? 'Supprimer le lien de paiement' : 'Supprimer la transaction'}
+                    className="p-1.5 text-red-500 hover:bg-red-50 rounded transition-colors"
+                    title="Supprimer"
                   >
-                    <Trash2 className="w-5 h-5" />
+                    <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
