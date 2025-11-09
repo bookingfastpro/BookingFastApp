@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell, X, Check, CheckCheck, Trash2, Calendar, Clock, AlertCircle } from 'lucide-react';
 import { useNotifications } from '../../hooks/useNotifications';
+import { useNavigate } from 'react-router-dom';
 
 export function NotificationBell() {
+  const navigate = useNavigate();
   const {
     notifications,
     unreadCount,
@@ -36,6 +38,20 @@ export function NotificationBell() {
     };
   }, [isOpen]);
 
+  const handleNotificationClick = async (notification: any) => {
+    // Marquer comme lu
+    if (!notification.is_read) {
+      await markAsRead(notification.id);
+    }
+
+    // Fermer le dropdown
+    setIsOpen(false);
+
+    // Naviguer vers la réservation si elle existe
+    if (notification.booking_id) {
+      navigate('/calendar');
+    }
+  };
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -174,9 +190,10 @@ export function NotificationBell() {
                     key={notification.id}
                     className={`p-4 transition-all duration-200 ${
                       notification.is_read
-                        ? 'bg-white'
-                        : 'bg-blue-50'
-                    } relative group`}
+                        ? 'bg-white hover:bg-gray-50'
+                        : 'bg-blue-50 hover:bg-blue-100'
+                    } cursor-pointer relative group`}
+                    onClick={() => handleNotificationClick(notification)}
                   >
                     <div className="flex items-start gap-3">
                       {/* Icon */}

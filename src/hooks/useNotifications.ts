@@ -164,6 +164,17 @@ export function useNotifications() {
     fetchNotifications();
   }, [fetchNotifications]);
 
+  // Auto-refresh toutes les 10 secondes
+  useEffect(() => {
+    if (!user) return;
+
+    const interval = setInterval(() => {
+      fetchNotifications();
+    }, 10000); // 10 secondes
+
+    return () => clearInterval(interval);
+  }, [user, fetchNotifications]);
+
   // S'abonner aux changements en temps réel
   useEffect(() => {
     if (!user) return;
