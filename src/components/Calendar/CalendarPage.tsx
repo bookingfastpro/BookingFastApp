@@ -255,38 +255,38 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
   const shouldShowTeamFilter = canViewTeamFilter && isMultiUserActive && teamMembers.length > 0 && view === 'calendar';
 
   return (
-    <div 
-      className="h-full flex flex-col overflow-y-auto scrollable-area" 
-      style={{ 
-        margin: 0, 
+    <div
+      className="h-full flex flex-col overflow-y-auto scrollable-area bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50"
+      style={{
+        margin: 0,
         padding: 0,
         WebkitOverflowScrolling: 'touch',
         touchAction: 'pan-y'
       }}
     >
       {shouldShowTeamFilter && (
-        <div className="bg-white border-b border-gray-200">
+        <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 shadow-sm">
           {/* Bouton Filtres repliable */}
-          <div className="px-4 py-3">
+          <div className="px-3 sm:px-4 py-3">
             <button
               onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}
-              className="w-full flex items-center justify-between px-4 py-2.5 bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 rounded-xl transition-all duration-300 border border-purple-200"
+              className="w-full flex items-center justify-between px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl transition-all duration-300 shadow-lg transform hover:scale-[1.02]"
             >
               <div className="flex items-center gap-2">
-                <Filter className="w-5 h-5 text-purple-600" />
-                <span className="font-medium text-gray-700">
+                <Filter className="w-5 h-5" />
+                <span className="font-bold text-sm sm:text-base">
                   Filtres
                   {selectedTeamMember !== 'all' && (
-                    <span className="ml-2 px-2 py-0.5 bg-purple-600 text-white text-xs rounded-full">
+                    <span className="ml-2 px-2 py-0.5 bg-white/30 backdrop-blur-sm text-white text-xs rounded-full font-bold">
                       1
                     </span>
                   )}
                 </span>
               </div>
               {isFiltersExpanded ? (
-                <ChevronUp className="w-5 h-5 text-gray-600" />
+                <ChevronUp className="w-5 h-5" />
               ) : (
-                <ChevronDown className="w-5 h-5 text-gray-600" />
+                <ChevronDown className="w-5 h-5" />
               )}
             </button>
           </div>
@@ -297,19 +297,21 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
               isFiltersExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
             }`}
           >
-            <div className="px-4 pb-4 space-y-3">
+            <div className="px-3 sm:px-4 pb-4 space-y-3">
               {/* Filtre par membre */}
-              <div className="bg-white rounded-xl border border-gray-200 p-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <UserCheck className="w-4 h-4 text-purple-600" />
-                  <span className="font-medium text-sm text-gray-700">Filtrer par membre</span>
+              <div className="bg-gradient-to-br from-white to-gray-50 rounded-xl border-2 border-purple-200 p-4 shadow-lg">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
+                    <UserCheck className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="font-bold text-sm text-gray-900">Filtrer par membre</span>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <select
                     value={selectedTeamMember}
                     onChange={(e) => setSelectedTeamMember(e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-3 py-2.5 border-2 border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all font-medium bg-white"
                     disabled={membersLoading}
                   >
                     <option value="all">
@@ -326,11 +328,11 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
                     })}
                     <option value="unassigned">Non assigné</option>
                   </select>
-                  
+
                   {selectedTeamMember !== 'all' && (
                     <button
                       onClick={() => setSelectedTeamMember('all')}
-                      className="p-2 text-gray-600 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-all duration-300"
+                      className="p-2.5 text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 rounded-xl transition-all duration-300 shadow-lg"
                       title="Réinitialiser"
                     >
                       <RotateCcw className="w-4 h-4" />
@@ -339,10 +341,10 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
                 </div>
 
                 {selectedTeamMember !== 'all' && (
-                  <div className="mt-2 flex items-center gap-2 text-xs text-purple-700 bg-purple-50 px-3 py-2 rounded-lg">
-                    <span className="font-medium">Filtre actif :</span>
-                    <span className="flex-1 truncate">
-                      {selectedTeamMember === 'unassigned' 
+                  <div className="mt-3 flex items-center gap-2 text-xs bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-300 px-3 py-2.5 rounded-xl">
+                    <span className="font-bold text-purple-900">Filtre actif:</span>
+                    <span className="flex-1 truncate font-medium text-purple-800">
+                      {selectedTeamMember === 'unassigned'
                         ? 'Non assignées'
                         : (() => {
                             const member = teamMembers.find(m => m.user_id === selectedTeamMember);
@@ -350,8 +352,8 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
                           })()
                       }
                     </span>
-                    <span className="ml-auto font-bold">
-                      {filteredBookings.length} réservation(s)
+                    <span className="ml-auto font-black text-purple-900 bg-white px-2 py-1 rounded-lg">
+                      {filteredBookings.length}
                     </span>
                   </div>
                 )}
@@ -360,7 +362,7 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
               {/* Bouton Indisponibilité */}
               <button
                 onClick={() => handleAddUnavailability()}
-                className="w-full px-4 py-3 text-sm font-medium text-white bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg flex items-center justify-center gap-2"
+                className="w-full px-4 py-3 text-sm font-bold text-white bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 rounded-xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg flex items-center justify-center gap-2"
               >
                 <Ban className="w-5 h-5" />
                 <span>Ajouter une indisponibilité</span>
