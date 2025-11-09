@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { X, Plus, Trash2, Search, Package, Hash, Euro, Percent, UserPlus, PackagePlus } from 'lucide-react';
+import { X, Plus, Trash2, Search, Package, Hash, Euro, Percent, UserPlus, PackagePlus, Edit2 } from 'lucide-react';
 import { Button } from '../UI/Button';
 import { useClients } from '../../hooks/useClients';
 import { useProducts } from '../../hooks/useProducts';
@@ -34,6 +34,7 @@ export function CreateInvoiceModal({ isOpen, onClose, onInvoiceCreated }: Create
   // États pour les modals
   const [showCreateClientModal, setShowCreateClientModal] = useState(false);
   const [showCreateProductModal, setShowCreateProductModal] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -316,33 +317,51 @@ export function CreateInvoiceModal({ isOpen, onClose, onInvoiceCreated }: Create
                     {filteredProducts.length > 0 ? (
                       <>
                         {filteredProducts.map(product => (
-                          <button
+                          <div
                             key={product.id}
-                            type="button"
-                            onClick={() => addItem(product)}
-                            className="w-full text-left p-3 sm:p-4 bg-white rounded-xl border-2 border-purple-200 hover:border-purple-500 hover:bg-purple-50 transition-all group"
+                            className="w-full bg-white rounded-xl border-2 border-purple-200 hover:border-purple-500 transition-all group overflow-hidden"
                           >
-                            <div className="flex items-center justify-between">
-                              <div className="flex-1">
-                                <div className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors text-sm sm:text-base">
-                                  {product.name}
-                                </div>
-                                {product.description && (
-                                  <div className="text-xs sm:text-sm text-gray-600 mt-1">
-                                    {product.description}
+                            <div className="flex items-center">
+                              <button
+                                type="button"
+                                onClick={() => addItem(product)}
+                                className="flex-1 text-left p-3 sm:p-4 hover:bg-purple-50 transition-all"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div className="flex-1">
+                                    <div className="font-bold text-gray-900 group-hover:text-purple-600 transition-colors text-sm sm:text-base">
+                                      {product.name}
+                                    </div>
+                                    {product.description && (
+                                      <div className="text-xs sm:text-sm text-gray-600 mt-1">
+                                        {product.description}
+                                      </div>
+                                    )}
                                   </div>
-                                )}
-                              </div>
-                              <div className="text-right ml-3 sm:ml-4">
-                                <div className="font-bold text-purple-600 text-sm sm:text-base">
-                                  {product.price_ht.toFixed(2)}€ HT
+                                  <div className="text-right ml-3 sm:ml-4">
+                                    <div className="font-bold text-purple-600 text-sm sm:text-base">
+                                      {product.price_ht.toFixed(2)}€ HT
+                                    </div>
+                                    <div className="text-xs text-gray-500">
+                                      TVA {product.tva_rate}%
+                                    </div>
+                                  </div>
                                 </div>
-                                <div className="text-xs text-gray-500">
-                                  TVA {product.tva_rate}%
-                                </div>
-                              </div>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setEditingProduct(product);
+                                  setShowCreateProductModal(true);
+                                }}
+                                className="flex-shrink-0 p-3 sm:p-4 text-blue-600 hover:bg-blue-50 transition-all border-l border-purple-200"
+                                title="Éditer le produit"
+                              >
+                                <Edit2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                              </button>
                             </div>
-                          </button>
+                          </div>
                         ))}
                         
                         {/* Bouton produit personnalisé */}
@@ -593,8 +612,12 @@ export function CreateInvoiceModal({ isOpen, onClose, onInvoiceCreated }: Create
       {showCreateProductModal && (
         <CreateProductModal
           isOpen={showCreateProductModal}
-          onClose={() => setShowCreateProductModal(false)}
+          onClose={() => {
+            setShowCreateProductModal(false);
+            setEditingProduct(null);
+          }}
           onProductCreated={handleProductCreated}
+          editingProduct={editingProduct}
         />
       )}
     </>

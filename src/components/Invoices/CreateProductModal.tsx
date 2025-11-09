@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from '../UI/Modal';
 import { Button } from '../UI/Button';
 import { Package, Euro, Percent } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
+import { Product } from '../../types';
 
 interface CreateProductModalProps {
   isOpen: boolean;
   onClose: () => void;
   onProductCreated?: () => void;
+  editingProduct?: Product | null;
 }
 
-export function CreateProductModal({ isOpen, onClose, onProductCreated }: CreateProductModalProps) {
-  const { createProduct } = useProducts();
+export function CreateProductModal({ isOpen, onClose, onProductCreated, editingProduct }: CreateProductModalProps) {
+  const { createProduct, updateProduct } = useProducts();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -20,6 +22,26 @@ export function CreateProductModal({ isOpen, onClose, onProductCreated }: Create
     tva_rate: '20',
     unit: 'unité'
   });
+
+  useEffect(() => {
+    if (editingProduct) {
+      setFormData({
+        name: editingProduct.name,
+        description: editingProduct.description || '',
+        price_ht: editingProduct.price_ht.toString(),
+        tva_rate: editingProduct.tva_rate.toString(),
+        unit: editingProduct.unit || 'unité'
+      });
+    } else {
+      setFormData({
+        name: '',
+        description: '',
+        price_ht: '',
+        tva_rate: '20',
+        unit: 'unité'
+      });
+    }
+  }, [editingProduct, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,17 +64,28 @@ export function CreateProductModal({ isOpen, onClose, onProductCreated }: Create
 
       const price_ttc = priceHT * (1 + tvaRate / 100);
 
-      await createProduct({
-        name: formData.name,
-        description: formData.description,
-        price_ht: priceHT,
-        price_ttc,
-        tva_rate: tvaRate,
-        unit: formData.unit,
-        is_active: true
-      });
-
-      alert('✅ Produit créé avec succès !');
+      if (editingProduct) {
+        await updateProduct(editingProduct.id, {
+          name: formData.name,
+          description: formData.description,
+          price_ht: priceHT,
+          price_ttc,
+          tva_rate: tvaRate,
+          unit: formData.unit
+        });
+        alert('✅ Produit modifié avec succès !');
+      } else {
+        await createProduct({
+          name: formData.name,
+          description: formData.description,
+          price_ht: priceHT,
+          price_ttc,
+          tva_rate: tvaRate,
+          unit: formData.unit,
+          is_active: true
+        });
+        alert('✅ Produit créé avec succès !');
+      }
       
       // Réinitialiser le formulaire
       setFormData({
@@ -86,7 +119,7 @@ export function CreateProductModal({ isOpen, onClose, onProductCreated }: Create
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Créer un produit" size="md">
+    <Modal isOpen={isOpen} onClose={onClose} title={editingProduct ? "Modifier le produit" : "Créer un produit"} size="md">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Nom du produit */}
         <div>
