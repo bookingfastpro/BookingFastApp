@@ -233,99 +233,96 @@ export function ServicesPage() {
         </PermissionGate>
       </div>
 
-      {/* Services List */}
-      <div className="space-y-3 sm:space-y-4">
+      {/* Services Grid - Cartes */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {services.filter(service => service.description !== 'Service personnalisé').map((service, index) => (
           <div
             key={service.id}
-            className="w-full bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 border-2 border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all duration-300 animate-fadeIn"
+            className="group relative bg-white rounded-2xl overflow-hidden border-2 border-gray-200 hover:border-purple-400 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 animate-fadeIn"
             style={{ animationDelay: `${index * 50}ms` }}
           >
-            <div className="flex items-start justify-between gap-3 sm:gap-4">
-              <div className="flex-1 min-w-0">
-                {/* En-tête avec image et nom */}
-                <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                  {service.image_url ? (
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0">
-                      <img
-                        src={service.image_url}
-                        alt={service.name}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    </div>
-                  ) : (
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg sm:rounded-xl flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0">
-                      {service.name.charAt(0)}
-                    </div>
-                  )}
-                  <div className="min-w-0 flex-1">
-                    <div className="font-bold text-gray-900 text-sm sm:text-base truncate">
-                      {service.name}
-                    </div>
-                    <div className="text-xs sm:text-sm text-gray-600 truncate">
-                      {service.description}
-                    </div>
+            {/* Image ou gradient */}
+            <div className="relative h-48 overflow-hidden">
+              {service.image_url ? (
+                <img
+                  src={service.image_url}
+                  alt={service.name}
+                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.parentElement!.classList.add('bg-gradient-to-br', 'from-purple-500', 'via-pink-500', 'to-rose-500');
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 flex items-center justify-center">
+                  <div className="text-6xl font-bold text-white opacity-50">
+                    {service.name.charAt(0)}
                   </div>
                 </div>
+              )}
 
-                {/* Détails */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <Clock className="w-3 sm:w-4 h-3 sm:h-4 text-blue-500 flex-shrink-0" />
-                    <span>{service.duration_minutes} minutes</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <Package className="w-3 sm:w-4 h-3 sm:h-4 text-green-500 flex-shrink-0" />
-                    <span>{service.capacity} {service.unit_name || 'pers.'}</span>
-                  </div>
+              {/* Badge prix */}
+              <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-2 rounded-xl shadow-lg">
+                <div className="text-lg font-bold text-purple-600">
+                  {formatPrice(service.price_ttc)}
                 </div>
+                <div className="text-xs text-gray-600 text-center">TTC</div>
+              </div>
+            </div>
 
-                {/* Prix */}
-                <div className="mt-2 sm:mt-3 flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium border bg-green-100 text-green-700 border-green-200">
-                    Prix TTC
-                  </span>
-                  <span className="text-xs text-gray-600">
-                    HT: {formatPrice(service.price_ht)} · TVA: {formatPrice(service.price_ttc - service.price_ht)}
-                  </span>
+            {/* Contenu */}
+            <div className="p-4">
+              {/* Titre et description */}
+              <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-1">
+                {service.name}
+              </h3>
+              <p className="text-sm text-gray-600 mb-4 line-clamp-2 min-h-[40px]">
+                {service.description}
+              </p>
+
+              {/* Détails */}
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Clock className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                  <span>{service.duration_minutes} minutes</span>
                 </div>
-
-                {/* Actions */}
-                <div className="mt-3 flex gap-2">
-                  <PermissionGate permission="edit_service">
-                    <button
-                      onClick={() => handleEdit(service)}
-                      className="flex items-center justify-center gap-1 sm:gap-2 bg-blue-500 text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-blue-600 transition-colors text-xs sm:text-sm"
-                    >
-                      <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
-                      Modifier
-                    </button>
-                  </PermissionGate>
-                  <PermissionGate permission="delete_service">
-                    <button
-                      onClick={() => handleDelete(service)}
-                      className="flex items-center justify-center gap-1 sm:gap-2 bg-red-500 text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-red-600 transition-colors text-xs sm:text-sm"
-                    >
-                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
-                      Supprimer
-                    </button>
-                  </PermissionGate>
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <Package className="w-4 h-4 text-green-500 flex-shrink-0" />
+                  <span>{service.capacity} {service.unit_name || 'pers.'}</span>
                 </div>
               </div>
 
-              {/* Prix à droite */}
-              <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                <div className="text-right">
-                  <div className="text-base sm:text-lg font-bold text-purple-600">
-                    {formatPrice(service.price_ttc)}
-                  </div>
-                  <div className="text-xs text-gray-600">
-                    TTC
-                  </div>
+              {/* Prix détaillés */}
+              <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                <div className="flex justify-between text-xs text-gray-600 mb-1">
+                  <span>Prix HT</span>
+                  <span className="font-medium">{formatPrice(service.price_ht)}</span>
                 </div>
+                <div className="flex justify-between text-xs text-gray-600">
+                  <span>TVA ({taxRate}%)</span>
+                  <span className="font-medium">{formatPrice(service.price_ttc - service.price_ht)}</span>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex gap-2">
+                <PermissionGate permission="edit_service">
+                  <button
+                    onClick={() => handleEdit(service)}
+                    className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-2.5 rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg text-sm font-medium"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Modifier
+                  </button>
+                </PermissionGate>
+                <PermissionGate permission="delete_service">
+                  <button
+                    onClick={() => handleDelete(service)}
+                    className="flex items-center justify-center bg-gradient-to-r from-red-500 to-red-600 text-white px-3 py-2.5 rounded-xl hover:from-red-600 hover:to-red-700 transition-all shadow-lg"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </PermissionGate>
               </div>
             </div>
           </div>
