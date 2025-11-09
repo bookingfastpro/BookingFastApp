@@ -258,38 +258,38 @@ export function PaymentSection({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3 lg:space-y-4">
       {/* Résumé des paiements - VERSION COMPACTE */}
-      <div className={`bg-gradient-to-r ${getPaymentStatusColor()} rounded-xl p-3 border-2`}>
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-bold text-gray-800">État du paiement</span>
-          <span className="text-xs font-bold px-2 py-1 bg-white/60 rounded-full">{getPaymentStatusText()}</span>
+      <div className={`bg-gradient-to-r ${getPaymentStatusColor()} rounded-lg lg:rounded-xl p-3 lg:p-4 border lg:border-2`}>
+        <div className="flex items-center justify-between mb-2 lg:mb-3">
+          <span className="text-sm lg:text-base font-bold text-gray-800">État du paiement</span>
+          <span className="text-xs lg:text-sm font-bold px-2 py-1 bg-white/60 rounded-full">{getPaymentStatusText()}</span>
         </div>
 
-        <div className="flex items-center justify-between text-sm mb-2">
+        <div className="flex items-center justify-between text-sm mb-2 lg:mb-3">
           <div className="flex items-center gap-1">
-            <span className="text-gray-600 text-xs">Total</span>
-            <span className="font-bold text-gray-900">{totalAmount.toFixed(2)}€</span>
+            <span className="text-gray-600 text-xs lg:text-sm">Total</span>
+            <span className="font-bold text-gray-900 text-xs lg:text-sm">{totalAmount.toFixed(2)}€</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-gray-600 text-xs">Payé</span>
-            <span className="font-bold text-green-600">{currentPaid.toFixed(2)}€</span>
+            <span className="text-gray-600 text-xs lg:text-sm">Payé</span>
+            <span className="font-bold text-green-600 text-xs lg:text-sm">{currentPaid.toFixed(2)}€</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="text-gray-600 text-xs">Restant</span>
-            <span className="font-bold text-orange-600">{remainingAmount.toFixed(2)}€</span>
+            <span className="text-gray-600 text-xs lg:text-sm">Restant</span>
+            <span className="font-bold text-orange-600 text-xs lg:text-sm">{remainingAmount.toFixed(2)}€</span>
           </div>
         </div>
 
         {/* Barre de progression */}
         <div className="flex items-center gap-2">
-          <div className="flex-1 bg-white/50 rounded-full h-2 overflow-hidden">
+          <div className="flex-1 bg-white/50 rounded-full h-2 lg:h-2.5 overflow-hidden">
             <div
-              className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500"
+              className="bg-gradient-to-r from-green-500 to-emerald-500 h-full rounded-full transition-all duration-500"
               style={{ width: `${Math.min((currentPaid / totalAmount) * 100, 100)}%` }}
             />
           </div>
-          <span className="text-xs font-semibold text-gray-700 whitespace-nowrap">
+          <span className="text-xs lg:text-sm font-semibold text-gray-700 whitespace-nowrap">
             {((currentPaid / totalAmount) * 100).toFixed(0)}%
           </span>
         </div>
@@ -587,8 +587,8 @@ export function PaymentSection({
       {/* Liste des transactions - VERSION COMPACTE */}
       {transactions.length > 0 && (
         <div className="space-y-2">
-          <h4 className="text-sm font-bold text-gray-800 flex items-center gap-2">
-            <CreditCard className="w-4 h-4 text-blue-600" />
+          <h4 className="text-sm lg:text-base font-bold text-gray-800 flex items-center gap-2">
+            <CreditCard className="w-4 h-4 lg:w-5 lg:h-5 text-blue-600" />
             Historique ({transactions.length})
           </h4>
 
@@ -596,7 +596,7 @@ export function PaymentSection({
             {transactions.map((transaction) => (
               <div
                 key={transaction.id}
-                className={`flex items-center gap-2 p-2 rounded-lg border ${
+                className={`flex items-center gap-2 p-2 lg:p-3 rounded-lg border ${
                   transaction.status === 'pending'
                     ? 'bg-orange-50 border-orange-200'
                     : transaction.status === 'cancelled'
@@ -605,7 +605,7 @@ export function PaymentSection({
                 }`}
               >
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 text-xs">
+                  <div className="flex items-center gap-2 text-xs lg:text-sm">
                     <span className={`font-bold ${
                       transaction.status === 'pending' ? 'text-orange-600' :
                       transaction.status === 'cancelled' ? 'text-red-600' : 'text-green-600'
@@ -621,7 +621,7 @@ export function PaymentSection({
                     )}
                   </div>
                   {transaction.note && (
-                    <div className="text-xs text-gray-500 truncate">{cleanTransactionNote(transaction.note)}</div>
+                    <div className="text-xs lg:text-sm text-gray-500 truncate">{cleanTransactionNote(transaction.note)}</div>
                   )}
                 </div>
 
@@ -630,20 +630,20 @@ export function PaymentSection({
                     <button
                       type="button"
                       onClick={() => copyPaymentLink(transaction)}
-                      className="p-1.5 text-blue-500 hover:bg-blue-50 rounded transition-colors"
+                      className="p-1.5 lg:p-2 text-blue-500 hover:bg-blue-50 rounded transition-colors"
                       title="Copier le lien"
                     >
-                      <Copy className="w-4 h-4" />
+                      <Copy className="w-4 h-4 lg:w-5 lg:h-5" />
                     </button>
                   )}
 
                   <button
                     type="button"
                     onClick={() => handleDeleteTransaction(transaction.id)}
-                    className="p-1.5 text-red-500 hover:bg-red-50 rounded transition-colors"
+                    className="p-1.5 lg:p-2 text-red-500 hover:bg-red-50 rounded transition-colors"
                     title="Supprimer"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-4 h-4 lg:w-5 lg:h-5" />
                   </button>
                 </div>
               </div>

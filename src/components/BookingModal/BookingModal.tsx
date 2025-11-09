@@ -946,28 +946,28 @@ export function BookingModal({
 
             <div className="space-y-3">
               {selectedClient && (
-                <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-7 h-7 bg-blue-500 rounded-lg flex items-center justify-center">
-                      <User className="w-4 h-4 text-white" />
+                <div className="bg-blue-50 rounded-lg p-3 lg:p-4 border border-blue-200">
+                  <div className="flex items-center gap-2 mb-2 lg:mb-3">
+                    <div className="w-7 h-7 lg:w-9 lg:h-9 bg-blue-500 rounded-lg flex items-center justify-center">
+                      <User className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
                     </div>
-                    <h3 className="text-sm font-semibold text-gray-900">Informations client</h3>
+                    <h3 className="text-sm lg:text-base font-semibold text-gray-900">Informations client</h3>
                   </div>
 
-                  <div className="space-y-1 text-xs">
+                  <div className="space-y-1 lg:space-y-2 text-xs lg:text-sm">
                     <div className="flex">
-                      <span className="text-gray-600 w-20 flex-shrink-0">Nom</span>
+                      <span className="text-gray-600 w-20 lg:w-24 flex-shrink-0">Nom</span>
                       <span className="font-semibold text-gray-900">{selectedClient.firstname} {selectedClient.lastname}</span>
                     </div>
                     {selectedClient.email && (
                       <div className="flex">
-                        <span className="text-gray-600 w-20 flex-shrink-0">Email</span>
+                        <span className="text-gray-600 w-20 lg:w-24 flex-shrink-0">Email</span>
                         <span className="font-medium text-gray-900 break-all">{selectedClient.email}</span>
                       </div>
                     )}
                     {selectedClient.phone && (
                       <div className="flex">
-                        <span className="text-gray-600 w-20 flex-shrink-0">Téléphone</span>
+                        <span className="text-gray-600 w-20 lg:w-24 flex-shrink-0">Téléphone</span>
                         <span className="font-medium text-gray-900">{selectedClient.phone}</span>
                       </div>
                     )}
@@ -976,15 +976,15 @@ export function BookingModal({
               )}
 
               {(selectedService || (isCustomService && customServiceData.name && customServiceData.price > 0)) && (
-                <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-7 h-7 bg-green-500 rounded-lg flex items-center justify-center">
-                      <Euro className="w-4 h-4 text-white" />
+                <div className="bg-green-50 rounded-lg p-3 lg:p-4 border border-green-200">
+                  <div className="flex items-center gap-2 mb-2 lg:mb-3">
+                    <div className="w-7 h-7 lg:w-9 lg:h-9 bg-green-500 rounded-lg flex items-center justify-center">
+                      <Euro className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
                     </div>
-                    <h3 className="text-sm font-semibold text-gray-900">Récapitulatif</h3>
+                    <h3 className="text-sm lg:text-base font-semibold text-gray-900">Récapitulatif</h3>
                   </div>
 
-                  <div className="space-y-1.5 text-xs">
+                  <div className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Service</span>
                       <span className="font-semibold text-gray-900 text-right max-w-[60%]">
@@ -1016,61 +1016,61 @@ export function BookingModal({
                       </span>
                     </div>
 
-                    <div className="h-px bg-green-300 my-1" />
+                    <div className="h-px bg-green-300 my-1 lg:my-2" />
 
                     <div className="flex justify-between items-center pt-0.5">
-                      <span className="font-bold text-sm text-gray-900">Total</span>
-                      <span className="text-lg font-bold text-green-600">{totalAmount.toFixed(2)}€</span>
+                      <span className="font-bold text-sm lg:text-base text-gray-900">Total</span>
+                      <span className="text-lg lg:text-2xl font-bold text-green-600">{totalAmount.toFixed(2)}€</span>
                     </div>
                   </div>
                 </div>
               )}
 
               {(selectedService || (isCustomService && customServiceData.name && customServiceData.price > 0)) && selectedClient && (
-                <div className="bg-gray-50 rounded-lg p-3 border border-gray-300">
-                  <div className="flex items-center gap-2 mb-2">
-                    <div className="w-7 h-7 bg-gray-600 rounded-lg flex items-center justify-center">
-                      <Calendar className="w-4 h-4 text-white" />
+                <div className="bg-gray-50 rounded-lg p-3 lg:p-4 border border-gray-300">
+                  <div className="flex items-center gap-2 mb-2 lg:mb-3">
+                    <div className="w-7 h-7 lg:w-9 lg:h-9 bg-gray-600 rounded-lg flex items-center justify-center">
+                      <Calendar className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
                     </div>
-                    <h3 className="text-sm font-semibold text-gray-900">Statut de la réservation</h3>
+                    <h3 className="text-sm lg:text-base font-semibold text-gray-900">Statut de la réservation</h3>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-1.5">
+                  <div className="grid grid-cols-3 gap-1.5 lg:gap-2">
                     <button
                       type="button"
                       onClick={() => setBookingStatus('pending')}
-                      className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 lg:p-3 rounded-lg border transition-all ${
                         bookingStatus === 'pending'
                           ? 'bg-orange-100 border-orange-400 shadow-sm'
                           : 'bg-white border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <div className="text-xl mb-0.5">⏳</div>
-                      <span className="text-[10px] font-semibold text-gray-700">En attente</span>
+                      <div className="text-xl lg:text-3xl mb-0.5 lg:mb-1">⏳</div>
+                      <span className="text-[10px] lg:text-xs font-semibold text-gray-700">En attente</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setBookingStatus('confirmed')}
-                      className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 lg:p-3 rounded-lg border transition-all ${
                         bookingStatus === 'confirmed'
                           ? 'bg-green-100 border-green-400 shadow-sm'
                           : 'bg-white border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <div className="text-xl mb-0.5">✅</div>
-                      <span className="text-[10px] font-semibold text-gray-700">Confirmée</span>
+                      <div className="text-xl lg:text-3xl mb-0.5 lg:mb-1">✅</div>
+                      <span className="text-[10px] lg:text-xs font-semibold text-gray-700">Confirmée</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setBookingStatus('cancelled')}
-                      className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 lg:p-3 rounded-lg border transition-all ${
                         bookingStatus === 'cancelled'
                           ? 'bg-red-100 border-red-400 shadow-sm'
                           : 'bg-white border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <div className="text-xl mb-0.5">❌</div>
-                      <span className="text-[10px] font-semibold text-gray-700">Annulée</span>
+                      <div className="text-xl lg:text-3xl mb-0.5 lg:mb-1">❌</div>
+                      <span className="text-[10px] lg:text-xs font-semibold text-gray-700">Annulée</span>
                     </button>
                   </div>
                 </div>
