@@ -233,82 +233,100 @@ export function ServicesPage() {
         </PermissionGate>
       </div>
 
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+      {/* Services List */}
+      <div className="space-y-3 sm:space-y-4">
         {services.filter(service => service.description !== 'Service personnalisé').map((service, index) => (
           <div
             key={service.id}
-            className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] animate-fadeIn"
-            style={{ animationDelay: `${index * 100}ms` }}
+            className="w-full bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 border-2 border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all duration-300 animate-fadeIn"
+            style={{ animationDelay: `${index * 50}ms` }}
           >
-            {service.image_url && (
-              <div className="w-full h-32 sm:h-48 bg-gray-100 rounded-lg sm:rounded-xl mb-3 sm:mb-4 overflow-hidden">
-                <img
-                  src={service.image_url}
-                  alt={service.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-              </div>
-            )}
-            
-            <div className="mb-3 sm:mb-4">
-              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">{service.name}</h3>
-              <p className="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">{service.description}</p>
-              
-              <div className="space-y-1 sm:space-y-2 text-xs sm:text-sm">
-                <div className="flex justify-between items-center bg-gradient-to-r from-blue-50 to-purple-50 p-2 rounded-lg">
-                  <span className="text-gray-600">Prix TTC:</span>
-                  <span className="font-bold text-green-600 text-base">{formatPrice(service.price_ttc)}</span>
+            <div className="flex items-start justify-between gap-3 sm:gap-4">
+              <div className="flex-1 min-w-0">
+                {/* En-tête avec image et nom */}
+                <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                  {service.image_url ? (
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 rounded-lg sm:rounded-xl overflow-hidden flex-shrink-0">
+                      <img
+                        src={service.image_url}
+                        alt={service.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg sm:rounded-xl flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0">
+                      {service.name.charAt(0)}
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="font-bold text-gray-900 text-sm sm:text-base truncate">
+                      {service.name}
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-600 truncate">
+                      {service.description}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Prix HT:</span>
-                  <span className="font-medium text-gray-700">{formatPrice(service.price_ht)}</span>
+
+                {/* Détails */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Clock className="w-3 sm:w-4 h-3 sm:h-4 text-blue-500 flex-shrink-0" />
+                    <span>{service.duration_minutes} minutes</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Package className="w-3 sm:w-4 h-3 sm:h-4 text-green-500 flex-shrink-0" />
+                    <span>{service.capacity} {service.unit_name || 'pers.'}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between text-xs">
-                  <span className="text-gray-400">TVA ({taxRate}%):</span>
-                  <span className="font-medium text-gray-500">
-                    {formatPrice(service.price_ttc - service.price_ht)}
+
+                {/* Prix */}
+                <div className="mt-2 sm:mt-3 flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium border bg-green-100 text-green-700 border-green-200">
+                    Prix TTC
+                  </span>
+                  <span className="text-xs text-gray-600">
+                    HT: {formatPrice(service.price_ht)} · TVA: {formatPrice(service.price_ttc - service.price_ht)}
                   </span>
                 </div>
-                <div className="flex justify-between pt-2 border-t border-gray-100">
-                  <span className="text-gray-500">Durée:</span>
-                  <span className="font-medium">{service.duration_minutes} min</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Capacité:</span>
-                  <span className="font-medium">{service.capacity} pers.</span>
-                </div>
-                {service.unit_name && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Unité:</span>
-                    <span className="font-medium">{service.unit_name}</span>
-                  </div>
-                )}
-              </div>
-            </div>
 
-            <div className="flex flex-col sm:flex-row gap-2">
-              <PermissionGate permission="edit_service">
-                <button
-                  onClick={() => handleEdit(service)}
-                  className="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 text-sm sm:text-base"
-                >
-                  <Edit className="w-4 h-4" />
-                  Modifier
-                </button>
-              </PermissionGate>
-              <PermissionGate permission="delete_service">
-                <button
-                  onClick={() => handleDelete(service)}
-                  className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 text-sm sm:text-base"
-                >
-                  <Trash2 className="w-4 h-4" />
-                  Supprimer
-                </button>
-              </PermissionGate>
+                {/* Actions */}
+                <div className="mt-3 flex gap-2">
+                  <PermissionGate permission="edit_service">
+                    <button
+                      onClick={() => handleEdit(service)}
+                      className="flex items-center justify-center gap-1 sm:gap-2 bg-blue-500 text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-blue-600 transition-colors text-xs sm:text-sm"
+                    >
+                      <Edit className="w-3 h-3 sm:w-4 sm:h-4" />
+                      Modifier
+                    </button>
+                  </PermissionGate>
+                  <PermissionGate permission="delete_service">
+                    <button
+                      onClick={() => handleDelete(service)}
+                      className="flex items-center justify-center gap-1 sm:gap-2 bg-red-500 text-white px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-red-600 transition-colors text-xs sm:text-sm"
+                    >
+                      <Trash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                      Supprimer
+                    </button>
+                  </PermissionGate>
+                </div>
+              </div>
+
+              {/* Prix à droite */}
+              <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                <div className="text-right">
+                  <div className="text-base sm:text-lg font-bold text-purple-600">
+                    {formatPrice(service.price_ttc)}
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    TTC
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         ))}
