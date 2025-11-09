@@ -311,7 +311,7 @@ export function PaymentSection({
             }`}
           >
             {showAddTransaction ? <ChevronUp className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-            Ajouter
+            Créer paiement
           </button>
 
           <button
