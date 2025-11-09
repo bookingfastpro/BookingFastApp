@@ -93,11 +93,13 @@ export function CalendarGrid({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [deletingUnavailabilityId, setDeletingUnavailabilityId] = useState<string | null>(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [shouldScroll, setShouldScroll] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const timeGridRef = useRef<HTMLDivElement>(null);
   const monthButtonRef = useRef<HTMLButtonElement>(null);
   const { settings } = useBusinessSettings();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const hasScrolledRef = useRef(false);
 
   const selectedDateString = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
 
@@ -180,6 +182,8 @@ export function CalendarGrid({
     const dateString = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
     sessionStorage.setItem('calendar_selected_date', dateString);
     console.log('💾 Sauvegarde de la date sélectionnée:', dateString);
+
+    setShouldScroll(true);
   }, [selectedDate]);
 
   useEffect(() => {
@@ -191,13 +195,10 @@ export function CalendarGrid({
 
   useEffect(() => {
     const handleBookingChange = () => {
-      console.log('📅 CalendarGrid - Événement booking détecté, centrage de la date...');
+      console.log('📅 CalendarGrid - Événement booking détecté, déclenchement scroll...');
       setRefreshTrigger(prev => prev + 1);
-      
-      setTimeout(() => {
-        scrollToSelectedDate(true);
-        window.dispatchEvent(new CustomEvent('refreshBookings'));
-      }, 100);
+      setShouldScroll(true);
+      window.dispatchEvent(new CustomEvent('refreshBookings'));
     };
 
     bookingEvents.on('bookingCreated', handleBookingChange);
@@ -209,7 +210,7 @@ export function CalendarGrid({
       bookingEvents.off('bookingUpdated', handleBookingChange);
       bookingEvents.off('bookingDeleted', handleBookingChange);
     };
-  }, [selectedDate, days]);
+  }, []);
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     const newViewMonth = new Date(viewMonth);
@@ -404,25 +405,23 @@ export function CalendarGrid({
   };
 
   useEffect(() => {
-    if (isInitialLoad && days.length > 0) {
-      console.log('🚀 CalendarGrid - Chargement initial, scroll SANS animation vers:', selectedDateString);
-      const timer = setTimeout(() => {
-        scrollToSelectedDate(false);
-        setIsInitialLoad(false);
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [isInitialLoad, days.length, selectedDateString]);
+    if (shouldScroll && days.length > 0 && scrollContainerRef.current) {
+      const animated = !isInitialLoad;
+      console.log('🎯 Déclenchement scroll -', animated ? 'AVEC animation' : 'SANS animation', '- vers:', selectedDateString);
 
-  useEffect(() => {
-    if (!isInitialLoad) {
-      console.log('🔄 CalendarGrid - Changement de date utilisateur, scroll AVEC animation');
       const timer = setTimeout(() => {
-        scrollToSelectedDate(true);
-      }, 100);
+        scrollToSelectedDate(animated);
+        setShouldScroll(false);
+
+        if (isInitialLoad) {
+          setIsInitialLoad(false);
+          hasScrolledRef.current = true;
+        }
+      }, animated ? 150 : 50);
+
       return () => clearTimeout(timer);
     }
-  }, [selectedDate, viewMonth]);
+  }, [shouldScroll, days.length, selectedDateString, isInitialLoad]);
 
   const getBookingsForDay = (date: Date) => {
     const dateString = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
