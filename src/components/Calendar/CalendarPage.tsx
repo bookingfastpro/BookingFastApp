@@ -61,39 +61,23 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
   const lastCheckedBookingId = useRef<string | null>(null);
 
   const openBookingFromId = (bookingId: string) => {
-    console.log('📖 CalendarPage - Tentative d\'ouverture de la réservation:', bookingId);
-
-    // Attendre que les bookings soient chargés
     if (loading || bookings.length === 0) {
-      console.log('⏳ En attente du chargement des bookings...');
       return false;
     }
 
-    // Chercher la réservation
     const booking = bookings.find(b => b.id === bookingId);
 
     if (booking) {
-      console.log('✅ Réservation trouvée, ouverture du modal:', booking);
       setEditingBooking(booking);
       setIsModalOpen(true);
       return true;
-    } else {
-      console.log('⚠️ Réservation non trouvée dans les bookings actuels, ID:', bookingId);
-      return false;
     }
+    return false;
   };
 
   useEffect(() => {
     const openBookingId = sessionStorage.getItem('openBookingId');
 
-    console.log('🔄 CalendarPage - Vérification sessionStorage:', {
-      openBookingId,
-      lastChecked: lastCheckedBookingId.current,
-      loading,
-      bookingsCount: bookings.length
-    });
-
-    // Si pas de booking ID ou si on l'a déjà traité, ne rien faire
     if (!openBookingId || openBookingId === lastCheckedBookingId.current) {
       return;
     }
@@ -101,19 +85,14 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
     lastCheckedBookingId.current = openBookingId;
 
     if (openBookingFromId(openBookingId)) {
-      // Nettoyer le sessionStorage si succès
       sessionStorage.removeItem('openBookingId');
       lastCheckedBookingId.current = null;
     }
   }, [bookings, loading]);
 
-  // Écouter l'événement personnalisé pour ouvrir une réservation
   useEffect(() => {
     const handleOpenBooking = (event: CustomEvent) => {
       const bookingId = event.detail.bookingId;
-      console.log('🎯 Événement reçu pour ouvrir la réservation:', bookingId);
-
-      // Réinitialiser le flag pour permettre l'ouverture
       lastCheckedBookingId.current = null;
 
       if (openBookingFromId(bookingId)) {

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
+import { logger } from '../utils/logger';
 
 export interface Notification {
   id: string;
@@ -38,14 +39,14 @@ export function useNotifications() {
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false })
-        .limit(20);
+        .limit(50);
 
       if (fetchError) throw fetchError;
 
       setNotifications(data || []);
       setUnreadCount(data?.filter(n => !n.is_read).length || 0);
     } catch (err) {
-      console.error('Erreur lors du chargement des notifications:', err);
+      logger.error('Erreur chargement notifications:', err);
       setError(err instanceof Error ? err.message : 'Erreur inconnue');
     } finally {
       setLoading(false);
@@ -67,7 +68,6 @@ export function useNotifications() {
 
       if (updateError) throw updateError;
 
-      // Mettre à jour localement
       setNotifications(prev =>
         prev.map(n =>
           n.id === notificationId
@@ -77,7 +77,7 @@ export function useNotifications() {
       );
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch (err) {
-      console.error('Erreur lors du marquage comme lu:', err);
+      logger.error('Erreur marquage comme lu:', err);
     }
   }, [user]);
 
@@ -102,7 +102,6 @@ export function useNotifications() {
 
       if (updateError) throw updateError;
 
-      // Mettre à jour localement
       setNotifications(prev =>
         prev.map(n => ({
           ...n,
@@ -112,7 +111,7 @@ export function useNotifications() {
       );
       setUnreadCount(0);
     } catch (err) {
-      console.error('Erreur lors du marquage de toutes comme lues:', err);
+      logger.error('Erreur marquage toutes comme lues:', err);
     }
   }, [user, notifications]);
 
@@ -128,16 +127,14 @@ export function useNotifications() {
 
       if (deleteError) throw deleteError;
 
-      // Mettre à jour localement
       setNotifications(prev => prev.filter(n => n.id !== notificationId));
 
-      // Mettre à jour le compteur si la notification était non lue
       const notification = notifications.find(n => n.id === notificationId);
       if (notification && !notification.is_read) {
         setUnreadCount(prev => Math.max(0, prev - 1));
       }
     } catch (err) {
-      console.error('Erreur lors de la suppression de la notification:', err);
+      logger.error('Erreur suppression notification:', err);
     }
   }, [user, notifications]);
 
@@ -155,27 +152,24 @@ export function useNotifications() {
       setNotifications([]);
       setUnreadCount(0);
     } catch (err) {
-      console.error('Erreur lors de la suppression de toutes les notifications:', err);
+      logger.error('Erreur suppression toutes notifications:', err);
     }
   }, [user]);
 
-  // Charger les notifications au montage et quand l'utilisateur change
   useEffect(() => {
     fetchNotifications();
   }, [fetchNotifications]);
 
-  // Auto-refresh toutes les 10 secondes
   useEffect(() => {
     if (!user) return;
 
     const interval = setInterval(() => {
       fetchNotifications();
-    }, 10000); // 10 secondes
+    }, 30000);
 
     return () => clearInterval(interval);
   }, [user, fetchNotifications]);
 
-  // S'abonner aux changements en temps réel
   useEffect(() => {
     if (!user) return;
 
@@ -190,11 +184,11 @@ export function useNotifications() {
           filter: `user_id=eq.${user.id}`
         },
         (payload) => {
-          console.log('🔔 Notification reçue:', payload);
+          logger.debug('🔔 Notification reçue:', payload);
 
           if (payload.eventType === 'INSERT') {
             const newNotification = payload.new as Notification;
-            setNotifications(prev => [newNotification, ...prev].slice(0, 20));
+            setNotifications(prev => [newNotification, ...prev].slice(0, 50));
             if (!newNotification.is_read) {
               setUnreadCount(prev => prev + 1);
             }
@@ -203,14 +197,10 @@ export function useNotifications() {
             setNotifications(prev =>
               prev.map(n => n.id === updatedNotification.id ? updatedNotification : n)
             );
-            // Recalculer le compteur
-            setUnreadCount(prev => {
-              const oldNotif = notifications.find(n => n.id === updatedNotification.id);
-              if (oldNotif && !oldNotif.is_read && updatedNotification.is_read) {
-                return Math.max(0, prev - 1);
-              }
-              return prev;
-            });
+            const oldNotif = notifications.find(n => n.id === updatedNotification.id);
+            if (oldNotif && !oldNotif.is_read && updatedNotification.is_read) {
+              setUnreadCount(prev => Math.max(0, prev - 1));
+            }
           } else if (payload.eventType === 'DELETE') {
             const deletedId = payload.old.id;
             setNotifications(prev => prev.filter(n => n.id !== deletedId));
