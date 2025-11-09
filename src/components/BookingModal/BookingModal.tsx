@@ -706,7 +706,7 @@ export function BookingModal({
                     }}
                     className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all duration-300 text-sm ${
                       isCustomService
-                        ? 'bg-white text-purple-600 shadow-md'
+                        ? 'bg-white text-cyan-600 shadow-md'
                         : 'text-gray-600 hover:text-gray-800'
                     }`}
                   >
@@ -724,10 +724,10 @@ export function BookingModal({
                       <button
                         type="button"
                         onClick={() => setIsServiceListExpanded(true)}
-                        className="w-full p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 shadow-lg text-left hover:shadow-xl transition-all duration-300"
+                        className="w-full p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 border-blue-500 bg-gradient-to-r from-blue-50 to-cyan-50 shadow-lg text-left hover:shadow-xl transition-all duration-300"
                       >
                         <div className="flex items-center gap-3 sm:gap-4">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center bg-gradient-to-r from-blue-500 to-cyan-500 text-white">
                             <Package className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div className="flex-1">
@@ -751,14 +751,14 @@ export function BookingModal({
                             onClick={() => handleServiceSelect(service)}
                             className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl border-2 transition-all duration-300 transform hover:scale-[1.02] text-left ${
                               selectedService?.id === service.id
-                                ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-purple-50 shadow-lg'
+                                ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-cyan-50 shadow-lg'
                                 : 'border-gray-200 bg-white hover:border-blue-300 hover:shadow-md'
                             }`}
                           >
                             <div className="flex items-center gap-3 sm:gap-4">
                               <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center ${
                                 selectedService?.id === service.id
-                                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
+                                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
                                   : 'bg-gray-100 text-gray-600'
                               }`}>
                                 <Package className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -784,10 +784,10 @@ export function BookingModal({
                       <button
                         type="button"
                         onClick={() => setIsServiceListExpanded(true)}
-                        className="w-full bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-500 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-left hover:shadow-xl transition-all duration-300"
+                        className="w-full bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-500 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-left hover:shadow-xl transition-all duration-300"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg sm:rounded-xl flex items-center justify-center text-white">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg sm:rounded-xl flex items-center justify-center text-white">
                             <Package className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div className="flex-1">
@@ -798,39 +798,39 @@ export function BookingModal({
                               <span className="text-gray-500">Capacité illimitée</span>
                             </div>
                           </div>
-                          <ChevronDown className="w-5 h-5 text-purple-500" />
+                          <ChevronDown className="w-5 h-5 text-cyan-500" />
                         </div>
                       </button>
                     ) : (
-                      <div className="bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+                      <div className="bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-200 rounded-xl sm:rounded-2xl p-4 sm:p-6">
                         <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg sm:rounded-xl flex items-center justify-center text-white">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg sm:rounded-xl flex items-center justify-center text-white">
                             <Package className="w-5 h-5 sm:w-6 sm:h-6" />
                           </div>
                           <div>
-                            <h3 className="text-base sm:text-lg font-bold text-purple-800">Service personnalisé</h3>
-                            <p className="text-purple-600 text-xs sm:text-sm">Créez un service sur mesure</p>
+                            <h3 className="text-base sm:text-lg font-bold text-cyan-800">Service personnalisé</h3>
+                            <p className="text-cyan-600 text-xs sm:text-sm">Créez un service sur mesure</p>
                           </div>
                         </div>
-                        
+
                         <div className="space-y-4">
                           <div>
-                            <label className="block text-sm font-medium text-purple-700 mb-2">
+                            <label className="block text-sm font-medium text-cyan-700 mb-2">
                               Nom du service *
                             </label>
                             <input
                               type="text"
                               value={customServiceData.name}
                               onChange={(e) => setCustomServiceData(prev => ({ ...prev, name: e.target.value }))}
-                              className="w-full pl-12 pr-4 py-3 border border-purple-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 text-base bg-white"
+                              className="w-full pl-12 pr-4 py-3 border border-cyan-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-300 text-base bg-white"
                               placeholder="Ex: Consultation spécialisée"
                               required
                             />
                           </div>
-                          
+
                           <div className="grid grid-cols-2 gap-3">
                             <div>
-                              <label className="block text-sm font-medium text-purple-700 mb-2">
+                              <label className="block text-sm font-medium text-cyan-700 mb-2">
                                 Prix (€) *
                               </label>
                               <input
@@ -839,14 +839,14 @@ export function BookingModal({
                                 min="0.01"
                                 value={customServiceData.price || ''}
                                 onChange={(e) => setCustomServiceData(prev => ({ ...prev, price: parseFloat(e.target.value) || 0 }))}
-                                className="w-full p-3 border border-purple-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 text-base bg-white"
+                                className="w-full p-3 border border-cyan-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-300 text-base bg-white"
                                 placeholder="0.00"
                                 required
                               />
                             </div>
-                            
+
                             <div>
-                              <label className="block text-sm font-medium text-purple-700 mb-2">
+                              <label className="block text-sm font-medium text-cyan-700 mb-2">
                                 Durée (min) *
                               </label>
                               <input
@@ -855,18 +855,18 @@ export function BookingModal({
                                 step="15"
                                 value={customServiceData.duration || ''}
                                 onChange={(e) => setCustomServiceData(prev => ({ ...prev, duration: parseInt(e.target.value) || 60 }))}
-                                className="w-full p-3 border border-purple-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all duration-300 text-base bg-white"
+                                className="w-full p-3 border border-cyan-300 rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all duration-300 text-base bg-white"
                                 placeholder="60"
                                 required
                               />
                             </div>
                           </div>
-                          
+
                           {customServiceData.name && customServiceData.price > 0 && (
                             <button
                               type="button"
                               onClick={handleCustomServiceComplete}
-                              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 font-medium"
+                              className="w-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white py-3 rounded-xl hover:from-cyan-600 hover:to-blue-600 transition-all duration-300 font-medium"
                             >
                               ✓ Valider le service
                             </button>
@@ -953,9 +953,9 @@ export function BookingModal({
 
             <div className="space-y-4 sm:space-y-6">
               {selectedClient && (
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border-2 border-blue-200">
+                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
                       <User className="w-4 h-4 text-white" />
                     </div>
                     <h3 className="text-sm font-bold text-gray-900">Informations client</h3>
@@ -985,7 +985,7 @@ export function BookingModal({
               {(selectedService || (isCustomService && customServiceData.name && customServiceData.price > 0)) && (
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
                       <Euro className="w-4 h-4 text-white" />
                     </div>
                     <h3 className="text-sm font-bold text-gray-900">Récapitulatif</h3>
@@ -1034,9 +1034,9 @@ export function BookingModal({
               )}
 
               {(selectedService || (isCustomService && customServiceData.name && customServiceData.price > 0)) && selectedClient && (
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
+                <div className="bg-gradient-to-r from-slate-50 to-gray-50 rounded-xl p-4 border-2 border-gray-300">
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-r from-slate-500 to-gray-500 rounded-lg flex items-center justify-center">
                       <Calendar className="w-4 h-4 text-white" />
                     </div>
                     <h3 className="text-sm font-bold text-gray-900">Statut de la réservation</h3>
