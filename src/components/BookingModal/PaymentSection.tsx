@@ -325,8 +325,8 @@ export function PaymentSection({
             }}
             className={`px-3 py-3 rounded-xl transition-all flex items-center justify-center gap-2 text-sm font-semibold ${
               showPaymentLink
-                ? 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white'
-                : 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:from-cyan-600 hover:to-blue-600'
+? 'bg-gradient-to-r from-purple-600 to-violet-600 text-white'
+: 'bg-gradient-to-r from-purple-500 to-violet-500 text-white hover:from-purple-600 hover:to-violet-600'
             }`}
           >
             {showPaymentLink ? <ChevronUp className="w-4 h-4" /> : <Link className="w-4 h-4" />}
