@@ -1,15 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Bell, X, Check, CheckCheck, Trash2, Calendar, Clock, AlertCircle } from 'lucide-react';
 import { useNotifications } from '../../hooks/useNotifications';
-import { useNavigate } from 'react-router-dom';
-import { useBookings } from '../../hooks/useBookings';
-import { useModal } from '../../contexts/ModalContext';
-import { BookingDetailsModal } from '../Bookings/BookingDetailsModal';
 
 export function NotificationBell() {
-  const navigate = useNavigate();
-  const { openModal, closeModal } = useModal();
-  const { bookings } = useBookings();
   const {
     notifications,
     unreadCount,
@@ -43,33 +36,6 @@ export function NotificationBell() {
     };
   }, [isOpen]);
 
-  const handleNotificationClick = async (notification: any) => {
-    // Marquer comme lu
-    if (!notification.is_read) {
-      await markAsRead(notification.id);
-    }
-
-    // Fermer le dropdown
-    setIsOpen(false);
-
-    // Ouvrir le modal de détails de la réservation si elle existe
-    if (notification.booking_id) {
-      // Trouver la réservation dans la liste
-      const booking = bookings.find(b => b.id === notification.booking_id);
-
-      if (booking) {
-        openModal(
-          <BookingDetailsModal
-            booking={booking}
-            onClose={closeModal}
-          />
-        );
-      } else {
-        // Si la réservation n'est pas trouvée, rediriger vers le calendrier
-        navigate('/calendar');
-      }
-    }
-  };
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -208,10 +174,9 @@ export function NotificationBell() {
                     key={notification.id}
                     className={`p-4 transition-all duration-200 ${
                       notification.is_read
-                        ? 'bg-white hover:bg-gray-50'
-                        : 'bg-blue-50 hover:bg-blue-100'
-                    } cursor-pointer relative group`}
-                    onClick={() => handleNotificationClick(notification)}
+                        ? 'bg-white'
+                        : 'bg-blue-50'
+                    } relative group`}
                   >
                     <div className="flex items-start gap-3">
                       {/* Icon */}
