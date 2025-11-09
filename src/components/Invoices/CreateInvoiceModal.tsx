@@ -313,7 +313,7 @@ export function CreateInvoiceModal({ isOpen, onClose, onInvoiceCreated }: Create
                   </div>
 
                   {/* Liste des produits - TOUJOURS AFFICHÉE */}
-                  <div className="space-y-2 max-h-48 sm:max-h-64 overflow-y-auto">
+                  <div className="space-y-2 max-h-80 sm:max-h-96 overflow-y-auto">
                     {filteredProducts.length > 0 ? (
                       <>
                         {filteredProducts.map(product => (
