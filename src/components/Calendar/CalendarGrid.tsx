@@ -414,15 +414,24 @@ export function CalendarGrid({
       const animated = !isInitialLoad;
       console.log('🎯 Déclenchement scroll -', animated ? 'AVEC animation' : 'SANS animation', '- vers:', selectedDateString);
 
-      const timer = setTimeout(() => {
-        scrollToSelectedDate(animated);
-        setShouldScroll(false);
+      const delay = isInitialLoad ? 200 : (animated ? 150 : 100);
 
-        if (isInitialLoad) {
-          setIsInitialLoad(false);
-          hasScrolledRef.current = true;
+      const timer = setTimeout(() => {
+        const container = scrollContainerRef.current;
+        if (container && container.firstElementChild) {
+          console.log('📦 Container et éléments prêts, scroll en cours...');
+          scrollToSelectedDate(animated);
+          setShouldScroll(false);
+
+          if (isInitialLoad) {
+            setIsInitialLoad(false);
+            hasScrolledRef.current = true;
+          }
+        } else {
+          console.warn('⚠️ Container ou éléments non prêts, nouvelle tentative...');
+          setShouldScroll(true);
         }
-      }, animated ? 150 : 50);
+      }, delay);
 
       return () => clearTimeout(timer);
     }
