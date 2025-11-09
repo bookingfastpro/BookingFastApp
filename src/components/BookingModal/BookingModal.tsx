@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, User, Euro, Package, Search, Mail, Phone, X, FileText, AlertCircle, ChevronDown } from 'lucide-react';
+import { Calendar, User, Euro, Package, Search, Mail, Phone, X, FileText, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { useClients } from '../../hooks/useClients';
 import { useBookings } from '../../hooks/useBookings';
 import { useServices } from '../../hooks/useServices';
@@ -69,6 +69,7 @@ export function BookingModal({
   const [tempBookingId, setTempBookingId] = useState<string | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isServiceListExpanded, setIsServiceListExpanded] = useState(true);
+  const [isNotesExpanded, setIsNotesExpanded] = useState(false);
 
   const hasMultiUserPlugin = userPlugins.some(p => p.plugin_slug === 'multi-user');
 
@@ -127,6 +128,7 @@ export function BookingModal({
       setTempBookingId(editingBooking.id);
       setIsEditMode(true);
       setIsServiceListExpanded(false);
+      setIsNotesExpanded(!!editingBooking.notes);
     } else {
       setSelectedService(null);
       setIsCustomService(false);
@@ -142,6 +144,7 @@ export function BookingModal({
       setTempBookingId(null);
       setIsEditMode(false);
       setIsServiceListExpanded(true);
+      setIsNotesExpanded(false);
     }
   }, [editingBooking, services, selectedDate, selectedTime]);
 
@@ -912,21 +915,39 @@ export function BookingModal({
                 />
               )}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <FileText className="w-4 h-4 inline mr-2" />
-                  Notes internes (optionnel)
-                </label>
-                <textarea
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 text-base resize-none"
-                  rows={3}
-                  placeholder="Ajoutez des notes ou commentaires sur cette réservation..."
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Ces notes sont visibles uniquement par vous et votre équipe
-                </p>
+              <div className="border-2 border-gray-200 rounded-xl overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setIsNotesExpanded(!isNotesExpanded)}
+                  className="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-gray-600" />
+                    <span className="text-sm font-medium text-gray-700">
+                      Notes internes {notes && `(${notes.length} caractères)`}
+                    </span>
+                  </div>
+                  {isNotesExpanded ? (
+                    <ChevronUp className="w-4 h-4 text-gray-600" />
+                  ) : (
+                    <ChevronDown className="w-4 h-4 text-gray-600" />
+                  )}
+                </button>
+
+                {isNotesExpanded && (
+                  <div className="p-4 bg-white">
+                    <textarea
+                      value={notes}
+                      onChange={(e) => setNotes(e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm resize-none"
+                      rows={3}
+                      placeholder="Ajoutez des notes ou commentaires sur cette réservation..."
+                    />
+                    <p className="text-xs text-gray-500 mt-2">
+                      Ces notes sont visibles uniquement par vous et votre équipe
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
