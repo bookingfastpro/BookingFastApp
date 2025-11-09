@@ -138,71 +138,59 @@ export function ReservationPayment({ bookings, clients, onSelectBooking }: Reser
         ) : (
           filteredBookings.map(booking => {
             const remaining = booking.total_amount - (booking.payment_amount || 0);
-            
+
             return (
               <button
                 key={booking.id}
                 onClick={() => onSelectBooking(booking)}
-                className="w-full bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 border-2 border-gray-200 hover:border-purple-300 hover:shadow-lg transition-all duration-300 text-left group"
+                className="w-full bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 text-left group border border-gray-100"
               >
-                <div className="flex items-start justify-between gap-3 sm:gap-4">
-                  <div className="flex-1 min-w-0">
-                    {/* Client */}
-                    <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg sm:rounded-xl flex items-center justify-center text-white font-bold text-xs sm:text-sm flex-shrink-0">
-                        {booking.client_firstname?.charAt(0)}{booking.client_name?.charAt(0)}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <div className="font-bold text-gray-900 text-sm sm:text-base truncate">
-                          {booking.client_firstname} {booking.client_name}
-                        </div>
-                        <div className="text-xs sm:text-sm text-gray-600 truncate">
-                          {booking.client_email}
-                        </div>
-                      </div>
+                {/* En-tête avec client et prix */}
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
+                      {booking.client_firstname?.charAt(0)}{booking.client_name?.charAt(0)}
                     </div>
-
-                    {/* Détails */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Calendar className="w-3 sm:w-4 h-3 sm:h-4 text-purple-500 flex-shrink-0" />
-                        <span className="truncate">{formatDate(booking.date)}</span>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-semibold text-gray-900 text-base truncate">
+                        {booking.client_firstname} {booking.client_name}
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Clock className="w-3 sm:w-4 h-3 sm:h-4 text-blue-500 flex-shrink-0" />
-                        <span>{formatTime(booking.time)}</span>
+                      <div className="text-sm text-gray-500 truncate">
+                        {booking.client_email}
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600 sm:col-span-2">
-                        <User className="w-3 sm:w-4 h-3 sm:h-4 text-green-500 flex-shrink-0" />
-                        <span className="truncate">{booking.service?.name}</span>
-                      </div>
-                    </div>
-
-                    {/* Statut de paiement */}
-                    <div className="mt-2 sm:mt-3 flex flex-wrap items-center gap-2">
-                      <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs font-medium border ${getPaymentStatusColor(booking)}`}>
-                        {getPaymentStatusText(booking)}
-                      </span>
-                      {booking.payment_amount > 0 && (
-                        <span className="text-xs text-gray-600">
-                          Payé: {booking.payment_amount.toFixed(2)}€
-                        </span>
-                      )}
                     </div>
                   </div>
-
-                  {/* Montant et flèche */}
-                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <div className="text-right">
-                      <div className="text-base sm:text-lg font-bold text-purple-600">
-                        {remaining.toFixed(2)}€
-                      </div>
-                      <div className="text-xs text-gray-600">
-                        sur {booking.total_amount.toFixed(2)}€
-                      </div>
+                  <div className="text-right flex-shrink-0">
+                    <div className="text-lg font-bold text-purple-600">
+                      {remaining.toFixed(2)}€
                     </div>
-                    <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 group-hover:text-purple-600 transition-colors" />
+                    <div className="text-xs text-gray-500">
+                      sur {booking.total_amount.toFixed(2)}€
+                    </div>
                   </div>
+                </div>
+
+                {/* Informations de la réservation */}
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Calendar className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                    <span className="truncate">{formatDate(booking.date)}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Clock className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                    <span>{formatTime(booking.time)}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <User className="w-4 h-4 text-green-400 flex-shrink-0" />
+                    <span className="truncate">{booking.service?.name}</span>
+                  </div>
+                </div>
+
+                {/* Statut de paiement */}
+                <div className="mt-3 pt-3 border-t border-gray-100">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(booking)}`}>
+                    {getPaymentStatusText(booking)}
+                  </span>
                 </div>
               </button>
             );
