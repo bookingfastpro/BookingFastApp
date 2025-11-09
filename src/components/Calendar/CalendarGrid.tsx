@@ -596,35 +596,26 @@ export function CalendarGrid({
               </div>
             </div>
             
-            <div className="text-right flex items-center gap-2">
-              <div className="flex flex-col items-end">
-                <div className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
-                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
-                  <span>
-                    {selectedDate.toLocaleDateString('fr-FR', {
-                      weekday: 'long',
-                      day: 'numeric',
-                      month: 'short'
-                    })}
-                  </span>
-                </div>
-                <div className={`text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full font-medium ${
-                  isDayClosed()
-                    ? 'bg-gradient-to-r from-red-100 to-pink-100 text-red-700'
-                    : dayBookings.length > 0
-                    ? 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-700'
-                    : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-600'
-                }`}>
-                  {isDayClosed() ? '🔒 Fermé' : `📅 ${dayBookings.length} rdv`}
-                </div>
+            <div className="text-right">
+              <div className="text-base sm:text-lg font-bold text-gray-900 flex items-center gap-2">
+                <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
+                <span>
+                  {selectedDate.toLocaleDateString('fr-FR', { 
+                    weekday: 'long',
+                    day: 'numeric', 
+                    month: 'short'
+                  })}
+                </span>
               </div>
-
-              {/* Bouton filtre à côté de la date */}
-              {filterButton && (
-                <div>
-                  {filterButton}
-                </div>
-              )}
+              <div className={`text-xs px-2 sm:px-3 py-0.5 sm:py-1 rounded-full font-medium ${
+                isDayClosed()
+                  ? 'bg-gradient-to-r from-red-100 to-pink-100 text-red-700'
+                  : dayBookings.length > 0 
+                  ? 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-700' 
+                  : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-600'
+              }`}>
+                {isDayClosed() ? '🔒 Fermé' : `📅 ${dayBookings.length} rdv`}
+              </div>
             </div>
           </div>
 
@@ -652,6 +643,13 @@ export function CalendarGrid({
                   </span>
                 </div>
               </button>
+
+              {/* Bouton filtre sur mobile uniquement */}
+              {filterButton && (
+                <div className="sm:hidden">
+                  {filterButton}
+                </div>
+              )}
 
               <button
                 onClick={() => changeMonth('next')}

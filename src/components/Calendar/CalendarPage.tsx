@@ -254,14 +254,13 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
 
   const shouldShowTeamFilter = canViewTeamFilter && isMultiUserActive && teamMembers.length > 0 && view === 'calendar';
 
-  // Bouton filtre compact (à afficher dans le CalendarGrid à côté de la date)
-  const filterButton = shouldShowTeamFilter ? (
+  // Bouton filtre pour mobile (à afficher dans le CalendarGrid)
+  const mobileFilterButton = shouldShowTeamFilter ? (
     <button
       onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}
-      className="flex items-center gap-1.5 px-2.5 py-2 sm:px-3 sm:py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-all duration-300 shadow-lg"
+      className="flex items-center gap-1.5 px-2.5 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg transition-all duration-300 shadow-lg"
     >
       <Filter className="w-4 h-4" />
-      <span className="hidden sm:inline text-xs font-bold">Filtres</span>
       {selectedTeamMember !== 'all' && (
         <span className="min-w-[16px] h-4 px-1 bg-white/30 backdrop-blur-sm text-white text-xs rounded-full font-bold flex items-center justify-center">
           1
@@ -281,8 +280,33 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
       }}
     >
       {shouldShowTeamFilter && (
-        <div className="hidden">
-          {/* Panneau de filtres - Masqué sur desktop car le bouton est maintenant à côté de la date */}
+        <div className="hidden sm:block bg-white/80 backdrop-blur-sm border-b border-gray-200 shadow-sm">
+          {/* Bouton Filtres repliable - Desktop uniquement */}
+          <div className="px-3 sm:px-4 py-3">
+            <button
+              onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}
+              className="w-full flex items-center justify-between px-4 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-xl transition-all duration-300 shadow-lg transform hover:scale-[1.02]"
+            >
+              <div className="flex items-center gap-2">
+                <Filter className="w-5 h-5" />
+                <span className="font-bold text-sm md:text-base">
+                  Filtres
+                  {selectedTeamMember !== 'all' && (
+                    <span className="ml-2 px-2 py-0.5 bg-white/30 backdrop-blur-sm text-white text-xs rounded-full font-bold">
+                      1
+                    </span>
+                  )}
+                </span>
+              </div>
+              {isFiltersExpanded ? (
+                <ChevronUp className="w-5 h-5" />
+              ) : (
+                <ChevronDown className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+
+          {/* Panneau de filtres dépliable - Desktop */}
           <div
             className={`overflow-hidden transition-all duration-300 ease-in-out ${
               isFiltersExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
@@ -363,17 +387,17 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
         </div>
       )}
 
-      {/* Panneau de filtres - Modal overlay (mobile et desktop) */}
+      {/* Panneau de filtres mobile - Modal overlay */}
       {shouldShowTeamFilter && isFiltersExpanded && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm"
+        <div className="sm:hidden fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm"
           onClick={() => setIsFiltersExpanded(false)}
         >
           <div
-            className="bg-white rounded-t-3xl sm:rounded-2xl w-full sm:w-auto sm:min-w-[500px] max-h-[80vh] overflow-y-auto shadow-2xl animate-slideUp"
+            className="bg-white rounded-t-3xl w-full max-h-[80vh] overflow-y-auto shadow-2xl animate-slideUp"
             onClick={(e) => e.stopPropagation()}
           >
             {/* En-tête */}
-            <div className="sticky top-0 bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-4 flex items-center justify-between rounded-t-3xl sm:rounded-t-2xl">
+            <div className="sticky top-0 bg-gradient-to-r from-purple-500 to-pink-500 px-4 py-4 flex items-center justify-between rounded-t-3xl">
               <div className="flex items-center gap-2">
                 <Filter className="w-5 h-5 text-white" />
                 <h3 className="text-lg font-bold text-white">Filtres</h3>
@@ -479,7 +503,7 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
                 onDeleteBooking={handleDeleteBooking}
                 onAddUnavailability={handleAddUnavailability}
                 onDeleteUnavailability={handleDeleteUnavailability}
-                filterButton={filterButton}
+                filterButton={mobileFilterButton}
               />
             </UsageLimitIndicator>
           ) : view === 'list' ? (
