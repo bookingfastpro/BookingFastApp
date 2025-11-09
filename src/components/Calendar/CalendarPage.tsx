@@ -60,6 +60,29 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
   // Vérifier si on doit ouvrir une réservation depuis une notification
   const lastCheckedBookingId = useRef<string | null>(null);
 
+  const openBookingFromId = (bookingId: string) => {
+    console.log('📖 CalendarPage - Tentative d\'ouverture de la réservation:', bookingId);
+
+    // Attendre que les bookings soient chargés
+    if (loading || bookings.length === 0) {
+      console.log('⏳ En attente du chargement des bookings...');
+      return false;
+    }
+
+    // Chercher la réservation
+    const booking = bookings.find(b => b.id === bookingId);
+
+    if (booking) {
+      console.log('✅ Réservation trouvée, ouverture du modal:', booking);
+      setEditingBooking(booking);
+      setIsModalOpen(true);
+      return true;
+    } else {
+      console.log('⚠️ Réservation non trouvée dans les bookings actuels, ID:', bookingId);
+      return false;
+    }
+  };
+
   useEffect(() => {
     const openBookingId = sessionStorage.getItem('openBookingId');
 
@@ -75,32 +98,34 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
       return;
     }
 
-    // Attendre que les bookings soient chargés
-    if (loading || bookings.length === 0) {
-      console.log('⏳ En attente du chargement des bookings...');
-      return;
-    }
-
-    console.log('📖 CalendarPage - Tentative d\'ouverture de la réservation:', openBookingId);
     lastCheckedBookingId.current = openBookingId;
 
-    // Chercher la réservation
-    const booking = bookings.find(b => b.id === openBookingId);
-
-    if (booking) {
-      console.log('✅ Réservation trouvée, ouverture du modal:', booking);
-      setEditingBooking(booking);
-      setIsModalOpen(true);
-
-      // Nettoyer le sessionStorage
-      sessionStorage.removeItem('openBookingId');
-      lastCheckedBookingId.current = null;
-    } else {
-      console.log('⚠️ Réservation non trouvée dans les bookings actuels, ID:', openBookingId);
-      // Nettoyer quand même pour éviter de bloquer
+    if (openBookingFromId(openBookingId)) {
+      // Nettoyer le sessionStorage si succès
       sessionStorage.removeItem('openBookingId');
       lastCheckedBookingId.current = null;
     }
+  }, [bookings, loading]);
+
+  // Écouter l'événement personnalisé pour ouvrir une réservation
+  useEffect(() => {
+    const handleOpenBooking = (event: CustomEvent) => {
+      const bookingId = event.detail.bookingId;
+      console.log('🎯 Événement reçu pour ouvrir la réservation:', bookingId);
+
+      // Réinitialiser le flag pour permettre l'ouverture
+      lastCheckedBookingId.current = null;
+
+      if (openBookingFromId(bookingId)) {
+        sessionStorage.removeItem('openBookingId');
+      }
+    };
+
+    window.addEventListener('openBookingFromNotification', handleOpenBooking as EventListener);
+
+    return () => {
+      window.removeEventListener('openBookingFromNotification', handleOpenBooking as EventListener);
+    };
   }, [bookings, loading]);
 
   useEffect(() => {

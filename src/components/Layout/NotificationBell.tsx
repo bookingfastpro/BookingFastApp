@@ -55,6 +55,11 @@ export function NotificationBell() {
       sessionStorage.setItem('openBookingId', notification.booking_id);
       console.log('📦 Booking ID stocké dans sessionStorage:', notification.booking_id);
 
+      // Émettre un événement personnalisé pour forcer la vérification
+      window.dispatchEvent(new CustomEvent('openBookingFromNotification', {
+        detail: { bookingId: notification.booking_id }
+      }));
+
       // Naviguer vers le calendrier
       navigate('/calendar');
     }
