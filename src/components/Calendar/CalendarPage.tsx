@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CalendarGrid } from './CalendarGrid';
 import { BookingsList } from './BookingsList';
 import { ClientsPage } from '../Clients/ClientsPage';
@@ -58,10 +58,16 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
   }, [hasPluginAccess, isOwner, hasPermission]);
 
   // Vérifier si on doit ouvrir une réservation depuis une notification
+  const hasCheckedSessionStorage = useRef(false);
+
   useEffect(() => {
+    // Ne vérifier qu'une fois que les bookings sont chargés
+    if (loading || bookings.length === 0) return;
+
     const openBookingId = sessionStorage.getItem('openBookingId');
-    if (openBookingId) {
+    if (openBookingId && !hasCheckedSessionStorage.current) {
       console.log('📖 CalendarPage - Ouverture de la réservation depuis notification:', openBookingId);
+      hasCheckedSessionStorage.current = true;
 
       // Chercher la réservation
       const booking = bookings.find(b => b.id === openBookingId);
@@ -74,10 +80,19 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
         // Nettoyer le sessionStorage
         sessionStorage.removeItem('openBookingId');
       } else {
-        console.log('⚠️ Réservation non trouvée dans les bookings actuels');
+        console.log('⚠️ Réservation non trouvée dans les bookings actuels, ID:', openBookingId);
+        // Ne pas nettoyer le sessionStorage si la réservation n'est pas trouvée
+        // pour réessayer plus tard
       }
     }
-  }, [bookings]);
+  }, [bookings, loading]);
+
+  // Réinitialiser le flag quand le composant se démonte
+  useEffect(() => {
+    return () => {
+      hasCheckedSessionStorage.current = false;
+    };
+  }, []);
 
   useEffect(() => {
     const handleBookingChange = (data: any) => {
