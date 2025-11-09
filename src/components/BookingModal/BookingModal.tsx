@@ -607,37 +607,37 @@ export function BookingModal({
         size="xl"
         headerGradient={headerGradient}
       >
-        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
           {!editingBooking && !isEditMode && limitInfo && !isUnlimited && (
-            <div className={`rounded-xl p-4 ${
-              canCreateBooking 
+            <div className={`rounded-lg p-3 ${
+              canCreateBooking
                 ? limitInfo.remaining! <= 10
-                  ? 'bg-yellow-50 border-2 border-yellow-300'
-                  : 'bg-blue-50 border-2 border-blue-300'
-                : 'bg-red-50 border-2 border-red-300'
+                  ? 'bg-yellow-50 border border-yellow-300'
+                  : 'bg-blue-50 border border-blue-300'
+                : 'bg-red-50 border border-red-300'
             }`}>
-              <div className="flex items-start gap-3">
-                <AlertCircle className={`w-5 h-5 mt-0.5 ${
+              <div className="flex items-start gap-2">
+                <AlertCircle className={`w-4 h-4 mt-0.5 flex-shrink-0 ${
                   canCreateBooking
                     ? limitInfo.remaining! <= 10
                       ? 'text-yellow-600'
                       : 'text-blue-600'
                     : 'text-red-600'
                 }`} />
-                <div className="flex-1">
-                  <h4 className={`font-bold mb-1 ${
+                <div className="flex-1 min-w-0">
+                  <h4 className={`font-semibold text-sm ${
                     canCreateBooking
                       ? limitInfo.remaining! <= 10
                         ? 'text-yellow-800'
                         : 'text-blue-800'
                       : 'text-red-800'
                   }`}>
-                    {canCreateBooking 
-                      ? `${limitInfo.remaining} réservation${limitInfo.remaining! > 1 ? 's' : ''} restante${limitInfo.remaining! > 1 ? 's' : ''} ce mois-ci`
-                      : 'Limite de réservations atteinte !'
+                    {canCreateBooking
+                      ? `${limitInfo.remaining} réservation${limitInfo.remaining! > 1 ? 's' : ''} restante${limitInfo.remaining! > 1 ? 's' : ''}`
+                      : 'Limite atteinte'
                     }
                   </h4>
-                  <p className={`text-sm ${
+                  <p className={`text-xs mt-0.5 ${
                     canCreateBooking
                       ? limitInfo.remaining! <= 10
                         ? 'text-yellow-700'
@@ -645,12 +645,8 @@ export function BookingModal({
                       : 'text-red-700'
                   }`}>
                     {canCreateBooking
-                      ? `Vous avez utilisé ${limitInfo.current}/${limitInfo.limit} réservations. ${
-                          limitInfo.remaining! <= 10 
-                            ? 'Pensez à passer au plan Pro pour des réservations illimitées !' 
-                            : ''
-                        }`
-                      : `Vous avez atteint votre limite de ${limitInfo.limit} réservations pour ce mois. Passez au plan Pro pour continuer !`
+                      ? `${limitInfo.current}/${limitInfo.limit} utilisées ce mois`
+                      : `Limite de ${limitInfo.limit}/mois atteinte`
                     }
                   </p>
                 </div>
@@ -659,25 +655,22 @@ export function BookingModal({
           )}
 
           {tempBookingId && !isEditMode && (
-            <div className="rounded-xl p-4 bg-blue-50 border-2 border-blue-300">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 mt-0.5 text-blue-600" />
-                <div className="flex-1">
-                  <h4 className="font-bold mb-1 text-blue-800">
-                    ⚠️ Réservation temporaire créée
-                  </h4>
-                  <p className="text-sm text-blue-700">
-                    Un lien de paiement a été généré. N'oubliez pas de cliquer sur <strong>"Créer"</strong> pour finaliser la réservation !
+            <div className="rounded-lg p-3 bg-blue-50 border border-blue-300">
+              <div className="flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 mt-0.5 text-blue-600 flex-shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs text-blue-700">
+                    Lien généré. Cliquez sur <strong>"Créer"</strong> pour finaliser.
                   </p>
                 </div>
               </div>
             </div>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            <div className="space-y-4 sm:space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+            <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 sm:mb-3">
+                <label className="block text-xs font-semibold text-gray-700 mb-2">
                   Service
                 </label>
                 
@@ -951,30 +944,30 @@ export function BookingModal({
               </div>
             </div>
 
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-3">
               {selectedClient && (
-                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-4 border-2 border-blue-200">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-7 h-7 bg-blue-500 rounded-lg flex items-center justify-center">
                       <User className="w-4 h-4 text-white" />
                     </div>
-                    <h3 className="text-sm font-bold text-gray-900">Informations client</h3>
+                    <h3 className="text-sm font-semibold text-gray-900">Informations client</h3>
                   </div>
 
-                  <div className="space-y-1.5 text-sm">
-                    <div className="flex items-start gap-2">
-                      <span className="text-gray-600 min-w-[70px]">Nom complet</span>
+                  <div className="space-y-1 text-xs">
+                    <div className="flex">
+                      <span className="text-gray-600 w-20 flex-shrink-0">Nom</span>
                       <span className="font-semibold text-gray-900">{selectedClient.firstname} {selectedClient.lastname}</span>
                     </div>
                     {selectedClient.email && (
-                      <div className="flex items-start gap-2">
-                        <span className="text-gray-600 min-w-[70px]">Email</span>
+                      <div className="flex">
+                        <span className="text-gray-600 w-20 flex-shrink-0">Email</span>
                         <span className="font-medium text-gray-900 break-all">{selectedClient.email}</span>
                       </div>
                     )}
                     {selectedClient.phone && (
-                      <div className="flex items-start gap-2">
-                        <span className="text-gray-600 min-w-[70px]">Téléphone</span>
+                      <div className="flex">
+                        <span className="text-gray-600 w-20 flex-shrink-0">Téléphone</span>
                         <span className="font-medium text-gray-900">{selectedClient.phone}</span>
                       </div>
                     )}
@@ -983,101 +976,101 @@ export function BookingModal({
               )}
 
               {(selectedService || (isCustomService && customServiceData.name && customServiceData.price > 0)) && (
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border-2 border-green-200">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-7 h-7 bg-green-500 rounded-lg flex items-center justify-center">
                       <Euro className="w-4 h-4 text-white" />
                     </div>
-                    <h3 className="text-sm font-bold text-gray-900">Récapitulatif</h3>
+                    <h3 className="text-sm font-semibold text-gray-900">Récapitulatif</h3>
                   </div>
 
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between items-start">
+                  <div className="space-y-1.5 text-xs">
+                    <div className="flex justify-between">
                       <span className="text-gray-600">Service</span>
-                      <span className="font-semibold text-gray-900 text-right">
+                      <span className="font-semibold text-gray-900 text-right max-w-[60%]">
                         {isCustomService ? customServiceData.name : selectedService?.name}
                       </span>
                     </div>
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between">
                       <span className="text-gray-600">Prix unitaire</span>
                       <span className="font-semibold text-gray-900">
                         {isCustomService ? customServiceData.price.toFixed(2) : selectedService?.price_ttc.toFixed(2)}€
                       </span>
                     </div>
                     {quantity > 1 && (
-                      <div className="flex justify-between items-start">
+                      <div className="flex justify-between">
                         <span className="text-gray-600">Quantité</span>
                         <span className="font-semibold text-gray-900">{quantity} {getPluralUnitName(quantity)}</span>
                       </div>
                     )}
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between">
                       <span className="text-gray-600">Durée</span>
                       <span className="font-semibold text-gray-900">
                         {isCustomService ? customServiceData.duration : selectedService?.duration_minutes} min
                       </span>
                     </div>
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between">
                       <span className="text-gray-600">Date et heure</span>
                       <span className="font-semibold text-gray-900 text-right">
-                        {new Date(date).toLocaleDateString('fr-FR')} à {time.slice(0, 5)}
+                        {new Date(date).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' })} à {time.slice(0, 5)}
                       </span>
                     </div>
 
-                    <div className="h-px bg-green-300 my-2" />
+                    <div className="h-px bg-green-300 my-1" />
 
-                    <div className="flex justify-between items-center pt-1">
-                      <span className="font-bold text-gray-900">Total</span>
-                      <span className="text-xl font-bold text-green-600">{totalAmount.toFixed(2)}€</span>
+                    <div className="flex justify-between items-center pt-0.5">
+                      <span className="font-bold text-sm text-gray-900">Total</span>
+                      <span className="text-lg font-bold text-green-600">{totalAmount.toFixed(2)}€</span>
                     </div>
                   </div>
                 </div>
               )}
 
               {(selectedService || (isCustomService && customServiceData.name && customServiceData.price > 0)) && selectedClient && (
-                <div className="bg-gradient-to-r from-slate-50 to-gray-50 rounded-xl p-4 border-2 border-gray-300">
-                  <div className="flex items-center gap-2 mb-3">
-                    <div className="w-8 h-8 bg-gradient-to-r from-slate-500 to-gray-500 rounded-lg flex items-center justify-center">
+                <div className="bg-gray-50 rounded-lg p-3 border border-gray-300">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-7 h-7 bg-gray-600 rounded-lg flex items-center justify-center">
                       <Calendar className="w-4 h-4 text-white" />
                     </div>
-                    <h3 className="text-sm font-bold text-gray-900">Statut de la réservation</h3>
+                    <h3 className="text-sm font-semibold text-gray-900">Statut de la réservation</h3>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-1.5">
                     <button
                       type="button"
                       onClick={() => setBookingStatus('pending')}
-                      className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all ${
                         bookingStatus === 'pending'
-                          ? 'bg-yellow-100 border-yellow-400'
-                          : 'bg-white border-gray-200'
+                          ? 'bg-orange-100 border-orange-400 shadow-sm'
+                          : 'bg-white border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <div className="text-2xl mb-1">⏳</div>
-                      <span className="text-xs font-semibold text-gray-700">En attente</span>
+                      <div className="text-xl mb-0.5">⏳</div>
+                      <span className="text-[10px] font-semibold text-gray-700">En attente</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setBookingStatus('confirmed')}
-                      className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all ${
                         bookingStatus === 'confirmed'
-                          ? 'bg-green-100 border-green-400'
-                          : 'bg-white border-gray-200'
+                          ? 'bg-green-100 border-green-400 shadow-sm'
+                          : 'bg-white border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <div className="text-2xl mb-1">✅</div>
-                      <span className="text-xs font-semibold text-gray-700">Confirmée</span>
+                      <div className="text-xl mb-0.5">✅</div>
+                      <span className="text-[10px] font-semibold text-gray-700">Confirmée</span>
                     </button>
                     <button
                       type="button"
                       onClick={() => setBookingStatus('cancelled')}
-                      className={`flex flex-col items-center justify-center p-3 rounded-lg border-2 transition-all ${
+                      className={`flex flex-col items-center justify-center p-2 rounded-lg border transition-all ${
                         bookingStatus === 'cancelled'
-                          ? 'bg-red-100 border-red-400'
-                          : 'bg-white border-gray-200'
+                          ? 'bg-red-100 border-red-400 shadow-sm'
+                          : 'bg-white border-gray-200 hover:border-gray-300'
                       }`}
                     >
-                      <div className="text-2xl mb-1">❌</div>
-                      <span className="text-xs font-semibold text-gray-700">Annulée</span>
+                      <div className="text-xl mb-0.5">❌</div>
+                      <span className="text-[10px] font-semibold text-gray-700">Annulée</span>
                     </button>
                   </div>
                 </div>
