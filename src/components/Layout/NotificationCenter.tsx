@@ -470,7 +470,13 @@ export function NotificationCenter() {
             onClick={() => setIsOpen(false)}
           />
 
-          <div className="fixed sm:absolute top-20 sm:top-full left-1/2 sm:left-auto sm:right-0 transform -translate-x-1/2 sm:translate-x-0 sm:translate-y-0 sm:mt-2 w-96 max-w-[90vw] sm:max-w-96 bg-white border border-gray-200 rounded-2xl shadow-2xl z-[100000] max-h-96 overflow-hidden">
+          <div
+            className="fixed sm:absolute top-20 sm:top-full left-1/2 sm:left-auto sm:right-0 transform -translate-x-1/2 sm:translate-x-0 sm:translate-y-0 sm:mt-2 w-96 max-w-[90vw] sm:max-w-96 bg-white border border-gray-200 rounded-2xl shadow-2xl z-[100000] max-h-96 overflow-hidden"
+            onClick={(e) => {
+              console.log('🔍 Click sur le dropdown (doit ne pas fermer)');
+              e.stopPropagation();
+            }}
+          >
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white">
               <div className="flex items-center justify-between">
@@ -520,7 +526,11 @@ export function NotificationCenter() {
                   {notifications.slice(0, 10).map((notification, index) => (
                     <div
                       key={notification.id}
-                      onClick={() => handleNotificationClick(notification)}
+                      onClick={(e) => {
+                        console.log('🖱️ Click capturé sur notification:', notification.id);
+                        handleNotificationClick(notification);
+                      }}
+                      onMouseDown={() => console.log('🖱️ MouseDown sur notification:', notification.id)}
                       className={`p-4 hover:bg-gray-50 transition-colors animate-fadeIn cursor-pointer ${
                         !notification.read ? 'bg-blue-50' : ''
                       }`}
