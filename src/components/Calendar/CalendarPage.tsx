@@ -43,7 +43,7 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
     const checkAccess = async () => {
       const multiUserActive = await hasPluginAccess('multi-user');
       setIsMultiUserActive(multiUserActive);
-      
+
       if (isOwner && multiUserActive) {
         setCanViewTeamFilter(true);
       } else if (multiUserActive) {
@@ -56,6 +56,28 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
 
     checkAccess();
   }, [hasPluginAccess, isOwner, hasPermission]);
+
+  // Vérifier si on doit ouvrir une réservation depuis une notification
+  useEffect(() => {
+    const openBookingId = sessionStorage.getItem('openBookingId');
+    if (openBookingId) {
+      console.log('📖 CalendarPage - Ouverture de la réservation depuis notification:', openBookingId);
+
+      // Chercher la réservation
+      const booking = bookings.find(b => b.id === openBookingId);
+
+      if (booking) {
+        console.log('✅ Réservation trouvée, ouverture du modal:', booking);
+        setEditingBooking(booking);
+        setIsModalOpen(true);
+
+        // Nettoyer le sessionStorage
+        sessionStorage.removeItem('openBookingId');
+      } else {
+        console.log('⚠️ Réservation non trouvée dans les bookings actuels');
+      }
+    }
+  }, [bookings]);
 
   useEffect(() => {
     const handleBookingChange = (data: any) => {
