@@ -602,7 +602,7 @@ export function POSPage() {
                       <button
                         type="button"
                         onClick={(e) => handleAddToCart(e, product)}
-                        className="relative bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg hover:border-purple-300 transition-all duration-300 hover:-translate-y-1 w-full text-left cursor-pointer"
+                        className="relative bg-white rounded-2xl overflow-hidden border-2 border-purple-200 shadow-sm hover:shadow-lg hover:border-purple-400 transition-all duration-300 hover:-translate-y-1 w-full text-left cursor-pointer"
                       >
                         {/* Header avec prix */}
                         <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 relative">
