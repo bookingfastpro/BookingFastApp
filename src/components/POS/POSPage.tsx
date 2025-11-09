@@ -590,91 +590,84 @@ export function POSPage() {
                 </div>
               </div>
 
-              {/* Grille de services - NOUVEAU DESIGN */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-2 sm:gap-3">
+              {/* Grille de services - DESIGN MODERNE */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3 sm:gap-4">
                 {filteredProducts.map(product => {
-                  const colorClasses = getColorClasses(product.color);
                   return (
                     <div
                       key={product.id}
                       className="group relative"
                     >
                       {/* Card Container */}
-                      <div className={`relative bg-white rounded-2xl overflow-hidden shadow-lg ${colorClasses.shadow} ${colorClasses.hover} transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1`}>
-                        {/* Gradient Header */}
-                        <div className={`bg-gradient-to-br ${colorClasses.gradient} p-3 sm:p-4 relative overflow-hidden`}>
-                          {/* Decorative Pattern */}
-                          <div className="absolute inset-0 opacity-10">
-                            <div className="absolute top-0 right-0 w-20 h-20 bg-white rounded-full -mr-10 -mt-10"></div>
-                            <div className="absolute bottom-0 left-0 w-16 h-16 bg-white rounded-full -ml-8 -mb-8"></div>
-                          </div>
-
+                      <div className="relative bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-lg hover:border-purple-300 transition-all duration-300 hover:-translate-y-1">
+                        {/* Header avec prix */}
+                        <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-4 relative">
                           {/* Edit Button */}
                           {!product._isBookingService && (
                             <button
                               type="button"
                               onClick={(e) => handleEditProduct(e, product)}
-                              className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm hover:bg-white/30 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10"
+                              className="absolute top-2 right-2 bg-white/80 backdrop-blur-sm hover:bg-white p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all z-10 shadow-sm"
                             >
-                              <Edit className="w-3 h-3 text-white" />
+                              <Edit className="w-3 h-3 text-purple-600" />
                             </button>
                           )}
 
                           {/* Booking Badge */}
                           {product._isBookingService && (
-                            <div className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-lg z-10">
-                              <Calendar className="w-3 h-3 text-white" />
+                            <div className="absolute top-2 right-2 bg-purple-100 px-2 py-1 rounded-lg z-10">
+                              <Calendar className="w-3 h-3 text-purple-600" />
                             </div>
                           )}
+
+                          {/* Prix principal */}
+                          <div className="text-center mb-3">
+                            <div className="flex items-baseline justify-center gap-1">
+                              <span className="text-3xl sm:text-4xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                                {product.price.toFixed(0)}
+                              </span>
+                              <span className="text-xl font-bold text-gray-400">
+                                .{(product.price % 1).toFixed(2).split('.')[1]}
+                              </span>
+                              <span className="text-sm font-bold text-gray-500">€</span>
+                            </div>
+                          </div>
 
                           {/* Service Name */}
-                          <h3 className="text-white font-bold text-sm sm:text-base leading-tight line-clamp-2 mb-2 relative z-10">
+                          <h3 className="text-gray-900 font-bold text-sm sm:text-base leading-tight line-clamp-2 text-center min-h-[2.5rem] flex items-center justify-center">
                             {product.name}
                           </h3>
-
-                          {/* Duration Badge */}
-                          {product.duration_minutes && (
-                            <div className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-lg relative z-10">
-                              <Clock className="w-3 h-3 text-white" />
-                              <span className="text-xs font-semibold text-white">
-                                {product.duration_minutes}min
-                              </span>
-                            </div>
-                          )}
                         </div>
 
                         {/* Content */}
                         <div className="p-3 sm:p-4">
-                          {/* Price Section */}
-                          <div className="mb-3">
-                            <div className="flex items-baseline gap-1 mb-1">
-                              <span className="text-2xl sm:text-3xl font-black text-gray-900">
-                                {product.price.toFixed(0)}
-                              </span>
-                              <span className="text-lg sm:text-xl font-bold text-gray-900">
-                                .{(product.price % 1).toFixed(2).split('.')[1]}
-                              </span>
-                              <span className="text-sm font-bold text-gray-600 ml-1">€</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {product._isTTCPrice && (
-                                <span className="text-[10px] font-semibold text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
-                                  TTC
+                          {/* Badges */}
+                          <div className="flex items-center justify-center gap-2 mb-3 min-h-[24px]">
+                            {product.duration_minutes && (
+                              <div className="inline-flex items-center gap-1 bg-purple-100 px-2 py-1 rounded-lg">
+                                <Clock className="w-3 h-3 text-purple-600" />
+                                <span className="text-xs font-semibold text-purple-700">
+                                  {product.duration_minutes}min
                                 </span>
-                              )}
-                              {product.track_stock && (
-                                <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
-                                  Stock: {product.stock}
-                                </span>
-                              )}
-                            </div>
+                              </div>
+                            )}
+                            {product._isTTCPrice && (
+                              <span className="text-xs font-semibold text-gray-600 bg-gray-100 px-2 py-1 rounded-lg">
+                                TTC
+                              </span>
+                            )}
+                            {product.track_stock && (
+                              <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-lg">
+                                {product.stock}
+                              </span>
+                            )}
                           </div>
 
                           {/* Add to Cart Button */}
                           <button
                             type="button"
                             onClick={(e) => handleAddToCart(e, product)}
-                            className={`w-full bg-gradient-to-r ${colorClasses.gradient} text-white py-2.5 sm:py-3 rounded-xl font-bold hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group-hover:scale-105`}
+                            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-2.5 sm:py-3 rounded-xl font-bold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
                           >
                             <Plus className="w-4 h-4" />
                             <span className="text-sm">Ajouter</span>
