@@ -576,27 +576,17 @@ export function NotificationCenter() {
                             )}
                           </div>
                           
-                          {/* Informations de la réservation */}
-                          <div className="mt-2 p-2 bg-gray-50 rounded-lg">
-                            <div className="text-xs text-gray-600 mb-2">
-                              <div className="flex items-center gap-2">
-                                <CreditCard className="w-3 h-3" />
-                                <span>
-                                  {notification.booking.service?.name} - {new Date(notification.booking.date).toLocaleDateString('fr-FR')} à {notification.booking.time.slice(0, 5)}
-                                </span>
-                              </div>
-                            </div>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                console.log('🔵 Bouton Voir les détails cliqué');
-                                handleNotificationClick(notification);
-                              }}
-                              className="w-full mt-1 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                            >
-                              Voir les détails
-                            </button>
-                          </div>
+                          {/* Bouton d'action - TOUJOURS AFFICHÉ */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              console.log('🔵 Bouton Voir les détails cliqué');
+                              handleNotificationClick(notification);
+                            }}
+                            className="w-full mt-2 px-3 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                          >
+                            Voir les détails
+                          </button>
                         </div>
                       </div>
                     </div>
