@@ -526,12 +526,7 @@ export function NotificationCenter() {
                   {notifications.slice(0, 10).map((notification, index) => (
                     <div
                       key={notification.id}
-                      onClick={(e) => {
-                        console.log('🖱️ Click capturé sur notification:', notification.id);
-                        handleNotificationClick(notification);
-                      }}
-                      onMouseDown={() => console.log('🖱️ MouseDown sur notification:', notification.id)}
-                      className={`p-4 hover:bg-gray-50 transition-colors animate-fadeIn cursor-pointer ${
+                      className={`p-4 transition-colors animate-fadeIn ${
                         !notification.read ? 'bg-blue-50' : ''
                       }`}
                       style={{ animationDelay: `${index * 50}ms` }}
@@ -583,7 +578,7 @@ export function NotificationCenter() {
                           
                           {/* Informations de la réservation */}
                           <div className="mt-2 p-2 bg-gray-50 rounded-lg">
-                            <div className="text-xs text-gray-600">
+                            <div className="text-xs text-gray-600 mb-2">
                               <div className="flex items-center gap-2">
                                 <CreditCard className="w-3 h-3" />
                                 <span>
@@ -591,6 +586,16 @@ export function NotificationCenter() {
                                 </span>
                               </div>
                             </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                console.log('🔵 Bouton Voir les détails cliqué');
+                                handleNotificationClick(notification);
+                              }}
+                              className="w-full mt-1 px-3 py-1.5 bg-blue-600 text-white text-xs font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                            >
+                              Voir les détails
+                            </button>
                           </div>
                         </div>
                       </div>
