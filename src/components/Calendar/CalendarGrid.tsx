@@ -179,19 +179,24 @@ export function CalendarGrid({
   const days = generateDaysForMonth();
 
   useEffect(() => {
-    const dateString = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
-    sessionStorage.setItem('calendar_selected_date', dateString);
-    console.log('💾 Sauvegarde de la date sélectionnée:', dateString);
-
+    console.log('🚀 Montage du composant CalendarGrid, déclenchement scroll initial');
     setShouldScroll(true);
-  }, [selectedDate]);
 
-  useEffect(() => {
     return () => {
       sessionStorage.removeItem('calendar_selected_date');
       console.log('🧹 Nettoyage de la date sauvegardée lors de la sortie du calendrier');
     };
   }, []);
+
+  useEffect(() => {
+    const dateString = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
+    sessionStorage.setItem('calendar_selected_date', dateString);
+    console.log('💾 Sauvegarde de la date sélectionnée:', dateString);
+
+    if (!isInitialLoad) {
+      setShouldScroll(true);
+    }
+  }, [selectedDate, isInitialLoad]);
 
   useEffect(() => {
     const handleBookingChange = () => {
