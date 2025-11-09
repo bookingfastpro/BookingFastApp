@@ -619,23 +619,18 @@ export function CalendarGrid({
             </div>
           </div>
 
-          <div className="flex items-center justify-center mb-2">
-            <div className="flex items-center gap-1 sm:gap-2">
-              <button
-                onClick={() => changeMonth('prev')}
-                className="hidden sm:flex p-2 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 transform hover:scale-110"
-              >
-                <ChevronLeft className="w-4 h-4 text-gray-600" />
-              </button>
-
+          {/* Sélecteur de mois - Mobile centré parfaitement, Desktop avec navigation */}
+          <div className="mb-2">
+            {/* Version mobile - bouton centré */}
+            <div className="flex sm:hidden items-center justify-center">
               <button
                 ref={monthButtonRef}
                 onClick={() => setShowDatePicker(true)}
-                className="group relative px-3 py-2 sm:px-4 sm:py-2 bg-white/80 backdrop-blur-sm rounded-lg sm:rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300"
+                className="group relative px-3 py-2 bg-white/80 backdrop-blur-sm rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300"
               >
                 <div className="flex items-center gap-2">
                   <CalendarIcon className="w-4 h-4 text-gray-600" />
-                  <span className="text-base sm:text-lg font-bold text-gray-900 capitalize">
+                  <span className="text-base font-bold text-gray-900 capitalize">
                     {viewMonth.toLocaleDateString('fr-FR', {
                       month: 'long',
                       year: 'numeric'
@@ -643,20 +638,40 @@ export function CalendarGrid({
                   </span>
                 </div>
               </button>
+            </div>
 
-              {/* Bouton filtre sur mobile uniquement */}
-              {filterButton && (
-                <div className="sm:hidden">
-                  {filterButton}
-                </div>
-              )}
+            {/* Version desktop - avec flèches de navigation */}
+            <div className="hidden sm:flex items-center justify-center">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => changeMonth('prev')}
+                  className="p-2 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 transform hover:scale-110"
+                >
+                  <ChevronLeft className="w-4 h-4 text-gray-600" />
+                </button>
 
-              <button
-                onClick={() => changeMonth('next')}
-                className="hidden sm:flex p-2 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 transform hover:scale-110"
-              >
-                <ChevronRight className="w-4 h-4 text-gray-600" />
-              </button>
+                <button
+                  onClick={() => setShowDatePicker(true)}
+                  className="group relative px-4 py-2 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300"
+                >
+                  <div className="flex items-center gap-2">
+                    <CalendarIcon className="w-4 h-4 text-gray-600" />
+                    <span className="text-lg font-bold text-gray-900 capitalize">
+                      {viewMonth.toLocaleDateString('fr-FR', {
+                        month: 'long',
+                        year: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => changeMonth('next')}
+                  className="p-2 bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-300 transform hover:scale-110"
+                >
+                  <ChevronRight className="w-4 h-4 text-gray-600" />
+                </button>
+              </div>
             </div>
           </div>
 
