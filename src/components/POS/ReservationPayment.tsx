@@ -143,25 +143,25 @@ export function ReservationPayment({ bookings, clients, onSelectBooking }: Reser
               <button
                 key={booking.id}
                 onClick={() => onSelectBooking(booking)}
-                className="w-full bg-gradient-to-br from-white via-purple-50/30 to-pink-50/30 rounded-2xl p-4 shadow-md hover:shadow-xl transition-all duration-300 text-left group border-2 border-purple-100 hover:border-purple-300"
+                className="w-full bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-all duration-200 text-left group border border-gray-100"
               >
                 {/* En-tête avec client et prix */}
                 <div className="flex items-start justify-between gap-3 mb-3">
                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-xl flex items-center justify-center text-white font-bold text-base flex-shrink-0 shadow-lg">
+                    <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0">
                       {booking.client_firstname?.charAt(0)}{booking.client_name?.charAt(0)}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="font-bold text-gray-900 text-base truncate">
+                      <div className="font-semibold text-gray-900 text-base truncate">
                         {booking.client_firstname} {booking.client_name}
                       </div>
-                      <div className="text-sm text-gray-600 truncate">
+                      <div className="text-sm text-gray-500 truncate">
                         {booking.client_email}
                       </div>
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <div className="text-xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                    <div className="text-lg font-bold text-purple-600">
                       {remaining.toFixed(2)}€
                     </div>
                     <div className="text-xs text-gray-500">
@@ -170,31 +170,25 @@ export function ReservationPayment({ bookings, clients, onSelectBooking }: Reser
                   </div>
                 </div>
 
-                {/* Informations de la réservation avec fond coloré */}
-                <div className="space-y-2 text-sm bg-white/60 rounded-xl p-3 backdrop-blur-sm">
-                  <div className="flex items-center gap-2 text-gray-700">
-                    <div className="w-7 h-7 bg-gradient-to-br from-purple-400 to-purple-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Calendar className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="truncate font-medium">{formatDate(booking.date)}</span>
+                {/* Informations de la réservation */}
+                <div className="space-y-2 text-sm">
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Calendar className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                    <span className="truncate">{formatDate(booking.date)}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-gray-700">
-                    <div className="w-7 h-7 bg-gradient-to-br from-blue-400 to-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Clock className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="font-medium">{formatTime(booking.time)}</span>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <Clock className="w-4 h-4 text-blue-400 flex-shrink-0" />
+                    <span>{formatTime(booking.time)}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-gray-700">
-                    <div className="w-7 h-7 bg-gradient-to-br from-green-400 to-emerald-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <User className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="truncate font-medium">{booking.service?.name}</span>
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <User className="w-4 h-4 text-green-400 flex-shrink-0" />
+                    <span className="truncate">{booking.service?.name}</span>
                   </div>
                 </div>
 
                 {/* Statut de paiement */}
-                <div className="mt-3 pt-3 border-t border-purple-100">
-                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm ${getPaymentStatusColor(booking)}`}>
+                <div className="mt-3 pt-3 border-t border-gray-100">
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(booking)}`}>
                     {getPaymentStatusText(booking)}
                   </span>
                 </div>
