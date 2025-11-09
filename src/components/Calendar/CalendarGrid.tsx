@@ -404,15 +404,15 @@ export function CalendarGrid({
   };
 
   useEffect(() => {
-    if (isInitialLoad) {
-      console.log('🚀 CalendarGrid - Chargement initial, scroll SANS animation');
+    if (isInitialLoad && days.length > 0) {
+      console.log('🚀 CalendarGrid - Chargement initial, scroll SANS animation vers:', selectedDateString);
       const timer = setTimeout(() => {
         scrollToSelectedDate(false);
         setIsInitialLoad(false);
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [isInitialLoad, days.length, selectedDateString]);
 
   useEffect(() => {
     if (!isInitialLoad) {
