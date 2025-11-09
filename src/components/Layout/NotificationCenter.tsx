@@ -464,6 +464,12 @@ export function NotificationCenter() {
       {/* Dropdown des notifications */}
       {isOpen && (
         <>
+          {/* Overlay pour fermer - DOIT ÊTRE AVANT LE DROPDOWN */}
+          <div
+            className="fixed inset-0 z-[99999] bg-black/20 sm:bg-transparent"
+            onClick={() => setIsOpen(false)}
+          />
+
           <div className="fixed sm:absolute top-20 sm:top-full left-1/2 sm:left-auto sm:right-0 transform -translate-x-1/2 sm:translate-x-0 sm:translate-y-0 sm:mt-2 w-96 max-w-[90vw] sm:max-w-96 bg-white border border-gray-200 rounded-2xl shadow-2xl z-[100000] max-h-96 overflow-hidden">
             {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white">
@@ -584,12 +590,6 @@ export function NotificationCenter() {
               )}
             </div>
           </div>
-
-          {/* Overlay pour fermer */}
-          <div 
-            className="fixed inset-0 z-[99999] bg-black/20 sm:bg-transparent" 
-            onClick={() => setIsOpen(false)}
-          />
         </>
       )}
     </div>
