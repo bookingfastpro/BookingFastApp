@@ -108,10 +108,10 @@ export function InvoicesPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4 lg:p-6">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 p-4 lg:p-6">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             {viewMode === 'quotes' ? 'Devis' : 'Factures'}
           </h1>
           <p className="text-gray-600 mt-1">
@@ -134,7 +134,7 @@ export function InvoicesPage() {
             <div className="text-xs lg:text-sm text-gray-600 mt-1">Brouillon{draftCount > 1 ? 's' : ''}</div>
           </div>
           <div className="bg-white rounded-2xl p-4 lg:p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-            <div className="text-2xl lg:text-3xl font-bold text-indigo-600">{totalAmount.toFixed(0)}€</div>
+            <div className="text-2xl lg:text-3xl font-bold text-purple-600">{totalAmount.toFixed(0)}€</div>
             <div className="text-xs lg:text-sm text-gray-600 mt-1">Montant total</div>
           </div>
         </div>
@@ -148,7 +148,7 @@ export function InvoicesPage() {
                 onClick={() => setViewMode('quotes')}
                 className={`flex-1 lg:flex-none px-6 py-3 rounded-xl font-semibold transition-all ${
                   viewMode === 'quotes'
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
                     : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                 }`}
               >
@@ -163,7 +163,7 @@ export function InvoicesPage() {
                 onClick={() => setViewMode('invoices')}
                 className={`flex-1 lg:flex-none px-6 py-3 rounded-xl font-semibold transition-all ${
                   viewMode === 'invoices'
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
                     : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                 }`}
               >
@@ -186,7 +186,7 @@ export function InvoicesPage() {
 
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="flex-1 lg:flex-none px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all font-semibold shadow-md flex items-center justify-center gap-2"
+                className="flex-1 lg:flex-none px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl transition-all font-semibold shadow-md flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" />
                 <span>Nouveau</span>
@@ -203,14 +203,14 @@ export function InvoicesPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Rechercher par numéro, client ou email..."
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
               />
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
+              className="px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all bg-white"
             >
               <option value="all">Tous les statuts</option>
               <option value="draft">Brouillon</option>
@@ -243,11 +243,11 @@ export function InvoicesPage() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
               {viewMode === 'quotes' ? (
-                <FileText className="w-8 h-8 text-blue-600" />
+                <FileText className="w-8 h-8 text-purple-600" />
               ) : (
-                <FileCheck className="w-8 h-8 text-indigo-600" />
+                <FileCheck className="w-8 h-8 text-pink-600" />
               )}
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -262,7 +262,7 @@ export function InvoicesPage() {
             {viewMode === 'quotes' && (
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all font-semibold shadow-md inline-flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl transition-all font-semibold shadow-md inline-flex items-center gap-2"
               >
                 <Plus className="w-5 h-5" />
                 Nouveau devis
@@ -398,7 +398,7 @@ function DocumentCard({
               <div className="text-xs text-gray-500 mb-1">
                 {isQuote ? 'Devis' : 'Facture'}
               </div>
-              <div className="text-lg font-bold text-blue-600">
+              <div className="text-lg font-bold text-purple-600">
                 {doc.invoice_number || doc.quote_number}
               </div>
               <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">
@@ -447,14 +447,14 @@ function DocumentCard({
             <div className="flex gap-2">
               <button
                 onClick={() => onPreview(doc)}
-                className="p-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-all"
+                className="p-2.5 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-xl transition-all"
                 title="Aperçu"
               >
                 <Eye className="w-4 h-4" />
               </button>
               <button
                 onClick={() => onDetails(doc)}
-                className="p-2.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-xl transition-all"
+                className="p-2.5 bg-pink-100 hover:bg-pink-200 text-pink-700 rounded-xl transition-all"
                 title="Détails"
               >
                 <FileText className="w-4 h-4" />
@@ -483,7 +483,7 @@ function DocumentCard({
               {isQuote && (
                 <button
                   onClick={() => onConvert(doc)}
-                  className="p-2.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-xl transition-all"
+                  className="p-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-all"
                   title="Convertir en facture"
                 >
                   <FileCheck className="w-4 h-4" />
@@ -522,7 +522,7 @@ function DocumentCard({
             <div className="text-xs text-gray-500">
               {isQuote ? 'Devis' : 'Facture'}
             </div>
-            <div className="text-lg font-bold text-blue-600">
+            <div className="text-lg font-bold text-purple-600">
               {doc.invoice_number || doc.quote_number}
             </div>
           </div>
@@ -536,7 +536,7 @@ function DocumentCard({
         </div>
 
         {/* Client */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-3 mb-3">
+        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-3 mb-3">
           <div className="flex items-center gap-2 text-gray-600 mb-1">
             <User className="w-3 h-3" />
             <div className="text-xs font-medium">Client</div>
@@ -586,7 +586,7 @@ function DocumentCard({
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => onPreview(doc)}
-              className="p-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
+              className="p-2.5 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
             >
               <Eye className="w-4 h-4" />
               <span className="text-xs font-semibold">Aperçu</span>
@@ -594,7 +594,7 @@ function DocumentCard({
 
             <button
               onClick={() => onDetails(doc)}
-              className="p-2.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
+              className="p-2.5 bg-pink-100 hover:bg-pink-200 text-pink-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
             >
               <FileText className="w-4 h-4" />
               <span className="text-xs font-semibold">Détails</span>
@@ -623,7 +623,7 @@ function DocumentCard({
             {isQuote && (
               <button
                 onClick={() => onConvert(doc)}
-                className="p-2.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
+                className="p-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
               >
                 <FileCheck className="w-4 h-4" />
                 <span className="text-xs font-semibold">Facturer</span>
