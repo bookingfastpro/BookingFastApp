@@ -108,48 +108,48 @@ export function InvoicesPage() {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-4 lg:p-6">
-        {/* Header moderne */}
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 p-4 lg:p-6">
+        {/* Header */}
         <div className="mb-6">
-          <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             {viewMode === 'quotes' ? 'Devis' : 'Factures'}
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 mt-1">
             Gérez vos {viewMode === 'quotes' ? 'devis' : 'factures'} clients
           </p>
         </div>
 
         {/* Cartes statistiques */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="bg-white rounded-2xl p-4 lg:p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <div className="text-2xl lg:text-3xl font-bold text-gray-900">{currentDocuments.length}</div>
             <div className="text-xs lg:text-sm text-gray-600 mt-1">Total</div>
           </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="bg-white rounded-2xl p-4 lg:p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <div className="text-2xl lg:text-3xl font-bold text-green-600">{paidCount}</div>
             <div className="text-xs lg:text-sm text-gray-600 mt-1">Payé{paidCount > 1 ? 's' : ''}</div>
           </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+          <div className="bg-white rounded-2xl p-4 lg:p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
             <div className="text-2xl lg:text-3xl font-bold text-orange-600">{draftCount}</div>
             <div className="text-xs lg:text-sm text-gray-600 mt-1">Brouillon{draftCount > 1 ? 's' : ''}</div>
           </div>
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
-            <div className="text-2xl lg:text-3xl font-bold text-purple-600">{totalAmount.toFixed(0)}€</div>
+          <div className="bg-white rounded-2xl p-4 lg:p-5 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+            <div className="text-2xl lg:text-3xl font-bold text-indigo-600">{totalAmount.toFixed(0)}€</div>
             <div className="text-xs lg:text-sm text-gray-600 mt-1">Montant total</div>
           </div>
         </div>
 
         {/* Barre d'actions */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-6">
           {/* Onglets et boutons */}
           <div className="flex flex-col lg:flex-row gap-3 mb-4">
             <div className="flex gap-2 flex-1">
               <button
                 onClick={() => setViewMode('quotes')}
-                className={`flex-1 lg:flex-none px-6 py-3 rounded-lg font-semibold transition-all ${
+                className={`flex-1 lg:flex-none px-6 py-3 rounded-xl font-semibold transition-all ${
                   viewMode === 'quotes'
-                    ? 'bg-purple-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <div className="flex items-center justify-center gap-2">
@@ -161,10 +161,10 @@ export function InvoicesPage() {
 
               <button
                 onClick={() => setViewMode('invoices')}
-                className={`flex-1 lg:flex-none px-6 py-3 rounded-lg font-semibold transition-all ${
+                className={`flex-1 lg:flex-none px-6 py-3 rounded-xl font-semibold transition-all ${
                   viewMode === 'invoices'
-                    ? 'bg-purple-600 text-white shadow-md'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md'
+                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                 }`}
               >
                 <div className="flex items-center justify-center gap-2">
@@ -178,7 +178,7 @@ export function InvoicesPage() {
             <div className="flex gap-2">
               <button
                 onClick={() => setShowCustomizationModal(true)}
-                className="flex-1 lg:flex-none px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-all font-semibold flex items-center justify-center gap-2"
+                className="flex-1 lg:flex-none px-6 py-3 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-xl transition-all font-semibold flex items-center justify-center gap-2"
               >
                 <Palette className="w-4 h-4" />
                 <span className="hidden lg:inline">PDF</span>
@@ -186,7 +186,7 @@ export function InvoicesPage() {
 
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="flex-1 lg:flex-none px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-all font-semibold shadow-md flex items-center justify-center gap-2"
+                className="flex-1 lg:flex-none px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all font-semibold shadow-md flex items-center justify-center gap-2"
               >
                 <Plus className="w-4 h-4" />
                 <span>Nouveau</span>
@@ -203,14 +203,14 @@ export function InvoicesPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Rechercher par numéro, client ou email..."
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               />
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all bg-white"
+              className="px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all bg-white"
             >
               <option value="all">Tous les statuts</option>
               <option value="draft">Brouillon</option>
@@ -242,12 +242,12 @@ export function InvoicesPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-12 text-center">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
               {viewMode === 'quotes' ? (
-                <FileText className="w-8 h-8 text-gray-400" />
+                <FileText className="w-8 h-8 text-blue-600" />
               ) : (
-                <FileCheck className="w-8 h-8 text-gray-400" />
+                <FileCheck className="w-8 h-8 text-indigo-600" />
               )}
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -262,7 +262,7 @@ export function InvoicesPage() {
             {viewMode === 'quotes' && (
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg transition-all font-semibold shadow-md inline-flex items-center gap-2"
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl transition-all font-semibold shadow-md inline-flex items-center gap-2"
               >
                 <Plus className="w-5 h-5" />
                 Nouveau devis
@@ -386,7 +386,7 @@ function DocumentCard({
 
   return (
     <div
-      className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all animate-fadeIn overflow-hidden"
+      className="bg-white rounded-2xl shadow-sm border border-gray-200 hover:shadow-md transition-all animate-fadeIn overflow-hidden"
       style={{ animationDelay: `${index * 50}ms` }}
     >
       {/* Version desktop */}
@@ -398,7 +398,7 @@ function DocumentCard({
               <div className="text-xs text-gray-500 mb-1">
                 {isQuote ? 'Devis' : 'Facture'}
               </div>
-              <div className="text-lg font-bold text-purple-600">
+              <div className="text-lg font-bold text-blue-600">
                 {doc.invoice_number || doc.quote_number}
               </div>
               <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">
@@ -447,14 +447,14 @@ function DocumentCard({
             <div className="flex gap-2">
               <button
                 onClick={() => onPreview(doc)}
-                className="p-2.5 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all"
+                className="p-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-all"
                 title="Aperçu"
               >
                 <Eye className="w-4 h-4" />
               </button>
               <button
                 onClick={() => onDetails(doc)}
-                className="p-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-all"
+                className="p-2.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-xl transition-all"
                 title="Détails"
               >
                 <FileText className="w-4 h-4" />
@@ -463,7 +463,7 @@ function DocumentCard({
               {isQuote && doc.status === 'draft' && (
                 <button
                   onClick={() => onSend(doc)}
-                  className="p-2.5 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-all"
+                  className="p-2.5 bg-green-100 hover:bg-green-200 text-green-700 rounded-xl transition-all"
                   title="Envoyer"
                 >
                   <Send className="w-4 h-4" />
@@ -473,7 +473,7 @@ function DocumentCard({
               {isQuote && actualStatus === 'sent' && !isPartiallyPaid && (
                 <button
                   onClick={() => onSend(doc)}
-                  className="p-2.5 bg-orange-100 hover:bg-orange-200 text-orange-700 rounded-lg transition-all"
+                  className="p-2.5 bg-orange-100 hover:bg-orange-200 text-orange-700 rounded-xl transition-all"
                   title="Renvoyer"
                 >
                   <RefreshCw className="w-4 h-4" />
@@ -483,7 +483,7 @@ function DocumentCard({
               {isQuote && (
                 <button
                   onClick={() => onConvert(doc)}
-                  className="p-2.5 bg-pink-100 hover:bg-pink-200 text-pink-700 rounded-lg transition-all"
+                  className="p-2.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-xl transition-all"
                   title="Convertir en facture"
                 >
                   <FileCheck className="w-4 h-4" />
@@ -493,7 +493,7 @@ function DocumentCard({
               {!isQuote && totalPaid > 0 && (
                 <button
                   onClick={() => onDetails(doc)}
-                  className="p-2.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-all"
+                  className="p-2.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-all"
                   title="Rembourser"
                 >
                   <Undo2 className="w-4 h-4" />
@@ -503,7 +503,7 @@ function DocumentCard({
               {(doc.status === 'draft' || (actualStatus === 'sent' && !isPartiallyPaid)) && (
                 <button
                   onClick={() => onDelete(doc)}
-                  className="p-2.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-all"
+                  className="p-2.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-all"
                   title="Supprimer"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -522,7 +522,7 @@ function DocumentCard({
             <div className="text-xs text-gray-500">
               {isQuote ? 'Devis' : 'Facture'}
             </div>
-            <div className="text-lg font-bold text-purple-600">
+            <div className="text-lg font-bold text-blue-600">
               {doc.invoice_number || doc.quote_number}
             </div>
           </div>
@@ -536,10 +536,10 @@ function DocumentCard({
         </div>
 
         {/* Client */}
-        <div className="bg-gray-50 rounded-lg p-3 mb-3">
-          <div className="flex items-center gap-2 text-gray-500 mb-1">
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-3 mb-3">
+          <div className="flex items-center gap-2 text-gray-600 mb-1">
             <User className="w-3 h-3" />
-            <div className="text-xs">Client</div>
+            <div className="text-xs font-medium">Client</div>
           </div>
           <div className="font-semibold text-gray-900 text-sm">
             {doc.client?.firstname} {doc.client?.lastname}
@@ -586,7 +586,7 @@ function DocumentCard({
           <div className="grid grid-cols-2 gap-2">
             <button
               onClick={() => onPreview(doc)}
-              className="p-2.5 bg-purple-100 hover:bg-purple-200 text-purple-700 rounded-lg transition-all flex flex-col items-center justify-center gap-1"
+              className="p-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
             >
               <Eye className="w-4 h-4" />
               <span className="text-xs font-semibold">Aperçu</span>
@@ -594,7 +594,7 @@ function DocumentCard({
 
             <button
               onClick={() => onDetails(doc)}
-              className="p-2.5 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-all flex flex-col items-center justify-center gap-1"
+              className="p-2.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
             >
               <FileText className="w-4 h-4" />
               <span className="text-xs font-semibold">Détails</span>
@@ -603,7 +603,7 @@ function DocumentCard({
             {isQuote && doc.status === 'draft' && (
               <button
                 onClick={() => onSend(doc)}
-                className="p-2.5 bg-green-100 hover:bg-green-200 text-green-700 rounded-lg transition-all flex flex-col items-center justify-center gap-1"
+                className="p-2.5 bg-green-100 hover:bg-green-200 text-green-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
               >
                 <Send className="w-4 h-4" />
                 <span className="text-xs font-semibold">Envoyer</span>
@@ -613,7 +613,7 @@ function DocumentCard({
             {isQuote && actualStatus === 'sent' && !isPartiallyPaid && (
               <button
                 onClick={() => onSend(doc)}
-                className="p-2.5 bg-orange-100 hover:bg-orange-200 text-orange-700 rounded-lg transition-all flex flex-col items-center justify-center gap-1"
+                className="p-2.5 bg-orange-100 hover:bg-orange-200 text-orange-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
               >
                 <RefreshCw className="w-4 h-4" />
                 <span className="text-xs font-semibold">Renvoyer</span>
@@ -623,7 +623,7 @@ function DocumentCard({
             {isQuote && (
               <button
                 onClick={() => onConvert(doc)}
-                className="p-2.5 bg-pink-100 hover:bg-pink-200 text-pink-700 rounded-lg transition-all flex flex-col items-center justify-center gap-1"
+                className="p-2.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
               >
                 <FileCheck className="w-4 h-4" />
                 <span className="text-xs font-semibold">Facturer</span>
@@ -633,7 +633,7 @@ function DocumentCard({
             {!isQuote && totalPaid > 0 && (
               <button
                 onClick={() => onDetails(doc)}
-                className="p-2.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-all flex flex-col items-center justify-center gap-1"
+                className="p-2.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
               >
                 <Undo2 className="w-4 h-4" />
                 <span className="text-xs font-semibold">Rembourser</span>
@@ -643,7 +643,7 @@ function DocumentCard({
             {(doc.status === 'draft' || (actualStatus === 'sent' && !isPartiallyPaid)) && (
               <button
                 onClick={() => onDelete(doc)}
-                className="p-2.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-all flex flex-col items-center justify-center gap-1"
+                className="p-2.5 bg-red-100 hover:bg-red-200 text-red-700 rounded-xl transition-all flex flex-col items-center justify-center gap-1"
               >
                 <Trash2 className="w-4 h-4" />
                 <span className="text-xs font-semibold">Supprimer</span>
