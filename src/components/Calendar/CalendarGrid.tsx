@@ -853,7 +853,7 @@ export function CalendarGrid({
                     return (
                       <div
                         key={block.id}
-                        className="absolute left-1 right-1 bg-gradient-to-r from-red-500/90 to-orange-500/90 text-white rounded-xl shadow-lg cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] animate-fadeIn pointer-events-auto border-2 border-red-300/50 group"
+                        className="absolute left-1 right-1 bg-gradient-to-r from-red-500/90 to-orange-500/90 text-white rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-all duration-200 hover:z-10 animate-fadeIn pointer-events-auto border-2 border-red-300/50 group"
                         style={{
                           ...position,
                           animationDelay: `${blockIndex * 100}ms`,
@@ -933,7 +933,7 @@ export function CalendarGrid({
                     return (
                       <div
                         key={`${group.serviceId}-${startTime}-${column}`}
-                        className={`absolute bg-gradient-to-r ${colorClass} text-white rounded-xl shadow-lg cursor-pointer hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:z-50 animate-fadeIn pointer-events-auto border-2 border-white/30`}
+                        className={`absolute bg-gradient-to-r ${colorClass} text-white rounded-xl shadow-lg cursor-pointer hover:shadow-xl transition-all duration-200 hover:z-10 animate-fadeIn pointer-events-auto border-2 border-white/30`}
                         style={{
                           left: columnLeft,
                           width: columnWidth,
