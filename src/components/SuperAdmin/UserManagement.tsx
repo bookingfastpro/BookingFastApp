@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Search, Edit, Trash2, Crown, Clock, CheckCircle, XCircle, Calendar, Mail, Shield, LogIn } from 'lucide-react';
-import { useAuth } from '../../hooks/useAuth';
+import { Users, Search, Edit, Trash2, Crown, Clock, CheckCircle, XCircle, Calendar, Mail, Shield } from 'lucide-react';
 import { useAdmin } from '../../hooks/useAdmin';
 import { User } from '../../types/admin';
 import { Modal } from '../UI/Modal';
@@ -8,7 +7,6 @@ import { Button } from '../UI/Button';
 
 export function UserManagement() {
   const { users, loading, updateUserStatus, deleteUser } = useAdmin();
-  const { impersonateUser } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -50,19 +48,6 @@ export function UserManagement() {
     if (window.confirm(`Supprimer définitivement l'utilisateur ${user.email} ?`)) {
       try {
         await deleteUser(user.id);
-      } catch (error) {
-        alert(`Erreur: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
-      }
-    }
-  };
-
-  const handleImpersonateUser = async (user: User) => {
-    const reason = prompt(`Raison de l'accès au compte de ${user.email}:`);
-    if (!reason) return;
-
-    if (window.confirm(`Vous allez vous connecter au compte de ${user.email}. Continuer ?`)) {
-      try {
-        await impersonateUser(user.id, reason);
       } catch (error) {
         alert(`Erreur: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
       }
@@ -266,13 +251,6 @@ export function UserManagement() {
                     
                     <td className="px-6 py-4">
                       <div className="flex gap-2">
-                        <button
-                          onClick={() => handleImpersonateUser(user)}
-                          className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-300 transform hover:scale-110"
-                          title="Se connecter au compte"
-                        >
-                          <LogIn className="w-4 h-4" />
-                        </button>
                         <button
                           onClick={() => handleEditUser(user)}
                           className="p-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-110"
