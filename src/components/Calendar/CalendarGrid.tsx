@@ -12,6 +12,8 @@ import { formatTime } from '../../utils/dateUtils';
 
 interface CalendarGridProps {
   currentDate: Date;
+  selectedDate: string;
+  onDateChange: (date: string) => void;
   onTimeSlotClick: (date: string, time: string) => void;
   onBookingClick: (booking: Booking) => void;
   bookings: Booking[];
@@ -49,6 +51,8 @@ interface ColumnLayout {
 
 export function CalendarGrid({
   currentDate,
+  selectedDate: selectedDateProp,
+  onDateChange,
   onTimeSlotClick,
   onBookingClick,
   bookings: allBookings,
@@ -61,9 +65,17 @@ export function CalendarGrid({
 }: CalendarGridProps) {
   const today = new Date();
   const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-  
-  const [selectedDate, setSelectedDate] = useState<Date>(today);
+
+  // Convertir la string en Date
+  const [year, month, day] = selectedDateProp.split('-').map(Number);
+  const selectedDate = new Date(year, month - 1, day);
   const [viewMonth, setViewMonth] = useState<Date>(today);
+
+  // Helper pour changer la date sélectionnée
+  const updateSelectedDate = (date: Date) => {
+    const dateString = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    onDateChange(dateString);
+  };
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const [selectedServiceBookings, setSelectedServiceBookings] = useState<Booking[]>([]);
   const [selectedServiceName, setSelectedServiceName] = useState('');
@@ -154,9 +166,8 @@ export function CalendarGrid({
   const days = generateDaysForMonth();
 
   useEffect(() => {
-    const now = new Date();
-    setSelectedDate(now);
-    setViewMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+    // Initialiser viewMonth basé sur selectedDate au lieu de today
+    setViewMonth(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1));
   }, []);
 
   useEffect(() => {
@@ -190,13 +201,13 @@ export function CalendarGrid({
     }
     setViewMonth(newViewMonth);
     const newSelectedDate = new Date(newViewMonth.getFullYear(), newViewMonth.getMonth(), 1);
-    setSelectedDate(newSelectedDate);
+    updateSelectedDate(newSelectedDate);
   };
 
   const goToCurrentMonth = () => {
     const now = new Date();
     setViewMonth(new Date(now.getFullYear(), now.getMonth(), 1));
-    setSelectedDate(now);
+    updateSelectedDate(now);
   };
 
   const goToMonth = (monthOffset: number) => {
@@ -204,9 +215,9 @@ export function CalendarGrid({
     const targetMonth = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
     setViewMonth(targetMonth);
     if (monthOffset === 0) {
-      setSelectedDate(now);
+      updateSelectedDate(now);
     } else {
-      setSelectedDate(new Date(targetMonth.getFullYear(), targetMonth.getMonth(), 1));
+      updateSelectedDate(new Date(targetMonth.getFullYear(), targetMonth.getMonth(), 1));
     }
   };
 
@@ -236,18 +247,18 @@ export function CalendarGrid({
     }
     setViewMonth(newMonth);
     const firstDay = new Date(newMonth.getFullYear(), newMonth.getMonth(), 1);
-    setSelectedDate(firstDay);
+    updateSelectedDate(firstDay);
   };
 
   const selectDay = (date: Date) => {
-    setSelectedDate(date);
+    updateSelectedDate(date);
     if (date.getMonth() !== viewMonth.getMonth() || date.getFullYear() !== viewMonth.getFullYear()) {
       setViewMonth(new Date(date.getFullYear(), date.getMonth(), 1));
     }
   };
 
   const handleDatePickerSelect = (date: Date) => {
-    setSelectedDate(date);
+    updateSelectedDate(date);
     setViewMonth(new Date(date.getFullYear(), date.getMonth(), 1));
   };
 
@@ -327,7 +338,7 @@ export function CalendarGrid({
     if (viewMonth.getMonth() !== now.getMonth() || viewMonth.getFullYear() !== now.getFullYear()) {
       setViewMonth(new Date(now.getFullYear(), now.getMonth(), 1));
     }
-    setSelectedDate(now);
+    updateSelectedDate(now);
   };
 
   const scrollToSelectedDate = (animated: boolean = false) => {

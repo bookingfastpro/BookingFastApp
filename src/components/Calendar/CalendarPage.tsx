@@ -495,6 +495,8 @@ export function CalendarPage({ view = 'calendar' }: CalendarPageProps) {
             <UsageLimitIndicator currentUsage={todayBookingsCount} permission="create_booking">
               <CalendarGrid
                 currentDate={currentDate}
+                selectedDate={selectedDate}
+                onDateChange={setSelectedDate}
                 onTimeSlotClick={handleTimeSlotClick}
                 onBookingClick={handleBookingClick}
                 bookings={filteredBookings}
