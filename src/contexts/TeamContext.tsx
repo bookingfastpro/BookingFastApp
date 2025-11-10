@@ -24,14 +24,12 @@ interface TeamContextType {
 const TeamContext = createContext<TeamContextType | undefined>(undefined);
 
 export function TeamProvider({ children }: { children: React.ReactNode }) {
-  // Vérifier si on est dans un contexte d'authentification
   let user = null;
   try {
     const auth = useAuth();
     user = auth.user;
   } catch (error) {
-    // Pas d'AuthProvider disponible (page publique)
-    console.log('ℹ️ TeamProvider sans AuthProvider (page publique)');
+    // Page publique
   }
 
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
@@ -48,54 +46,39 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
 
     try {
       setLoading(true);
-      console.log('🔍 Récupération des membres pour:', user.id);
 
-      // Récupérer le membre actuel pour obtenir son owner_id et role
       const { data: currentMember, error: memberError } = await supabase
         .from('team_members')
         .select('owner_id, role_name')
         .eq('user_id', user.id)
         .maybeSingle();
 
-      if (memberError) {
-        console.error('❌ Erreur récupération membre:', memberError);
-        throw memberError;
-      }
+      if (memberError) throw memberError;
 
       if (!currentMember) {
-        console.log('ℹ️ Utilisateur pas dans une équipe');
         setTeamMembers([]);
         setCurrentUserRole(null);
         setLoading(false);
         return;
       }
 
-      // Mapper role_name vers le type attendu
       const roleMap: Record<string, 'owner' | 'admin' | 'member'> = {
         'owner': 'owner',
         'admin': 'admin',
         'employee': 'member',
         'member': 'member'
       };
-      
-      setCurrentUserRole(roleMap[currentMember.role_name] || 'member');
-      console.log('✅ Rôle utilisateur:', roleMap[currentMember.role_name]);
 
-      // Récupérer tous les membres de l'équipe
+      setCurrentUserRole(roleMap[currentMember.role_name] || 'member');
+
       const { data: members, error: membersError } = await supabase
         .from('team_members')
         .select('*')
         .eq('owner_id', currentMember.owner_id)
         .order('created_at', { ascending: true });
 
-      if (membersError) {
-        console.error('❌ Erreur récupération membres:', membersError);
-        throw membersError;
-      }
+      if (membersError) throw membersError;
 
-      console.log('✅ Membres récupérés:', members?.length || 0);
-
-      // Utiliser les données directement de team_members (qui contient déjà email et full_name)
       const formattedMembers = (members || []).map(member => ({
         id: member.id,
         user_id: member.user_id,
@@ -106,10 +89,8 @@ export function TeamProvider({ children }: { children: React.ReactNode }) {
         created_at: member.created_at
       }));
 
-      console.log('✅ Membres formatés:', formattedMembers.length);
       setTeamMembers(formattedMembers);
     } catch (error) {
-      console.error('❌ Erreur chargement équipe:', error);
       setTeamMembers([]);
       setCurrentUserRole(null);
     } finally {

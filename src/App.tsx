@@ -30,6 +30,8 @@ const POSPage = lazy(() => import('./components/POS/POSPage').then(m => ({ defau
 const PluginsPage = lazy(() => import('./components/Plugins/PluginsPage').then(m => ({ default: m.PluginsPage })));
 const LoginPage = lazy(() => import('./components/Auth/LoginPage').then(m => ({ default: m.LoginPage })));
 const InvoicesPage = lazy(() => import('./components/Invoices/InvoicesPage').then(m => ({ default: m.InvoicesPage })));
+const ResetPasswordPage = lazy(() => import('./components/Auth/ResetPasswordPage').then(m => ({ default: m.ResetPasswordPage })));
+const SuperAdminPage = lazy(() => import('./components/SuperAdmin/SuperAdminPage').then(m => ({ default: m.SuperAdminPage })));
 
 function App() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);

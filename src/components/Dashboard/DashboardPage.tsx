@@ -74,21 +74,10 @@ export function DashboardPage() {
   });
 
   useEffect(() => {
-    let mounted = true;
-    
-    const calculateStatsDebounced = () => {
-      if (mounted && bookings.length > 0 && services.length > 0 && settings) {
-        calculateStats();
-      }
-    };
-    
-    const timer = setTimeout(calculateStatsDebounced, 100);
-    
-    return () => {
-      mounted = false;
-      clearTimeout(timer);
-    };
-  }, [bookings.length, services.length, settings?.id]);
+    if (bookings.length > 0 && services.length > 0 && settings) {
+      calculateStats();
+    }
+  }, [bookings, services, settings]);
 
   const calculateStats = () => {
     const timezone = getBusinessTimezone(settings);
