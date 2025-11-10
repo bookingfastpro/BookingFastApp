@@ -191,6 +191,97 @@ export function useUnavailabilities() {
     }
   }, [user?.id, fetchUnavailabilities]);
 
+  // Supabase Realtime subscription pour synchronisation multi-appareils
+  useEffect(() => {
+    if (!user || !isSupabaseConfigured) return;
+
+    let targetUserId = user.id;
+    let channelName = `unavailabilities:${user.id}`;
+
+    // Fonction pour obtenir le targetUserId
+    const setupSubscription = async () => {
+      try {
+        const { data: membershipData } = await supabase!
+          .from('team_members')
+          .select('owner_id, restricted_visibility')
+          .eq('user_id', user.id)
+          .eq('is_active', true)
+          .maybeSingle();
+
+        if (membershipData?.owner_id) {
+          targetUserId = membershipData.owner_id;
+          channelName = `unavailabilities:${targetUserId}`;
+        }
+
+        const isRestrictedMember = membershipData?.restricted_visibility === true;
+
+        // S'abonner aux changements de la table unavailabilities
+        const channel = supabase!
+          .channel(channelName)
+          .on(
+            'postgres_changes',
+            {
+              event: '*',
+              schema: 'public',
+              table: 'unavailabilities',
+              filter: `user_id=eq.${targetUserId}`
+            },
+            async (payload) => {
+              console.log('🔄 Realtime unavailability event:', payload.eventType, payload);
+
+              if (payload.eventType === 'INSERT') {
+                const newUnavailability = payload.new as Unavailability;
+
+                // Vérifier si c'est pour cet utilisateur (restricted member)
+                if (isRestrictedMember && newUnavailability.assigned_user_id !== user.id) {
+                  return;
+                }
+
+                setUnavailabilities((prev) => {
+                  // Éviter les duplications
+                  if (prev.some(u => u.id === newUnavailability.id)) {
+                    return prev;
+                  }
+                  return [...prev, newUnavailability];
+                });
+              } else if (payload.eventType === 'UPDATE') {
+                const updatedUnavailability = payload.new as Unavailability;
+
+                // Vérifier si c'est pour cet utilisateur (restricted member)
+                if (isRestrictedMember && updatedUnavailability.assigned_user_id !== user.id) {
+                  return;
+                }
+
+                setUnavailabilities((prev) =>
+                  prev.map((u) =>
+                    u.id === updatedUnavailability.id ? updatedUnavailability : u
+                  )
+                );
+              } else if (payload.eventType === 'DELETE') {
+                setUnavailabilities((prev) => prev.filter((u) => u.id !== payload.old.id));
+              }
+            }
+          )
+          .subscribe((status) => {
+            console.log('📡 Realtime unavailabilities subscription status:', status);
+          });
+
+        return () => {
+          console.log('🔌 Unsubscribing from realtime channel:', channelName);
+          supabase!.removeChannel(channel);
+        };
+      } catch (error) {
+        console.error('❌ Erreur setup realtime unavailabilities:', error);
+      }
+    };
+
+    const cleanup = setupSubscription();
+
+    return () => {
+      cleanup.then(fn => fn && fn());
+    };
+  }, [user?.id]);
+
   return {
     unavailabilities,
     loading,
