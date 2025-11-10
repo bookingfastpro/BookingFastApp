@@ -7,12 +7,16 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   isAuthenticated: boolean;
+  isImpersonating: boolean;
+  impersonatedUserId: string | null;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  impersonateUser: (targetUserId: string, reason?: string) => Promise<void>;
+  endImpersonation: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const pathname = window.location.pathname;
@@ -29,6 +33,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(!isPublicPage);
+  const [isImpersonating, setIsImpersonating] = useState(false);
+  const [impersonatedUserId, setImpersonatedUserId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isPublicPage) {
@@ -177,6 +183,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const impersonateUser = async (targetUserId: string, reason?: string) => {
+    if (!supabase) throw new Error('Supabase non configuré');
+
+    try {
+      console.log('👤 Début de l\'usurpation d\'identité pour:', targetUserId);
+
+      const { data, error } = await supabase.functions.invoke('impersonate-user', {
+        body: { targetUserId, reason },
+      });
+
+      if (error) throw error;
+
+      if (data?.actionLink) {
+        setIsImpersonating(true);
+        setImpersonatedUserId(targetUserId);
+        localStorage.setItem('impersonation_active', 'true');
+        localStorage.setItem('impersonated_user_id', targetUserId);
+
+        window.location.href = data.actionLink;
+      }
+    } catch (error) {
+      console.error('❌ Erreur lors de l\'usurpation:', error);
+      throw error;
+    }
+  };
+
+  const endImpersonation = async () => {
+    if (!supabase) throw new Error('Supabase non configuré');
+
+    try {
+      console.log('🛑 Fin de l\'usurpation d\'identité');
+
+      await supabase.functions.invoke('end-impersonation');
+
+      localStorage.removeItem('impersonation_active');
+      localStorage.removeItem('impersonated_user_id');
+      setIsImpersonating(false);
+      setImpersonatedUserId(null);
+
+      await supabase.auth.signOut();
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('❌ Erreur lors de la fin de l\'usurpation:', error);
+      throw error;
+    }
+  };
+
   const signOut = async () => {
     if (!supabase) {
       console.error('❌ Supabase non configuré');
@@ -186,13 +239,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('🚪 Déconnexion en cours...');
 
-      const { error } = await supabase.auth.signOut({ 
-        scope: 'local' 
+      if (isImpersonating) {
+        await endImpersonation();
+        return;
+      }
+
+      const { error } = await supabase.auth.signOut({
+        scope: 'local'
       });
 
       if (error) {
         console.error('❌ Erreur lors de la déconnexion:', error);
-        
+
         if (error.message?.includes('session') || error.message?.includes('Session')) {
           console.warn('⚠️ Session manquante, nettoyage local forcé');
           localStorage.removeItem('bookingfast-auth');
@@ -201,7 +259,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           window.location.href = '/login';
           return;
         }
-        
+
         throw error;
       }
 
@@ -209,7 +267,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setSession(null);
       setUser(null);
       window.location.href = '/login';
-      
+
     } catch (error) {
       console.error('❌ Erreur critique lors de la déconnexion:', error);
       localStorage.removeItem('bookingfast-auth');
@@ -219,14 +277,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  useEffect(() => {
+    const impersonationActive = localStorage.getItem('impersonation_active') === 'true';
+    const storedUserId = localStorage.getItem('impersonated_user_id');
+
+    if (impersonationActive && storedUserId) {
+      setIsImpersonating(true);
+      setImpersonatedUserId(storedUserId);
+    }
+  }, []);
+
   const value = {
     user,
     session,
     loading,
     isAuthenticated: !!user,
+    isImpersonating,
+    impersonatedUserId,
     signIn,
     signUp,
     signOut,
+    impersonateUser,
+    endImpersonation,
   };
 
   console.log('🔐 AuthContext - État actuel:', { 

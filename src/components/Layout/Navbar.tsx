@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Calendar, Settings, LayoutDashboard, Package, Mail, BarChart3, Users, ShoppingCart, LogOut, Menu, X, ChevronDown, ChevronRight, Puzzle, List, UserCircle, FileText } from 'lucide-react';
+import { Calendar, Settings, LayoutDashboard, Package, Mail, BarChart3, Users, ShoppingCart, LogOut, Menu, X, ChevronDown, ChevronRight, Puzzle, List, UserCircle, FileText, ShieldAlert } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { usePlugins } from '../../hooks/usePlugins';
 import { NotificationBell } from './NotificationBell';
@@ -8,7 +8,7 @@ import { NotificationBell } from './NotificationBell';
 export function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { signOut } = useAuth();
+  const { signOut, isImpersonating, endImpersonation } = useAuth();
   const { userPlugins, loading } = usePlugins();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pluginsMenuOpen, setPluginsMenuOpen] = useState(false);
@@ -232,14 +232,21 @@ export function Navbar() {
             </div>
 
             <div className="flex items-center gap-2">
+              {isImpersonating && (
+                <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl font-medium bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg animate-pulse">
+                  <ShieldAlert className="w-5 h-5" />
+                  <span className="hidden md:inline font-bold">Mode Admin</span>
+                </div>
+              )}
+
               <NotificationBell />
 
               <button
-                onClick={signOut}
+                onClick={isImpersonating ? endImpersonation : signOut}
                 className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-red-600 hover:bg-red-50 transition-colors"
               >
                 <LogOut className="w-5 h-5" />
-                <span className="hidden md:inline">Déconnexion</span>
+                <span className="hidden md:inline">{isImpersonating ? 'Quitter le mode admin' : 'Déconnexion'}</span>
               </button>
 
               <button
@@ -583,9 +590,25 @@ export function Navbar() {
               </div>
 
               <div className="pt-6 mt-6 border-t border-white/20">
+                {isImpersonating && (
+                  <div className="mb-4 bg-gradient-to-r from-orange-500 to-red-500 text-white p-4 rounded-2xl shadow-2xl animate-pulse">
+                    <div className="flex items-center gap-3">
+                      <ShieldAlert className="w-6 h-6" />
+                      <div>
+                        <div className="font-bold">Mode Administrateur</div>
+                        <div className="text-xs text-white/80">Vous consultez le compte d'un utilisateur</div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <button
                   onClick={() => {
-                    signOut();
+                    if (isImpersonating) {
+                      endImpersonation();
+                    } else {
+                      signOut();
+                    }
                     setMobileMenuOpen(false);
                   }}
                   className="w-full flex items-center gap-4 p-4 rounded-2xl font-medium bg-gradient-to-r from-red-500 to-pink-500 text-white hover:from-red-600 hover:to-pink-600 transition-all transform hover:scale-105 shadow-2xl"
@@ -594,8 +617,8 @@ export function Navbar() {
                     <LogOut className="w-6 h-6" />
                   </div>
                   <div className="flex-1 text-left">
-                    <div className="font-bold">Déconnexion</div>
-                    <div className="text-xs text-red-100">Quitter l'application</div>
+                    <div className="font-bold">{isImpersonating ? 'Quitter le mode admin' : 'Déconnexion'}</div>
+                    <div className="text-xs text-red-100">{isImpersonating ? 'Retourner à votre compte' : 'Quitter l\'application'}</div>
                   </div>
                 </button>
               </div>
