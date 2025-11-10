@@ -34,14 +34,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     exclude: ['lucide-react'],
-    include: [
-      'react',
-      'react-dom',
-      'react-router-dom',
-      '@supabase/supabase-js',
-      'date-fns',
-      'recharts'
-    ]
+    include: ['react', 'react-dom', 'react-router-dom', '@supabase/supabase-js']
   },
   esbuild: {
     logOverride: { 'this-is-undefined-in-esm': 'silent' },
@@ -58,9 +51,6 @@ export default defineConfig({
     target: 'esnext',
     minify: 'esbuild',
     sourcemap: false,
-    modulePreload: {
-      polyfill: false
-    },
     rollupOptions: {
       output: {
         manualChunks: {
@@ -92,7 +82,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     cssCodeSplit: true,
     assetsInlineLimit: 4096,
-    reportCompressedSize: false,
     commonjsOptions: {
       transformMixedEsModules: true
     }

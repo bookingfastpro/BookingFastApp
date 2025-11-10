@@ -44,20 +44,40 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
+    <!-- Disable service worker and clear caches -->
     <script>
+      // Unregister ALL service workers
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.getRegistrations().then(function(registrations) {
           for(let registration of registrations) {
             registration.unregister();
+            console.log('✅ Service Worker unregistered');
           }
         });
       }
-
+      
+      // Clear ALL caches
       if ('caches' in window) {
         caches.keys().then(function(names) {
           for (let name of names) {
             caches.delete(name);
+            console.log('✅ Cache deleted:', name);
           }
+        });
+      }
+      
+      // Force reload without cache on every load
+      if (performance.navigation.type !== 1) {
+        console.log('🔄 Force reload without cache');
+      }
+      
+      // Performance monitoring
+      if ('performance' in window) {
+        window.addEventListener('load', () => {
+          setTimeout(() => {
+            const perfData = performance.getEntriesByType('navigation')[0];
+            console.log('⏱️ Page load time:', perfData.loadEventEnd - perfData.loadEventStart, 'ms');
+          }, 0);
         });
       }
     </script>

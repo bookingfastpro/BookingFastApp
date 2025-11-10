@@ -38,7 +38,7 @@ docker exec -it supabase_db psql -U postgres
 SELECT * FROM auth.config;
 
 -- Vérifier s'il y a une config site_url
-SELECT * FROM auth.config WHERE parameter = 'site_url'; 
+SELECT * FROM auth.config WHERE parameter = 'site_url';
 ```
 
 ### 4. Variable SUPABASE_PUBLIC_URL qui interfère
