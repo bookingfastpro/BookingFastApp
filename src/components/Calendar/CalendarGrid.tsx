@@ -61,20 +61,20 @@ export function CalendarGrid({
 }: CalendarGridProps) {
   const today = new Date();
   const todayString = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
-
+  
   const [selectedDate, setSelectedDate] = useState<Date>(today);
-  const [viewMonth, setViewMonth] = useState<Date>(new Date(today.getFullYear(), today.getMonth(), 1));
+  const [viewMonth, setViewMonth] = useState<Date>(today);
   const [serviceModalOpen, setServiceModalOpen] = useState(false);
   const [selectedServiceBookings, setSelectedServiceBookings] = useState<Booking[]>([]);
   const [selectedServiceName, setSelectedServiceName] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [deletingUnavailabilityId, setDeletingUnavailabilityId] = useState<string | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const timeGridRef = useRef<HTMLDivElement>(null);
   const monthButtonRef = useRef<HTMLButtonElement>(null);
   const { settings } = useBusinessSettings();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const selectedDateString = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
 
@@ -153,56 +153,21 @@ export function CalendarGrid({
 
   const days = generateDaysForMonth();
 
-  const centerSelectedDate = (immediate: boolean = false) => {
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
-    }
-
-    scrollTimeoutRef.current = setTimeout(() => {
-      const container = scrollContainerRef.current;
-      if (!container || days.length === 0) return;
-
-      const selectedIndex = days.findIndex(day => isSelected(day.date));
-      if (selectedIndex === -1) return;
-
-      const firstButton = container.querySelector('button');
-      if (!firstButton) return;
-
-      const buttonRect = firstButton.getBoundingClientRect();
-      const buttonWidth = buttonRect.width;
-      const containerStyle = window.getComputedStyle(container.firstElementChild as Element);
-      const gap = parseFloat(containerStyle.gap) || 8;
-
-      const itemWidth = buttonWidth + gap;
-      const itemPosition = selectedIndex * itemWidth;
-      const containerWidth = container.clientWidth;
-      const scrollPosition = itemPosition - (containerWidth / 2) + (buttonWidth / 2);
-
-      container.scrollTo({
-        left: Math.max(0, scrollPosition),
-        behavior: immediate ? 'auto' : 'smooth'
-      });
-
-      console.log('✅ Date centrée:', selectedDateString, '| Index:', selectedIndex, '| Immediate:', immediate);
-    }, immediate ? 0 : 50);
-  };
-
   useEffect(() => {
-    centerSelectedDate(true);
-  }, [days.length]);
-
-  useEffect(() => {
-    if (days.length > 0) {
-      centerSelectedDate(false);
-    }
-  }, [selectedDate]);
+    const now = new Date();
+    setSelectedDate(now);
+    setViewMonth(new Date(now.getFullYear(), now.getMonth(), 1));
+  }, []);
 
   useEffect(() => {
     const handleBookingChange = () => {
-      console.log('📅 Événement booking détecté');
+      console.log('📅 CalendarGrid - Événement booking détecté, centrage de la date...');
       setRefreshTrigger(prev => prev + 1);
-      centerSelectedDate(false);
-      window.dispatchEvent(new CustomEvent('refreshBookings'));
+      
+      setTimeout(() => {
+        scrollToSelectedDate(true);
+        window.dispatchEvent(new CustomEvent('refreshBookings'));
+      }, 100);
     };
 
     bookingEvents.on('bookingCreated', handleBookingChange);
@@ -213,11 +178,8 @@ export function CalendarGrid({
       bookingEvents.off('bookingCreated', handleBookingChange);
       bookingEvents.off('bookingUpdated', handleBookingChange);
       bookingEvents.off('bookingDeleted', handleBookingChange);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
-      }
     };
-  }, [days, selectedDate]);
+  }, [selectedDate, days]);
 
   const navigateMonth = (direction: 'prev' | 'next') => {
     const newViewMonth = new Date(viewMonth);
@@ -368,6 +330,69 @@ export function CalendarGrid({
     setSelectedDate(now);
   };
 
+  const scrollToSelectedDate = (animated: boolean = false) => {
+    console.log('🎯 scrollToSelectedDate - Début centrage, animated:', animated);
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const selectedIndex = days.findIndex(day => isSelected(day.date));
+      
+      console.log('🔍 scrollToSelectedDate - Index sélectionné:', selectedIndex);
+      
+      if (selectedIndex !== -1) {
+        const firstDateElement = container.querySelector('button');
+        if (firstDateElement) {
+          const dateRect = firstDateElement.getBoundingClientRect();
+          const dateWidth = dateRect.width;
+          
+          const containerStyle = window.getComputedStyle(container.firstElementChild as Element);
+          const gap = parseFloat(containerStyle.gap) || 8;
+          
+          const totalItemWidth = dateWidth + gap;
+          const itemPosition = selectedIndex * totalItemWidth;
+          const containerWidth = container.clientWidth;
+          const scrollPosition = itemPosition - (containerWidth / 2) + (dateWidth / 2);
+          
+          console.log('📐 scrollToSelectedDate - Calculs:', {
+            dateWidth,
+            gap,
+            totalItemWidth,
+            itemPosition,
+            containerWidth,
+            scrollPosition: Math.max(0, scrollPosition),
+            animated
+          });
+          
+          container.scrollTo({
+            left: Math.max(0, scrollPosition),
+            behavior: animated ? 'smooth' : 'auto'
+          });
+          
+          console.log('✅ scrollToSelectedDate - Centrage effectué');
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (isInitialLoad) {
+      console.log('🚀 CalendarGrid - Chargement initial, scroll SANS animation');
+      const timer = setTimeout(() => {
+        scrollToSelectedDate(false);
+        setIsInitialLoad(false);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isInitialLoad) {
+      console.log('🔄 CalendarGrid - Changement de date utilisateur, scroll AVEC animation');
+      const timer = setTimeout(() => {
+        scrollToSelectedDate(true);
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedDate, viewMonth]);
 
   const getBookingsForDay = (date: Date) => {
     const dateString = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
