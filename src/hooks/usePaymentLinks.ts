@@ -9,8 +9,18 @@ export interface PaymentLink {
   status: 'pending' | 'completed' | 'expired' | 'cancelled';
   expires_at: string;
   payment_url: string;
+  short_code?: string;
   created_at: string;
 }
+
+const generateShortCode = (length: number = 7): string => {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < length; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+};
 
 export function usePaymentLinks() {
   const [loading, setLoading] = useState(false);
@@ -49,6 +59,34 @@ export function usePaymentLinks() {
 
       console.log('👤 User ID:', user.id);
 
+      // Générer un code court unique
+      let shortCode = '';
+      let attempts = 0;
+      const maxAttempts = 10;
+
+      while (attempts < maxAttempts) {
+        shortCode = generateShortCode();
+
+        // Vérifier si le code existe déjà
+        const { data: existing } = await supabase
+          .from('payment_links')
+          .select('id')
+          .eq('short_code', shortCode)
+          .maybeSingle();
+
+        if (!existing) {
+          break;
+        }
+
+        attempts++;
+      }
+
+      if (!shortCode) {
+        throw new Error('Impossible de générer un code court unique');
+      }
+
+      console.log('🔑 Code court généré:', shortCode);
+
       // Créer le lien de paiement dans la base de données
       const { data: paymentLink, error: insertError } = await supabase
         .from('payment_links')
@@ -57,7 +95,8 @@ export function usePaymentLinks() {
           user_id: user.id,
           amount: amount,
           status: 'pending',
-          expires_at: expiresAt.toISOString()
+          expires_at: expiresAt.toISOString(),
+          short_code: shortCode
         })
         .select()
         .single();
@@ -73,11 +112,11 @@ export function usePaymentLinks() {
 
       console.log('✅ Payment link créé:', paymentLink);
 
-      // 🔥 GÉNÉRER L'URL AVEC UNIQUEMENT LE link_id
+      // 🔥 GÉNÉRER L'URL COURTE AVEC LE SHORT CODE
       const baseUrl = window.location.origin;
-      const paymentUrl = `${baseUrl}/payment?link_id=${paymentLink.id}`;
+      const paymentUrl = `${baseUrl}/p/${paymentLink.short_code}`;
 
-      console.log('🔗 URL générée:', paymentUrl);
+      console.log('🔗 URL courte générée:', paymentUrl);
 
       // Mettre à jour le lien avec l'URL complète
       const { data: updatedLink, error: updateError } = await supabase

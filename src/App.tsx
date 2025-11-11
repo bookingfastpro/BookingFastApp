@@ -11,6 +11,7 @@ import { IframeBookingPage } from './components/IframeBooking/IframeBookingPage'
 import { PaymentPage } from './components/PaymentPage/PaymentPage';
 import { PaymentSuccess } from './components/PaymentPage/PaymentSuccess';
 import { PaymentCancel } from './components/PaymentPage/PaymentCancel';
+import { ShortLinkRedirect } from './components/PaymentPage/ShortLinkRedirect';
 import { BookingDebug } from './components/IframeBooking/BookingDebug';
 import { LandingPage } from './components/Landing/LandingPage';
 import { ProtectedRoute } from './components/Auth/ProtectedRoute';
@@ -71,9 +72,10 @@ function AppRoutes() {
   }, [isPWAMode, pathname, navigate]);
 
   // 🎯 Pages TOUJOURS publiques (pas de vérification auth)
-  const isAlwaysPublicPage = 
+  const isAlwaysPublicPage =
     pathname.startsWith('/booking/') ||
     pathname.startsWith('/booking-debug/') ||
+    pathname.startsWith('/p/') ||
     pathname === '/payment' ||
     pathname.startsWith('/payment?') ||
     pathname === '/payment-success' ||
@@ -102,6 +104,7 @@ function AppRoutes() {
         <Routes>
           <Route path="/booking/:userId" element={<IframeBookingPage />} />
           <Route path="/booking-debug/:bookingId" element={<BookingDebug />} />
+          <Route path="/p/:code" element={<ShortLinkRedirect />} />
           <Route path="/payment" element={<PaymentPage />} />
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-cancel" element={<PaymentCancel />} />
