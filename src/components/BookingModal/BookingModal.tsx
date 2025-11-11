@@ -20,6 +20,7 @@ import { TeamMemberSelector } from './TeamMemberSelector';
 import { useAuth } from '../../contexts/AuthContext';
 import { bookingEvents } from '../../lib/bookingEvents';
 import { triggerWorkflow } from '../../lib/workflowEngine';
+import { triggerSmsWorkflow } from '../../lib/smsWorkflowEngine';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -364,6 +365,13 @@ export function BookingModal({
           console.log('✅ Workflow payment_link_created déclenché avec succès');
         } catch (workflowError) {
           console.error('❌ Erreur workflow payment_link_created:', workflowError);
+        }
+
+        try {
+          await triggerSmsWorkflow('payment_link_created', bookingWithPaymentLink, user.id);
+          console.log('✅ SMS Workflow payment_link_created déclenché avec succès');
+        } catch (smsError) {
+          console.error('❌ Erreur SMS workflow payment_link_created:', smsError);
         }
       }
       
