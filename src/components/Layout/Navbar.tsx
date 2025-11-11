@@ -139,18 +139,6 @@ export function Navbar() {
               </div>
 
               <button
-                onClick={() => handleNavigation('services')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
-                  currentPage === 'services'
-                    ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                <Package className="w-5 h-5" />
-                <span>Services</span>
-              </button>
-
-              <button
                 onClick={() => handleNavigation('invoices')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
                   currentPage === 'invoices'
@@ -163,6 +151,18 @@ export function Navbar() {
               </button>
 
               <button
+                onClick={() => handleNavigation('services')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
+                  currentPage === 'services'
+                    ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Package className="w-5 h-5" />
+                <span>Services</span>
+              </button>
+
+              <button
                 onClick={() => handleNavigation('emails')}
                 className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all ${
                   currentPage === 'emails'
@@ -171,7 +171,7 @@ export function Navbar() {
                 }`}
               >
                 <Mail className="w-5 h-5" />
-                <span>Emails</span>
+                <span>Workflows</span>
               </button>
 
               {hasPlugins && (
@@ -404,32 +404,6 @@ export function Navbar() {
                 </div>
                 
                 <button
-                  onClick={() => handleNavigation('services')}
-                  className={`w-full flex items-center gap-4 p-4 rounded-2xl font-medium transition-all transform hover:scale-105 ${
-                    currentPage === 'services'
-                      ? 'bg-white text-gray-900 shadow-2xl'
-                      : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm'
-                  }`}
-                >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                    currentPage === 'services'
-                      ? 'bg-gradient-to-r from-green-500 to-emerald-500'
-                      : 'bg-white/20'
-                  }`}>
-                    <Package className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="flex-1 text-left">
-                    <div className="font-bold">Services</div>
-                    <div className={`text-xs ${currentPage === 'services' ? 'text-gray-500' : 'text-purple-200'}`}>
-                      Vos prestations
-                    </div>
-                  </div>
-                  {currentPage === 'services' && (
-                    <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 animate-pulse"></div>
-                  )}
-                </button>
-
-                <button
                   onClick={() => handleNavigation('invoices')}
                   className={`w-full flex items-center gap-4 p-4 rounded-2xl font-medium transition-all transform hover:scale-105 ${
                     currentPage === 'invoices'
@@ -456,6 +430,32 @@ export function Navbar() {
                 </button>
 
                 <button
+                  onClick={() => handleNavigation('services')}
+                  className={`w-full flex items-center gap-4 p-4 rounded-2xl font-medium transition-all transform hover:scale-105 ${
+                    currentPage === 'services'
+                      ? 'bg-white text-gray-900 shadow-2xl'
+                      : 'bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm'
+                  }`}
+                >
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                    currentPage === 'services'
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-500'
+                      : 'bg-white/20'
+                  }`}>
+                    <Package className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <div className="font-bold">Services</div>
+                    <div className={`text-xs ${currentPage === 'services' ? 'text-gray-500' : 'text-purple-200'}`}>
+                      Vos prestations
+                    </div>
+                  </div>
+                  {currentPage === 'services' && (
+                    <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 animate-pulse"></div>
+                  )}
+                </button>
+
+                <button
                   onClick={() => handleNavigation('emails')}
                   className={`w-full flex items-center gap-4 p-4 rounded-2xl font-medium transition-all transform hover:scale-105 ${
                     currentPage === 'emails'
@@ -471,7 +471,7 @@ export function Navbar() {
                     <Mail className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1 text-left">
-                    <div className="font-bold">Emails</div>
+                    <div className="font-bold">Workflows</div>
                     <div className={`text-xs ${currentPage === 'emails' ? 'text-gray-500' : 'text-purple-200'}`}>
                       Communication
                     </div>
