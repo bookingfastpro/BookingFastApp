@@ -232,6 +232,10 @@ export interface BusinessSettings {
   stripe_public_key?: string;
   stripe_secret_key?: string;
   payment_link_expiry_minutes?: number;
+  twilio_enabled?: boolean;
+  twilio_account_sid?: string;
+  twilio_auth_token?: string;
+  twilio_phone_number?: string;
   created_at: string;
   updated_at: string;
 }

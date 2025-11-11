@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Settings, Save, Building2, CreditCard, Mail, Clock, Users, Palette, FileText } from 'lucide-react';
+import { Settings, Save, Building2, CreditCard, Mail, Clock, Users, Palette, FileText, MessageSquare } from 'lucide-react';
 import { useBusinessSettings } from '../../hooks/useBusinessSettings';
 import { useCompanyInfo } from '../../hooks/useCompanyInfo';
 import { LoadingSpinner } from '../UI/LoadingSpinner';
@@ -31,7 +31,13 @@ export function SettingsPage() {
     brevo_api_key: '',
     brevo_sender_email: '',
     brevo_sender_name: '',
-    
+
+    // Paramètres Twilio
+    twilio_enabled: false,
+    twilio_account_sid: '',
+    twilio_auth_token: '',
+    twilio_phone_number: '',
+
     // Paramètres Stripe
     stripe_enabled: false,
     stripe_public_key: '',
@@ -74,6 +80,10 @@ export function SettingsPage() {
         brevo_api_key: settings.brevo_api_key,
         brevo_sender_email: settings.brevo_sender_email,
         brevo_sender_name: settings.brevo_sender_name,
+        twilio_enabled: settings.twilio_enabled,
+        twilio_account_sid: settings.twilio_account_sid,
+        twilio_auth_token: settings.twilio_auth_token,
+        twilio_phone_number: settings.twilio_phone_number,
         stripe_enabled: settings.stripe_enabled,
         stripe_public_key: settings.stripe_public_key,
         stripe_secret_key: settings.stripe_secret_key,
@@ -163,6 +173,20 @@ export function SettingsPage() {
     }
   };
 
+  const handleSaveSms = async () => {
+    try {
+      await updateSettings({
+        twilio_enabled: formData.twilio_enabled,
+        twilio_account_sid: formData.twilio_account_sid,
+        twilio_auth_token: formData.twilio_auth_token,
+        twilio_phone_number: formData.twilio_phone_number
+      });
+      alert('Paramètres SMS sauvegardés !');
+    } catch (error) {
+      alert('Erreur lors de la sauvegarde');
+    }
+  };
+
   const handleSavePayment = async () => {
     try {
       await updateSettings({
@@ -189,6 +213,7 @@ export function SettingsPage() {
     { id: 'general', label: 'Général', icon: Settings },
     { id: 'company', label: 'Entreprise', icon: Building2 },
     { id: 'email', label: 'Email', icon: Mail },
+    { id: 'sms', label: 'SMS', icon: MessageSquare },
     { id: 'payment', label: 'Paiement', icon: CreditCard }
   ];
 
@@ -596,6 +621,100 @@ export function SettingsPage() {
             <Button onClick={handleSaveEmail} className="w-full">
               <Save className="w-5 h-5 mr-2" />
               Sauvegarder les paramètres email
+            </Button>
+          </div>
+        )}
+
+        {activeTab === 'sms' && (
+          <div className="space-y-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Paramètres SMS (Twilio)</h2>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+              <div className="flex items-start gap-3">
+                <MessageSquare className="w-5 h-5 text-blue-600 mt-0.5" />
+                <div>
+                  <h3 className="font-bold text-blue-900 mb-1">Configuration Twilio</h3>
+                  <p className="text-sm text-blue-700">
+                    Envoyez des SMS automatiques à vos clients pour les rappels de réservation, confirmations et liens de paiement.
+                  </p>
+                  <p className="text-sm text-blue-700 mt-2">
+                    Vous devez créer un compte sur <a href="https://www.twilio.com" target="_blank" rel="noopener noreferrer" className="underline font-bold">twilio.com</a> pour obtenir vos identifiants.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 p-4 bg-green-50 rounded-xl border border-green-200">
+              <input
+                type="checkbox"
+                id="twilio_enabled"
+                checked={formData.twilio_enabled}
+                onChange={(e) => setFormData({ ...formData, twilio_enabled: e.target.checked })}
+                className="w-5 h-5 text-green-600 rounded focus:ring-2 focus:ring-green-500"
+              />
+              <label htmlFor="twilio_enabled" className="text-sm font-bold text-gray-700 cursor-pointer">
+                Activer l'envoi de SMS via Twilio
+              </label>
+            </div>
+
+            {formData.twilio_enabled && (
+              <div className="space-y-4 pl-8">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Account SID Twilio
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.twilio_account_sid}
+                    onChange={(e) => setFormData({ ...formData, twilio_account_sid: e.target.value })}
+                    placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Trouvable sur votre tableau de bord Twilio</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Auth Token Twilio
+                  </label>
+                  <input
+                    type="password"
+                    value={formData.twilio_auth_token}
+                    onChange={(e) => setFormData({ ...formData, twilio_auth_token: e.target.value })}
+                    className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Token d'authentification (à garder secret)</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-2">
+                    Numéro de téléphone Twilio
+                  </label>
+                  <input
+                    type="tel"
+                    value={formData.twilio_phone_number}
+                    onChange={(e) => setFormData({ ...formData, twilio_phone_number: e.target.value })}
+                    placeholder="+33612345678"
+                    className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Format international (ex: +33612345678)</p>
+                </div>
+
+                <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                  <h4 className="font-bold text-yellow-900 mb-2">⚠️ Important</h4>
+                  <ul className="text-sm text-yellow-800 space-y-1 list-disc list-inside">
+                    <li>Les numéros de téléphone des clients doivent être au format international (+33...)</li>
+                    <li>Chaque SMS envoyé est facturé par Twilio (environ 0,05€ par SMS)</li>
+                    <li>Les SMS sont limités à 160 caractères</li>
+                    <li>Configurez vos workflows SMS dans la section Workflows</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            <Button onClick={handleSaveSms} className="w-full">
+              <Save className="w-5 h-5 mr-2" />
+              Sauvegarder les paramètres SMS
             </Button>
           </div>
         )}

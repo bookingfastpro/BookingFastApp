@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Plus, CreditCard as Edit, Trash2, Play, Pause, Settings, Eye, Send, Zap, Clock, User, Calendar, Euro } from 'lucide-react';
+import { Mail, Plus, CreditCard as Edit, Trash2, Play, Pause, Settings, Eye, Send, Zap, Clock, User, Calendar, Euro, MessageSquare } from 'lucide-react';
 import { useEmailWorkflows } from '../../hooks/useEmailWorkflows';
+import { useSmsWorkflows } from '../../hooks/useSmsWorkflows';
 import { useTeam } from '../../hooks/useTeam';
 import { EmailWorkflow, EmailTemplate, WorkflowTrigger } from '../../types/email';
 import { WorkflowList } from './WorkflowList';
@@ -9,19 +10,33 @@ import { TemplateEditor } from './TemplateEditor';
 import { WorkflowStats } from './WorkflowStats';
 import { ManualEmailSender } from './ManualEmailSender';
 import { PermissionGate } from '../UI/PermissionGate';
+import { SmsWorkflowEditor } from '../SmsWorkflow/SmsWorkflowEditor';
+import { SmsTemplateEditor } from '../SmsWorkflow/SmsTemplateEditor';
+import { SmsWorkflow, SmsTemplate } from '../../types/sms';
 
 export function EmailWorkflowPage() {
   const { workflows, templates, loading, addWorkflow, updateWorkflow, deleteWorkflow, addTemplate, updateTemplate, deleteTemplate } = useEmailWorkflows();
+  const { workflows: smsWorkflows, templates: smsTemplates, loading: smsLoading, addWorkflow: addSmsWorkflow, updateWorkflow: updateSmsWorkflow, deleteWorkflow: deleteSmsWorkflow, addTemplate: addSmsTemplate, updateTemplate: updateSmsTemplate, deleteTemplate: deleteSmsTemplate } = useSmsWorkflows();
   const { hasPermission } = useTeam();
   const [activeTab, setActiveTab] = useState<'workflows' | 'templates' | 'stats' | 'send'>('workflows');
+  const [communicationType, setCommunicationType] = useState<'email' | 'sms'>('email');
   const [editingWorkflow, setEditingWorkflow] = useState<EmailWorkflow | null>(null);
   const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | null>(null);
+  const [editingSmsWorkflow, setEditingSmsWorkflow] = useState<SmsWorkflow | null>(null);
+  const [editingSmsTemplate, setEditingSmsTemplate] = useState<SmsTemplate | null>(null);
   const [showWorkflowEditor, setShowWorkflowEditor] = useState(false);
   const [showTemplateEditor, setShowTemplateEditor] = useState(false);
+  const [showSmsWorkflowEditor, setShowSmsWorkflowEditor] = useState(false);
+  const [showSmsTemplateEditor, setShowSmsTemplateEditor] = useState(false);
 
   const handleNewWorkflow = () => {
-    setEditingWorkflow(null);
-    setShowWorkflowEditor(true);
+    if (communicationType === 'email') {
+      setEditingWorkflow(null);
+      setShowWorkflowEditor(true);
+    } else {
+      setEditingSmsWorkflow(null);
+      setShowSmsWorkflowEditor(true);
+    }
   };
 
   const handleEditWorkflow = (workflow: EmailWorkflow) => {
@@ -29,14 +44,29 @@ export function EmailWorkflowPage() {
     setShowWorkflowEditor(true);
   };
 
+  const handleEditSmsWorkflow = (workflow: SmsWorkflow) => {
+    setEditingSmsWorkflow(workflow);
+    setShowSmsWorkflowEditor(true);
+  };
+
   const handleNewTemplate = () => {
-    setEditingTemplate(null);
-    setShowTemplateEditor(true);
+    if (communicationType === 'email') {
+      setEditingTemplate(null);
+      setShowTemplateEditor(true);
+    } else {
+      setEditingSmsTemplate(null);
+      setShowSmsTemplateEditor(true);
+    }
   };
 
   const handleEditTemplate = (template: EmailTemplate) => {
     setEditingTemplate(template);
     setShowTemplateEditor(true);
+  };
+
+  const handleEditSmsTemplate = (template: SmsTemplate) => {
+    setEditingSmsTemplate(template);
+    setShowSmsTemplateEditor(true);
   };
 
   const handleSaveWorkflow = async (workflowData: Partial<EmailWorkflow>) => {
@@ -100,6 +130,67 @@ export function EmailWorkflowPage() {
     }
   };
 
+  const handleSaveSmsWorkflow = async (workflowData: Partial<SmsWorkflow>) => {
+    try {
+      if (editingSmsWorkflow) {
+        await updateSmsWorkflow(editingSmsWorkflow.id, workflowData);
+      } else {
+        await addSmsWorkflow(workflowData);
+      }
+      setShowSmsWorkflowEditor(false);
+      setEditingSmsWorkflow(null);
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde du workflow SMS:', error);
+      alert('Erreur lors de la sauvegarde');
+    }
+  };
+
+  const handleSaveSmsTemplate = async (templateData: Partial<SmsTemplate>) => {
+    try {
+      if (editingSmsTemplate) {
+        await updateSmsTemplate(editingSmsTemplate.id, templateData);
+      } else {
+        await addSmsTemplate(templateData);
+      }
+      setShowSmsTemplateEditor(false);
+      setEditingSmsTemplate(null);
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde du template SMS:', error);
+      alert('Erreur lors de la sauvegarde');
+    }
+  };
+
+  const handleDeleteSmsWorkflow = async (workflow: SmsWorkflow) => {
+    if (window.confirm(`Supprimer le workflow SMS "${workflow.name}" ?`)) {
+      try {
+        await deleteSmsWorkflow(workflow.id);
+      } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        alert('Erreur lors de la suppression');
+      }
+    }
+  };
+
+  const handleDeleteSmsTemplate = async (template: SmsTemplate) => {
+    if (window.confirm(`Supprimer le template SMS "${template.name}" ?`)) {
+      try {
+        await deleteSmsTemplate(template.id);
+      } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        alert('Erreur lors de la sauvegarde');
+      }
+    }
+  };
+
+  const handleToggleSmsWorkflow = async (workflow: SmsWorkflow) => {
+    try {
+      await updateSmsWorkflow(workflow.id, { active: !workflow.active });
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour:', error);
+      alert('Erreur lors de la mise à jour');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -118,16 +209,41 @@ export function EmailWorkflowPage() {
     >
       <div className="mb-6 sm:mb-8">
         <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-          Workflows Email
+          Workflows de Communication
         </h1>
-        <p className="text-sm sm:text-base text-gray-600 mt-2">Automatisez vos communications avec vos clients</p>
+        <p className="text-sm sm:text-base text-gray-600 mt-2">Automatisez vos communications par Email et SMS</p>
+
+        <div className="flex gap-2 mt-4 bg-white rounded-2xl p-2 shadow-lg w-full sm:w-fit">
+          <button
+            onClick={() => setCommunicationType('email')}
+            className={`flex-1 sm:flex-none px-4 sm:px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base ${
+              communicationType === 'email'
+                ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
+            Email
+          </button>
+          <button
+            onClick={() => setCommunicationType('sms')}
+            className={`flex-1 sm:flex-none px-4 sm:px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center gap-2 text-sm sm:text-base ${
+              communicationType === 'sms'
+                ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg'
+                : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
+            SMS
+          </button>
+        </div>
       </div>
 
       <div className="mb-6 sm:mb-8">
         <div className="flex flex-col sm:flex-row gap-2 bg-white rounded-2xl p-2 shadow-lg w-full sm:w-fit overflow-x-auto">
           {[
-            { key: 'workflows', label: 'Workflows', icon: Zap, count: workflows.length },
-            { key: 'templates', label: 'Templates', icon: Mail, count: templates.length },
+            { key: 'workflows', label: 'Workflows', icon: Zap, count: communicationType === 'email' ? workflows.length : smsWorkflows.length },
+            { key: 'templates', label: 'Templates', icon: communicationType === 'email' ? Mail : MessageSquare, count: communicationType === 'email' ? templates.length : smsTemplates.length },
             { key: 'stats', label: 'Statistiques', icon: Settings, count: 0 },
             { key: 'send', label: 'Envoi', icon: Send, count: 0 }
           ].map(tab => (
@@ -136,7 +252,7 @@ export function EmailWorkflowPage() {
               onClick={() => setActiveTab(tab.key as any)}
               className={`flex-1 sm:flex-none px-3 sm:px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center sm:justify-start gap-2 text-sm sm:text-base ${
                 activeTab === tab.key
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
+                  ? (communicationType === 'email' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg' : 'bg-gradient-to-r from-green-500 to-teal-500 text-white shadow-lg')
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
             >
@@ -163,17 +279,17 @@ export function EmailWorkflowPage() {
         </div>
       </div>
 
-      {activeTab === 'workflows' && (
+      {activeTab === 'workflows' && communicationType === 'email' && (
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 sm:mb-6">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Workflows Actifs</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Workflows Email Actifs</h2>
             <PermissionGate permission="manage_emails">
               <button
                 onClick={handleNewWorkflow}
                 className="w-full sm:w-auto bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 font-medium text-sm sm:text-base"
               >
                 <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-                Nouveau Workflow
+                Nouveau Workflow Email
               </button>
             </PermissionGate>
           </div>
@@ -188,7 +304,32 @@ export function EmailWorkflowPage() {
         </div>
       )}
 
-      {activeTab === 'templates' && (
+      {activeTab === 'workflows' && communicationType === 'sms' && (
+        <div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Workflows SMS Actifs</h2>
+            <PermissionGate permission="manage_emails">
+              <button
+                onClick={handleNewWorkflow}
+                className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl hover:from-green-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 font-medium text-sm sm:text-base"
+              >
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                Nouveau Workflow SMS
+              </button>
+            </PermissionGate>
+          </div>
+
+          <WorkflowList
+            workflows={smsWorkflows as any}
+            templates={smsTemplates as any}
+            onEdit={handleEditSmsWorkflow as any}
+            onDelete={handleDeleteSmsWorkflow as any}
+            onToggle={handleToggleSmsWorkflow as any}
+          />
+        </div>
+      )}
+
+      {activeTab === 'templates' && communicationType === 'email' && (
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 sm:mb-6">
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Templates Email</h2>
@@ -271,6 +412,92 @@ export function EmailWorkflowPage() {
         </div>
       )}
 
+      {activeTab === 'templates' && communicationType === 'sms' && (
+        <div>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Templates SMS</h2>
+            <PermissionGate permission="manage_emails">
+              <button
+                onClick={handleNewTemplate}
+                className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl hover:from-green-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center gap-2 font-medium text-sm sm:text-base"
+              >
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                Nouveau Template SMS
+              </button>
+            </PermissionGate>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {smsTemplates.map((template, index) => (
+              <div
+                key={template.id}
+                className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] animate-fadeIn"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="flex items-center gap-3 mb-3 sm:mb-4">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg sm:rounded-xl flex items-center justify-center text-white">
+                    <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-sm sm:text-base">{template.name}</h3>
+                    <p className="text-xs sm:text-sm text-gray-600 line-clamp-1">{template.description}</p>
+                  </div>
+                </div>
+
+                <div className="mb-3 sm:mb-4">
+                  <div className="text-xs sm:text-sm text-gray-600 mb-2">Contenu:</div>
+                  <div className="bg-gray-50 rounded-lg p-2 sm:p-3 text-xs sm:text-sm font-medium text-gray-800 line-clamp-3">
+                    {template.content}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {template.content.length} / 160 caractères
+                  </div>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <PermissionGate permission="manage_emails">
+                    <button
+                      onClick={() => handleEditSmsTemplate(template)}
+                      className="flex-1 bg-gradient-to-r from-green-500 to-teal-500 text-white px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl hover:from-green-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 text-sm sm:text-base"
+                    >
+                      <Edit className="w-4 h-4" />
+                      Modifier
+                    </button>
+                  </PermissionGate>
+                  <PermissionGate permission="manage_emails">
+                    <button
+                      onClick={() => handleDeleteSmsTemplate(template)}
+                      className="flex-1 bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2 text-sm sm:text-base"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Supprimer
+                    </button>
+                  </PermissionGate>
+                </div>
+              </div>
+            ))}
+
+            {smsTemplates.length === 0 && (
+              <div className="col-span-full text-center py-12">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <MessageSquare className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
+                </div>
+                <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">Aucun template SMS</h3>
+                <p className="text-sm sm:text-base text-gray-500 mb-6">Créez votre premier template SMS (max 160 caractères)</p>
+                <PermissionGate permission="manage_emails">
+                  <button
+                    onClick={handleNewTemplate}
+                    className="bg-gradient-to-r from-green-500 to-teal-500 text-white px-4 sm:px-6 py-3 rounded-xl sm:rounded-2xl hover:from-green-600 hover:to-teal-600 transition-all duration-300 transform hover:scale-105 shadow-lg text-sm sm:text-base"
+                  >
+                    Créer un template SMS
+                  </button>
+                </PermissionGate>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {activeTab === 'stats' && (
         <WorkflowStats workflows={workflows} />
       )}
@@ -298,6 +525,29 @@ export function EmailWorkflowPage() {
           onClose={() => {
             setShowTemplateEditor(false);
             setEditingTemplate(null);
+          }}
+        />
+      )}
+
+      {showSmsWorkflowEditor && (
+        <SmsWorkflowEditor
+          workflow={editingSmsWorkflow}
+          templates={smsTemplates}
+          onSave={handleSaveSmsWorkflow}
+          onClose={() => {
+            setShowSmsWorkflowEditor(false);
+            setEditingSmsWorkflow(null);
+          }}
+        />
+      )}
+
+      {showSmsTemplateEditor && (
+        <SmsTemplateEditor
+          template={editingSmsTemplate}
+          onSave={handleSaveSmsTemplate}
+          onClose={() => {
+            setShowSmsTemplateEditor(false);
+            setEditingSmsTemplate(null);
           }}
         />
       )}
