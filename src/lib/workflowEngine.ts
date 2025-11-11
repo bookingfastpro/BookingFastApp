@@ -132,6 +132,35 @@ const sendEmailViaBrevo = async (
   try {
     console.log('📧 ENVOI EMAIL RÉEL VIA BREVO...');
 
+    // Récupérer les paramètres Brevo depuis la base de données
+    const { data: settings, error: settingsError } = await supabase
+      .from('business_settings')
+      .select('brevo_enabled, brevo_api_key, brevo_sender_email, brevo_sender_name')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (settingsError) {
+      console.error('❌ Erreur récupération paramètres Brevo:', settingsError);
+      return false;
+    }
+
+    if (!settings || !settings.brevo_enabled) {
+      console.log('⚠️ Brevo non activé pour cet utilisateur');
+      return false;
+    }
+
+    if (!settings.brevo_api_key || !settings.brevo_sender_email) {
+      console.error('❌ Paramètres Brevo incomplets');
+      return false;
+    }
+
+    console.log('✅ Paramètres Brevo récupérés:', {
+      enabled: settings.brevo_enabled,
+      hasApiKey: !!settings.brevo_api_key,
+      senderEmail: settings.brevo_sender_email,
+      senderName: settings.brevo_sender_name
+    });
+
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 
     const response = await fetch(`${supabaseUrl}/functions/v1/send-brevo-email`, {
@@ -141,7 +170,9 @@ const sendEmailViaBrevo = async (
         'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
       },
       body: JSON.stringify({
-        user_id: userId,
+        brevo_api_key: settings.brevo_api_key,
+        brevo_sender_email: settings.brevo_sender_email,
+        brevo_sender_name: settings.brevo_sender_name || 'BookingFast',
         to_email: to,
         to_name: to.split('@')[0],
         subject: subject,
