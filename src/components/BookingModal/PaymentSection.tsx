@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CreditCard, Plus, Trash2, Link, Euro, Calculator, Send, Clock, Copy, User, Mail, Package, Calendar, ChevronDown, ChevronUp, X, ExternalLink, RefreshCw } from 'lucide-react';
+import { CreditCard, Plus, Trash2, Link, Euro, Calculator, Send, Clock, Copy, User, Mail, Package, Calendar, ChevronDown, ChevronUp, X, ExternalLink, MessageSquare } from 'lucide-react';
 import { Transaction, Booking } from '../../types';
 import { useBusinessSettings } from '../../hooks/useBusinessSettings';
 import { sendPaymentLinkEmail } from '../../lib/workflowEngine';
@@ -216,7 +216,7 @@ export function PaymentSection({
     }
   };
 
-  const resendPaymentLink = async (transaction: Transaction) => {
+  const sendPaymentLinkByEmail = async (transaction: Transaction) => {
     if (transaction.method !== 'stripe' || transaction.status !== 'pending') return;
     if (!user?.id) return;
 
@@ -240,12 +240,43 @@ export function PaymentSection({
       };
 
       await triggerWorkflow('payment_link_created', bookingData as Booking, user.id);
+
+      alert('✅ Lien de paiement envoyé par email !');
+    } catch (error) {
+      console.error('Erreur envoi email:', error);
+      alert('❌ Erreur lors de l\'envoi de l\'email');
+    }
+  };
+
+  const sendPaymentLinkBySms = async (transaction: Transaction) => {
+    if (transaction.method !== 'stripe' || transaction.status !== 'pending') return;
+    if (!user?.id) return;
+
+    try {
+      const fullPaymentLink = await getPaymentLinkUrl(transaction);
+
+      if (!fullPaymentLink) {
+        alert('Erreur : Impossible de récupérer le lien de paiement');
+        return;
+      }
+
+      const bookingData: Partial<Booking> = {
+        client_firstname: selectedClient?.firstname || '',
+        client_name: selectedClient?.lastname || '',
+        client_email: clientEmail,
+        client_phone: selectedClient?.phone || '',
+        payment_link: fullPaymentLink,
+        date: bookingDate,
+        time: bookingTime,
+        total_amount: totalAmount
+      };
+
       await triggerSmsWorkflow('payment_link_created', bookingData as Booking, user.id);
 
-      alert('Lien de paiement renvoyé par email et SMS !');
+      alert('✅ Lien de paiement envoyé par SMS !');
     } catch (error) {
-      console.error('Erreur renvoi lien:', error);
-      alert('Erreur lors du renvoi du lien');
+      console.error('Erreur envoi SMS:', error);
+      alert('❌ Erreur lors de l\'envoi du SMS');
     }
   };
 
@@ -683,11 +714,19 @@ export function PaymentSection({
                       </button>
                       <button
                         type="button"
-                        onClick={() => resendPaymentLink(transaction)}
-                        className="p-1.5 lg:p-2 text-purple-500 hover:bg-purple-50 rounded transition-colors"
-                        title="Renvoyer le lien par email/SMS"
+                        onClick={() => sendPaymentLinkByEmail(transaction)}
+                        className="p-1.5 lg:p-2 text-green-500 hover:bg-green-50 rounded transition-colors"
+                        title="Envoyer par email"
                       >
-                        <RefreshCw className="w-4 h-4 lg:w-5 lg:h-5" />
+                        <Mail className="w-4 h-4 lg:w-5 lg:h-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => sendPaymentLinkBySms(transaction)}
+                        className="p-1.5 lg:p-2 text-purple-500 hover:bg-purple-50 rounded transition-colors"
+                        title="Envoyer par SMS"
+                      >
+                        <MessageSquare className="w-4 h-4 lg:w-5 lg:h-5" />
                       </button>
                     </>
                   )}
