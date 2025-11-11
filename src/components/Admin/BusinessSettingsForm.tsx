@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Building2, Clock, Euro, Mail, CreditCard, Eye, EyeOff, Globe, Shield, AlertTriangle, CheckCircle, Percent, Trash2, RefreshCw, Calculator, Calendar, FileText } from 'lucide-react';
+import { Save, Building2, Clock, Euro, Mail, CreditCard, Eye, EyeOff, Globe, Shield, AlertTriangle, CheckCircle, Percent, Trash2, RefreshCw, Calculator, Calendar, FileText, MessageSquare } from 'lucide-react';
 import { useBusinessSettings } from '../../hooks/useBusinessSettings';
 import { useCompanyInfo } from '../../hooks/useCompanyInfo';
 import { BusinessSettings } from '../../types';
@@ -32,6 +32,7 @@ export function BusinessSettingsForm() {
   const [saving, setSaving] = useState(false);
   const [showStripeKeys, setShowStripeKeys] = useState(false);
   const [showBrevoKey, setShowBrevoKey] = useState(false);
+  const [showTwilioToken, setShowTwilioToken] = useState(false);
   const [testingStripe, setTestingStripe] = useState(false);
   const [stripeTestResult, setStripeTestResult] = useState<string | null>(null);
   const [clearingCache, setClearingCache] = useState(false);
@@ -966,6 +967,108 @@ export function BusinessSettingsForm() {
                       className="w-full px-4 py-3 border-2 border-pink-300 rounded-xl focus:border-pink-500 focus:ring-2 focus:ring-pink-200 transition-all"
                       placeholder="BookingFast"
                     />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* Twilio SMS */}
+          <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-2xl p-6 border-2 border-green-200">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-xl flex items-center justify-center">
+                <MessageSquare className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Configuration Twilio SMS</h3>
+                <p className="text-sm text-gray-600">Envoi automatique de SMS</p>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-start gap-3 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl">
+                <MessageSquare className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-blue-800">
+                  <strong>À propos de Twilio :</strong> Twilio vous permet d'envoyer des SMS automatiques à vos clients pour les confirmations de réservation, rappels et modifications. Créez un compte sur <a href="https://www.twilio.com" target="_blank" rel="noopener noreferrer" className="underline font-bold">twilio.com</a> pour obtenir vos identifiants.
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-4 bg-green-100 rounded-xl">
+                <input
+                  type="checkbox"
+                  checked={formData.twilio_enabled || false}
+                  onChange={(e) => setFormData({ ...formData, twilio_enabled: e.target.checked })}
+                  className="w-5 h-5 rounded border-2 border-green-300"
+                />
+                <label className="text-sm font-medium text-gray-700">
+                  Activer l'envoi de SMS via Twilio
+                </label>
+              </div>
+
+              {formData.twilio_enabled && (
+                <>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Account SID Twilio
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.twilio_account_sid || ''}
+                      onChange={(e) => setFormData({ ...formData, twilio_account_sid: e.target.value })}
+                      className="w-full px-4 py-3 border-2 border-green-300 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                      placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Trouvable sur votre tableau de bord Twilio</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Auth Token Twilio
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showTwilioToken ? 'text' : 'password'}
+                        value={formData.twilio_auth_token || ''}
+                        onChange={(e) => setFormData({ ...formData, twilio_auth_token: e.target.value })}
+                        className="w-full px-4 py-3 pr-12 border-2 border-green-300 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                        placeholder="********************************"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowTwilioToken(!showTwilioToken)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      >
+                        {showTwilioToken ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">Token d'authentification (à garder secret)</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Numéro de téléphone Twilio
+                    </label>
+                    <input
+                      type="tel"
+                      value={formData.twilio_phone_number || ''}
+                      onChange={(e) => setFormData({ ...formData, twilio_phone_number: e.target.value })}
+                      className="w-full px-4 py-3 border-2 border-green-300 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all"
+                      placeholder="+33612345678"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Format international (ex: +33612345678)</p>
+                  </div>
+
+                  <div className="flex items-start gap-3 p-4 bg-yellow-50 border-2 border-yellow-200 rounded-xl">
+                    <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                    <div className="text-sm text-yellow-800">
+                      <strong>Important :</strong>
+                      <ul className="list-disc list-inside mt-2 space-y-1">
+                        <li>Les numéros de téléphone des clients doivent être au format international (+33...)</li>
+                        <li>Chaque SMS envoyé est facturé par Twilio (environ 0,05€ par SMS)</li>
+                        <li>Les SMS sont limités à 160 caractères</li>
+                        <li>Configurez vos workflows SMS dans la section Workflows</li>
+                      </ul>
+                    </div>
                   </div>
                 </>
               )}
