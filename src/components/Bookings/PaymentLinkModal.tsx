@@ -16,8 +16,6 @@ export function PaymentLinkModal({ booking, onClose }: PaymentLinkModalProps) {
   const [generatedLink, setGeneratedLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sendEmailNotification, setSendEmailNotification] = useState(true);
-  const [sendSmsNotification, setSendSmsNotification] = useState(true);
 
   const remainingBalance = booking.total_amount - (booking.payment_amount || 0);
 
@@ -41,16 +39,7 @@ export function PaymentLinkModal({ booking, onClose }: PaymentLinkModalProps) {
 
     try {
       console.log('🔵 [MODAL] Appel createPaymentLink...');
-      console.log('📧 Options notifications:', { sendEmail: sendEmailNotification, sendSms: sendSmsNotification });
-      const link = await createPaymentLink(
-        booking.id,
-        amountValue,
-        expiryMinutes,
-        {
-          sendEmail: sendEmailNotification,
-          sendSms: sendSmsNotification
-        }
-      );
+      const link = await createPaymentLink(booking.id, amountValue, expiryMinutes);
       
       console.log('✅ [MODAL] Lien reçu:', link);
       
@@ -167,32 +156,6 @@ export function PaymentLinkModal({ booking, onClose }: PaymentLinkModalProps) {
                 <p className="text-sm text-yellow-800">
                   ⚠️ <strong>Important :</strong> Le lien expirera automatiquement après {expiryMinutes} minutes.
                 </p>
-              </div>
-
-              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-sm font-semibold text-gray-900">Notifications</span>
-                </div>
-                <div className="space-y-2">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={sendEmailNotification}
-                      onChange={(e) => setSendEmailNotification(e.target.checked)}
-                      className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">Envoyer le lien par email</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={sendSmsNotification}
-                      onChange={(e) => setSendSmsNotification(e.target.checked)}
-                      className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
-                    />
-                    <span className="text-sm text-gray-700">Envoyer le lien par SMS</span>
-                  </label>
-                </div>
               </div>
 
               {error && (
