@@ -217,7 +217,7 @@ export function BookingModal({
     });
   };
 
-  const handleGeneratePaymentLink = async (amount: number) => {
+  const handleGeneratePaymentLink = async (amount: number, sendEmail: boolean = true, sendSms: boolean = true) => {
     console.log('🔥 ========================================');
     console.log('🔥 GÉNÉRATION LIEN DE PAIEMENT (SANS SAUVEGARDE AUTO)');
     console.log('🔥 ========================================');
@@ -351,7 +351,9 @@ export function BookingModal({
       
       if (user?.id) {
         console.log('🔥 DÉCLENCHEMENT WORKFLOW payment_link_created');
-        
+        console.log('📧 Envoyer Email:', sendEmail);
+        console.log('📱 Envoyer SMS:', sendSms);
+
         const bookingWithPaymentLink = {
           id: bookingId,
           service_id: isCustomService ? null : selectedService?.id,
@@ -372,19 +374,23 @@ export function BookingModal({
           payment_link: paymentLink.payment_url,
           transactions: [newTransaction]
         };
-        
-        try {
-          await triggerWorkflow('payment_link_created', bookingWithPaymentLink, user.id);
-          console.log('✅ Workflow payment_link_created déclenché avec succès');
-        } catch (workflowError) {
-          console.error('❌ Erreur workflow payment_link_created:', workflowError);
+
+        if (sendEmail) {
+          try {
+            await triggerWorkflow('payment_link_created', bookingWithPaymentLink, user.id);
+            console.log('✅ Workflow payment_link_created déclenché avec succès');
+          } catch (workflowError) {
+            console.error('❌ Erreur workflow payment_link_created:', workflowError);
+          }
         }
 
-        try {
-          await triggerSmsWorkflow('payment_link_created', bookingWithPaymentLink, user.id);
-          console.log('✅ SMS Workflow payment_link_created déclenché avec succès');
-        } catch (smsError) {
-          console.error('❌ Erreur SMS workflow payment_link_created:', smsError);
+        if (sendSms) {
+          try {
+            await triggerSmsWorkflow('payment_link_created', bookingWithPaymentLink, user.id);
+            console.log('✅ SMS Workflow payment_link_created déclenché avec succès');
+          } catch (smsError) {
+            console.error('❌ Erreur SMS workflow payment_link_created:', smsError);
+          }
         }
       }
       

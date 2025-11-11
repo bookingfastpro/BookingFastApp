@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CreditCard, Plus, Trash2, Link, Euro, Calculator, Send, Clock, Copy, User, Mail, Package, Calendar, ChevronDown, ChevronUp, X, ExternalLink, MessageSquare } from 'lucide-react';
+import { CreditCard, Plus, Trash2, Link, Euro, Calculator, Send, Clock, Copy, User, Mail, Package, Calendar, ChevronDown, ChevronUp, X, ExternalLink, MessageSquare, Phone } from 'lucide-react';
 import { Transaction, Booking } from '../../types';
 import { useBusinessSettings } from '../../hooks/useBusinessSettings';
 import { sendPaymentLinkEmail } from '../../lib/workflowEngine';
@@ -14,7 +14,7 @@ interface PaymentSectionProps {
   transactions: Transaction[];
   onAddTransaction: (transaction: Omit<Transaction, 'id' | 'created_at'>) => void;
   onDeleteTransaction: (transactionId: string) => void;
-  onGeneratePaymentLink: (amount: number) => void;
+  onGeneratePaymentLink: (amount: number, sendEmail: boolean, sendSms: boolean) => void;
   clientEmail: string;
   serviceName: string;
   bookingDate: string;
@@ -98,6 +98,8 @@ export function PaymentSection({
     note: ''
   });
   const [paymentLinkAmount, setPaymentLinkAmount] = useState(0);
+  const [sendEmailOnGenerate, setSendEmailOnGenerate] = useState(true);
+  const [sendSmsOnGenerate, setSendSmsOnGenerate] = useState(true);
 
   const calculateCurrentPaid = () => {
     return transactions
@@ -133,21 +135,23 @@ export function PaymentSection({
 
   const handleGenerateLink = () => {
     if (paymentLinkAmount <= 0) return;
-    
+
     console.log('🔄 Génération lien de paiement:', {
       amount: paymentLinkAmount,
       client: clientEmail,
       service: serviceName,
-      isStripeConfigured
+      isStripeConfigured,
+      sendEmail: sendEmailOnGenerate,
+      sendSms: sendSmsOnGenerate
     });
-    
+
     if (!isStripeConfigured) {
       console.warn('⚠️ Stripe non configuré - génération du lien quand même');
     }
-    
+
     // Appeler la fonction de génération de lien qui gère le workflow
-    onGeneratePaymentLink(paymentLinkAmount);
-    
+    onGeneratePaymentLink(paymentLinkAmount, sendEmailOnGenerate, sendSmsOnGenerate);
+
     setPaymentLinkAmount(0);
     setShowPaymentLink(false);
   };
@@ -635,6 +639,44 @@ export function PaymentSection({
                   {item.label}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* Options de notification */}
+          <div className="border-2 border-purple-200 bg-purple-50 rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-2">
+              <Mail className="w-4 h-4 text-purple-600" />
+              <span className="text-xs lg:text-sm font-semibold text-gray-900">Notifications</span>
+            </div>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={sendEmailOnGenerate}
+                  onChange={(e) => setSendEmailOnGenerate(e.target.checked)}
+                  className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                />
+                <div className="flex items-center gap-2">
+                  <Mail className="w-3 h-3 lg:w-4 lg:h-4 text-gray-600 group-hover:text-purple-600 transition-colors" />
+                  <span className="text-xs lg:text-sm text-gray-700 group-hover:text-gray-900">
+                    Envoyer le lien par email
+                  </span>
+                </div>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  checked={sendSmsOnGenerate}
+                  onChange={(e) => setSendSmsOnGenerate(e.target.checked)}
+                  className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                />
+                <div className="flex items-center gap-2">
+                  <Phone className="w-3 h-3 lg:w-4 lg:h-4 text-gray-600 group-hover:text-purple-600 transition-colors" />
+                  <span className="text-xs lg:text-sm text-gray-700 group-hover:text-gray-900">
+                    Envoyer le lien par SMS
+                  </span>
+                </div>
+              </label>
             </div>
           </div>
 
