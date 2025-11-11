@@ -29,7 +29,8 @@ export function usePaymentLinks() {
   const createPaymentLink = async (
     bookingId: string,
     amount: number,
-    expiryMinutes: number = 30
+    expiryMinutes: number = 30,
+    options?: { sendEmail?: boolean; sendSms?: boolean }
   ): Promise<PaymentLink | null> => {
     console.log('🔵 [usePaymentLinks] createPaymentLink appelé');
     console.log('📋 Booking ID:', bookingId);
@@ -134,6 +135,67 @@ export function usePaymentLinks() {
       const finalLink = updatedLink || { ...paymentLink, payment_url: paymentUrl };
 
       console.log('✅ Lien final:', finalLink);
+
+      // 🔥 METTRE À JOUR LA RÉSERVATION AVEC LE LIEN DE PAIEMENT
+      try {
+        console.log('🔄 Mise à jour réservation avec payment_link:', paymentUrl);
+        const { error: updateBookingError } = await supabase
+          .from('bookings')
+          .update({ payment_link: paymentUrl })
+          .eq('id', bookingId);
+
+        if (updateBookingError) {
+          console.error('⚠️ Erreur mise à jour réservation:', updateBookingError);
+        } else {
+          console.log('✅ Réservation mise à jour avec payment_link');
+
+          // 🔥 DÉCLENCHER LES WORKFLOWS SEULEMENT SI LES OPTIONS SONT ACTIVÉES
+          const { sendEmail = true, sendSms = true } = options || {};
+
+          console.log('📧 Options notifications:', { sendEmail, sendSms });
+
+          if (sendEmail || sendSms) {
+            // Récupérer la réservation complète pour les workflows
+            const { data: bookingData, error: bookingError } = await supabase
+              .from('bookings')
+              .select('*, service:services(*)')
+              .eq('id', bookingId)
+              .single();
+
+            if (bookingError) {
+              console.error('⚠️ Erreur récupération réservation:', bookingError);
+            } else if (bookingData) {
+              console.log('📝 Réservation récupérée pour workflows:', bookingData);
+
+              // Importer dynamiquement les fonctions de workflow
+              const { triggerWorkflow } = await import('../lib/workflowEngine');
+              const { triggerSmsWorkflow } = await import('../lib/smsWorkflowEngine');
+
+              if (sendEmail) {
+                try {
+                  console.log('📧 Déclenchement workflow email payment_link_created');
+                  await triggerWorkflow('payment_link_created', bookingData, user.id);
+                } catch (workflowError) {
+                  console.error('❌ Erreur workflow email:', workflowError);
+                }
+              }
+
+              if (sendSms) {
+                try {
+                  console.log('📱 Déclenchement workflow SMS payment_link_created');
+                  await triggerSmsWorkflow('payment_link_created', bookingData, user.id);
+                } catch (smsError) {
+                  console.error('❌ Erreur workflow SMS:', smsError);
+                }
+              }
+            }
+          } else {
+            console.log('⏭️ Notifications désactivées - Aucun workflow déclenché');
+          }
+        }
+      } catch (updateError) {
+        console.error('❌ Erreur complète mise à jour:', updateError);
+      }
 
       setLoading(false);
       return finalLink;
