@@ -71,6 +71,8 @@ export function BookingModal({
   const [isEditMode, setIsEditMode] = useState(false);
   const [isServiceListExpanded, setIsServiceListExpanded] = useState(true);
   const [isNotesExpanded, setIsNotesExpanded] = useState(false);
+  const [sendEmailNotification, setSendEmailNotification] = useState(true);
+  const [sendSmsNotification, setSendSmsNotification] = useState(true);
 
   const hasMultiUserPlugin = userPlugins.some(p => p.plugin_slug === 'multi-user');
 
@@ -286,8 +288,11 @@ export function BookingModal({
           } : null
         };
 
-        const newBooking = await addBooking(bookingData);
-        
+        const newBooking = await addBooking(bookingData, {
+          sendEmail: false,
+          sendSms: false
+        });
+
         if (!newBooking) {
           throw new Error('Impossible de créer la réservation temporaire');
         }
@@ -476,15 +481,21 @@ export function BookingModal({
       if (editingBooking || tempBookingId) {
         const bookingIdToUpdate = editingBooking?.id || tempBookingId!;
         console.log('✏️ Mise à jour réservation:', bookingIdToUpdate);
-        const updatedBooking = await updateBooking(bookingIdToUpdate, bookingData);
+        const updatedBooking = await updateBooking(bookingIdToUpdate, bookingData, {
+          sendEmail: sendEmailNotification,
+          sendSms: sendSmsNotification
+        });
         
         if (updatedBooking) {
           bookingEvents.emit('bookingUpdated', updatedBooking);
         }
       } else {
         console.log('✨ Création nouvelle réservation');
-        const newBooking = await addBooking(bookingData);
-        
+        const newBooking = await addBooking(bookingData, {
+          sendEmail: sendEmailNotification,
+          sendSms: sendSmsNotification
+        });
+
         if (newBooking) {
           bookingEvents.emit('bookingCreated', newBooking);
           refetchLimit();
@@ -949,6 +960,44 @@ export function BookingModal({
                     </p>
                   </div>
                 )}
+              </div>
+
+              {/* Options de notification */}
+              <div className="border-2 border-blue-200 bg-blue-50 rounded-xl p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Mail className="w-5 h-5 text-blue-600" />
+                  <span className="text-sm font-semibold text-gray-900">Notifications</span>
+                </div>
+                <div className="space-y-2">
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={sendEmailNotification}
+                      onChange={(e) => setSendEmailNotification(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <div className="flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-gray-600 group-hover:text-blue-600 transition-colors" />
+                      <span className="text-sm text-gray-700 group-hover:text-gray-900">
+                        Envoyer une confirmation par email
+                      </span>
+                    </div>
+                  </label>
+                  <label className="flex items-center gap-3 cursor-pointer group">
+                    <input
+                      type="checkbox"
+                      checked={sendSmsNotification}
+                      onChange={(e) => setSendSmsNotification(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <div className="flex items-center gap-2">
+                      <Phone className="w-4 h-4 text-gray-600 group-hover:text-blue-600 transition-colors" />
+                      <span className="text-sm text-gray-700 group-hover:text-gray-900">
+                        Envoyer une confirmation par SMS
+                      </span>
+                    </div>
+                  </label>
+                </div>
               </div>
             </div>
 

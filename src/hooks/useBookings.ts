@@ -88,7 +88,11 @@ export function useBookings() {
     }
   }, [user?.id]);
 
-  const addBooking = async (bookingData: Omit<Booking, 'id' | 'created_at' | 'user_id'>) => {
+  const addBooking = async (
+    bookingData: Omit<Booking, 'id' | 'created_at' | 'user_id'>,
+    options?: { sendEmail?: boolean; sendSms?: boolean }
+  ) => {
+    const { sendEmail = true, sendSms = true } = options || {};
     if (!isSupabaseConfigured || !user) {
       throw new Error('Supabase non configuré ou utilisateur non connecté');
     }
@@ -133,29 +137,37 @@ export function useBookings() {
       if (data) {
         setBookings(prev => [...prev, data]);
 
-        try {
-          await triggerWorkflow('booking_created', data, targetUserId);
-        } catch (workflowError) {
-          logger.error('❌ Erreur workflow booking_created:', workflowError);
+        if (sendEmail) {
+          try {
+            await triggerWorkflow('booking_created', data, targetUserId);
+          } catch (workflowError) {
+            logger.error('❌ Erreur workflow booking_created:', workflowError);
+          }
         }
 
-        try {
-          await triggerSmsWorkflow('booking_created', data, targetUserId);
-        } catch (smsError) {
-          logger.error('❌ Erreur SMS workflow booking_created:', smsError);
+        if (sendSms) {
+          try {
+            await triggerSmsWorkflow('booking_created', data, targetUserId);
+          } catch (smsError) {
+            logger.error('❌ Erreur SMS workflow booking_created:', smsError);
+          }
         }
 
         if (data.payment_link) {
-          try {
-            await triggerWorkflow('payment_link_created', data, targetUserId);
-          } catch (workflowError) {
-            logger.error('❌ Erreur workflow payment_link_created:', workflowError);
+          if (sendEmail) {
+            try {
+              await triggerWorkflow('payment_link_created', data, targetUserId);
+            } catch (workflowError) {
+              logger.error('❌ Erreur workflow payment_link_created:', workflowError);
+            }
           }
 
-          try {
-            await triggerSmsWorkflow('payment_link_created', data, targetUserId);
-          } catch (smsError) {
-            logger.error('❌ Erreur SMS workflow payment_link_created:', smsError);
+          if (sendSms) {
+            try {
+              await triggerSmsWorkflow('payment_link_created', data, targetUserId);
+            } catch (smsError) {
+              logger.error('❌ Erreur SMS workflow payment_link_created:', smsError);
+            }
           }
         }
 
@@ -173,7 +185,12 @@ export function useBookings() {
     }
   };
 
-  const updateBooking = async (id: string, updates: Partial<Booking>) => {
+  const updateBooking = async (
+    id: string,
+    updates: Partial<Booking>,
+    options?: { sendEmail?: boolean; sendSms?: boolean }
+  ) => {
+    const { sendEmail = true, sendSms = true } = options || {};
     if (!isSupabaseConfigured || !user) {
       throw new Error('Supabase non configuré ou utilisateur non connecté');
     }
@@ -230,43 +247,55 @@ export function useBookings() {
 
         setBookings(prev => prev.map(b => b.id === id ? bookingWithTransactions : b));
 
-        try {
-          await triggerWorkflow('booking_updated', bookingWithTransactions, targetUserId);
-        } catch (workflowError) {
-          logger.error('❌ Erreur workflow booking_updated:', workflowError);
+        if (sendEmail) {
+          try {
+            await triggerWorkflow('booking_updated', bookingWithTransactions, targetUserId);
+          } catch (workflowError) {
+            logger.error('❌ Erreur workflow booking_updated:', workflowError);
+          }
         }
 
-        try {
-          await triggerSmsWorkflow('booking_updated', bookingWithTransactions, targetUserId);
-        } catch (smsError) {
-          logger.error('❌ Erreur SMS workflow booking_updated:', smsError);
+        if (sendSms) {
+          try {
+            await triggerSmsWorkflow('booking_updated', bookingWithTransactions, targetUserId);
+          } catch (smsError) {
+            logger.error('❌ Erreur SMS workflow booking_updated:', smsError);
+          }
         }
 
         if (bookingWithTransactions.payment_link && (!oldBooking || oldBooking.payment_link !== bookingWithTransactions.payment_link)) {
-          try {
-            await triggerWorkflow('payment_link_created', bookingWithTransactions, targetUserId);
-          } catch (workflowError) {
-            logger.error('❌ Erreur workflow payment_link_created:', workflowError);
+          if (sendEmail) {
+            try {
+              await triggerWorkflow('payment_link_created', bookingWithTransactions, targetUserId);
+            } catch (workflowError) {
+              logger.error('❌ Erreur workflow payment_link_created:', workflowError);
+            }
           }
 
-          try {
-            await triggerSmsWorkflow('payment_link_created', bookingWithTransactions, targetUserId);
-          } catch (smsError) {
-            logger.error('❌ Erreur SMS workflow payment_link_created:', smsError);
+          if (sendSms) {
+            try {
+              await triggerSmsWorkflow('payment_link_created', bookingWithTransactions, targetUserId);
+            } catch (smsError) {
+              logger.error('❌ Erreur SMS workflow payment_link_created:', smsError);
+            }
           }
         }
 
         if (oldBooking && oldBooking.booking_status !== bookingWithTransactions.booking_status) {
-          try {
-            await triggerWorkflow('booking_status_changed', bookingWithTransactions, targetUserId);
-          } catch (workflowError) {
-            logger.error('❌ Erreur workflow booking_status_changed:', workflowError);
+          if (sendEmail) {
+            try {
+              await triggerWorkflow('booking_status_changed', bookingWithTransactions, targetUserId);
+            } catch (workflowError) {
+              logger.error('❌ Erreur workflow booking_status_changed:', workflowError);
+            }
           }
 
-          try {
-            await triggerSmsWorkflow('booking_status_changed', bookingWithTransactions, targetUserId);
-          } catch (smsError) {
-            logger.error('❌ Erreur SMS workflow booking_status_changed:', smsError);
+          if (sendSms) {
+            try {
+              await triggerSmsWorkflow('booking_status_changed', bookingWithTransactions, targetUserId);
+            } catch (smsError) {
+              logger.error('❌ Erreur SMS workflow booking_status_changed:', smsError);
+            }
           }
         }
 
