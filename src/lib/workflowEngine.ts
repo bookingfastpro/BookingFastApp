@@ -131,9 +131,9 @@ const sendEmailViaBrevo = async (
 
   try {
     console.log('📧 ENVOI EMAIL RÉEL VIA BREVO...');
-    
+
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    
+
     const response = await fetch(`${supabaseUrl}/functions/v1/send-brevo-email`, {
       method: 'POST',
       headers: {
@@ -152,7 +152,7 @@ const sendEmailViaBrevo = async (
     });
 
     console.log('📧 Statut réponse Brevo:', response.status);
-    
+
     if (response.ok) {
       const result = await response.json();
       console.log('✅ Email envoyé avec succès via Brevo:', result.messageId);
@@ -160,10 +160,12 @@ const sendEmailViaBrevo = async (
     } else {
       const errorData = await response.json();
       console.error('❌ Erreur envoi email Brevo:', errorData);
+      console.log('⚠️ L\'email n\'a pas été envoyé. Vérifiez que Brevo est activé dans Admin > Configuration.');
       return false;
     }
   } catch (error) {
     console.error('❌ ERREUR RÉSEAU ENVOI EMAIL:', error);
+    console.log('⚠️ L\'email n\'a pas été envoyé. Vérifiez votre configuration Brevo.');
     return false;
   }
 };

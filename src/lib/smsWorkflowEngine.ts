@@ -136,10 +136,12 @@ const sendSmsViaTwilio = async (
     } else {
       const errorData = await response.json();
       console.error('❌ Erreur envoi SMS Twilio:', errorData);
+      console.log('⚠️ Le SMS n\'a pas été envoyé. Vérifiez que Twilio est activé dans Admin > Configuration.');
       return false;
     }
   } catch (error) {
     console.error('❌ ERREUR RÉSEAU ENVOI SMS:', error);
+    console.log('⚠️ Le SMS n\'a pas été envoyé. Vérifiez votre configuration Twilio.');
     return false;
   }
 };
