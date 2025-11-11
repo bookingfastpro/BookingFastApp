@@ -132,8 +132,8 @@ export function BookingModal({
       setIsEditMode(true);
       setIsServiceListExpanded(false);
       setIsNotesExpanded(!!editingBooking.notes);
-      setSendEmailNotification(false);
-      setSendSmsNotification(false);
+      setSendEmailNotification(editingBooking.send_email_notification ?? true);
+      setSendSmsNotification(editingBooking.send_sms_notification ?? true);
     } else {
       setSelectedService(null);
       setIsCustomService(false);
@@ -291,7 +291,9 @@ export function BookingModal({
             name: customServiceData.name,
             price: customServiceData.price,
             duration: customServiceData.duration
-          } : null
+          } : null,
+          send_email_notification: sendEmailNotification,
+          send_sms_notification: sendSmsNotification
         };
 
         const newBooking = await addBooking(bookingData, {
@@ -478,7 +480,9 @@ export function BookingModal({
           name: customServiceData.name,
           price: customServiceData.price,
           duration: customServiceData.duration
-        } : null
+        } : null,
+        send_email_notification: sendEmailNotification,
+        send_sms_notification: sendSmsNotification
       };
 
       console.log('💾 Données de réservation à sauvegarder:', bookingData);

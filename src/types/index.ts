@@ -195,6 +195,8 @@ export interface Booking {
     price: number;
     duration: number;
   } | null;
+  send_email_notification?: boolean;
+  send_sms_notification?: boolean;
   created_at: string;
   updated_at?: string;
   service?: Service;
