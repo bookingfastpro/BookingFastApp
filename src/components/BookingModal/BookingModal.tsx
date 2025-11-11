@@ -84,16 +84,16 @@ export function BookingModal({
     if (editingBooking) {
       console.log('🔍 BookingModal - editingBooking:', editingBooking);
       console.log('🔍 BookingModal - editingBooking.transactions:', editingBooking.transactions);
-      
+
       const service = services.find(s => s.id === editingBooking.service_id);
       const isCustom = !service || service.description === 'Service personnalisé';
-      
+
       setSelectedService(isCustom ? null : service);
       setIsCustomService(isCustom);
-      
+
       if (isCustom) {
         let serviceName = 'Service personnalisé';
-        
+
         if (editingBooking.custom_service_data?.name) {
           serviceName = editingBooking.custom_service_data.name;
         } else if (service?.name && service.name !== 'Service personnalisé') {
@@ -101,9 +101,9 @@ export function BookingModal({
         } else if (editingBooking.service?.name && editingBooking.service.name !== 'Service personnalisé') {
           serviceName = editingBooking.service.name;
         }
-        
+
         const servicePrice = editingBooking.total_amount / editingBooking.quantity;
-        
+
         setCustomServiceData({
           name: serviceName,
           price: servicePrice,
@@ -120,11 +120,11 @@ export function BookingModal({
       setQuantity(editingBooking.quantity);
       setDate(editingBooking.date);
       setTime(editingBooking.time);
-      
+
       const bookingTransactions = editingBooking.transactions || [];
       console.log('📋 BookingModal - Transactions chargées:', bookingTransactions);
       setTransactions(bookingTransactions);
-      
+
       setBookingStatus(editingBooking.booking_status || 'pending');
       setAssignedUserId(editingBooking.assigned_user_id || null);
       setNotes(editingBooking.notes || '');
@@ -132,6 +132,8 @@ export function BookingModal({
       setIsEditMode(true);
       setIsServiceListExpanded(false);
       setIsNotesExpanded(!!editingBooking.notes);
+      setSendEmailNotification(false);
+      setSendSmsNotification(false);
     } else {
       setSelectedService(null);
       setIsCustomService(false);
@@ -148,6 +150,8 @@ export function BookingModal({
       setIsEditMode(false);
       setIsServiceListExpanded(true);
       setIsNotesExpanded(false);
+      setSendEmailNotification(true);
+      setSendSmsNotification(true);
     }
   }, [editingBooking, services, selectedDate, selectedTime]);
 
@@ -161,12 +165,14 @@ export function BookingModal({
     setTempBookingId(null);
     setIsEditMode(false);
     setIsServiceListExpanded(true);
-    
+    setSendEmailNotification(true);
+    setSendSmsNotification(true);
+
     setTimeout(() => {
       const event = new CustomEvent('resetDatePicker');
       window.dispatchEvent(event);
     }, 100);
-    
+
     onClose();
   };
 
