@@ -4,6 +4,7 @@ import { Booking } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 import { GoogleCalendarService } from '../lib/googleCalendar';
 import { triggerWorkflow } from '../lib/workflowEngine';
+import { triggerSmsWorkflow } from '../lib/smsWorkflowEngine';
 import { logger } from '../utils/logger';
 
 export function useBookings() {
@@ -138,11 +139,23 @@ export function useBookings() {
           logger.error('❌ Erreur workflow booking_created:', workflowError);
         }
 
+        try {
+          await triggerSmsWorkflow('booking_created', data, targetUserId);
+        } catch (smsError) {
+          logger.error('❌ Erreur SMS workflow booking_created:', smsError);
+        }
+
         if (data.payment_link) {
           try {
             await triggerWorkflow('payment_link_created', data, targetUserId);
           } catch (workflowError) {
             logger.error('❌ Erreur workflow payment_link_created:', workflowError);
+          }
+
+          try {
+            await triggerSmsWorkflow('payment_link_created', data, targetUserId);
+          } catch (smsError) {
+            logger.error('❌ Erreur SMS workflow payment_link_created:', smsError);
           }
         }
 
@@ -223,11 +236,23 @@ export function useBookings() {
           logger.error('❌ Erreur workflow booking_updated:', workflowError);
         }
 
+        try {
+          await triggerSmsWorkflow('booking_updated', bookingWithTransactions, targetUserId);
+        } catch (smsError) {
+          logger.error('❌ Erreur SMS workflow booking_updated:', smsError);
+        }
+
         if (bookingWithTransactions.payment_link && (!oldBooking || oldBooking.payment_link !== bookingWithTransactions.payment_link)) {
           try {
             await triggerWorkflow('payment_link_created', bookingWithTransactions, targetUserId);
           } catch (workflowError) {
             logger.error('❌ Erreur workflow payment_link_created:', workflowError);
+          }
+
+          try {
+            await triggerSmsWorkflow('payment_link_created', bookingWithTransactions, targetUserId);
+          } catch (smsError) {
+            logger.error('❌ Erreur SMS workflow payment_link_created:', smsError);
           }
         }
 
@@ -236,6 +261,12 @@ export function useBookings() {
             await triggerWorkflow('booking_status_changed', bookingWithTransactions, targetUserId);
           } catch (workflowError) {
             logger.error('❌ Erreur workflow booking_status_changed:', workflowError);
+          }
+
+          try {
+            await triggerSmsWorkflow('booking_status_changed', bookingWithTransactions, targetUserId);
+          } catch (smsError) {
+            logger.error('❌ Erreur SMS workflow booking_status_changed:', smsError);
           }
         }
 
