@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { TeamProvider } from './contexts/TeamContext';
-import { AuthProvider } from './contexts/AuthContext';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Navbar } from './components/Layout/Navbar';
 import { LoadingSpinner } from './components/UI/LoadingSpinner';
 import { UpdateModal } from './components/UI/UpdateModal';
@@ -18,6 +18,7 @@ import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { PublicRoute } from './components/Auth/PublicRoute';
 import { isPWA } from './utils/pwaDetection';
 import { CacheBuster } from './utils/cacheBuster';
+import { oneSignalService } from './lib/oneSignalService';
 
 const DashboardPage = lazy(() => import('./components/Dashboard/DashboardPage').then(m => ({ default: m.DashboardPage })));
 const CalendarPage = lazy(() => import('./components/Calendar/CalendarPage').then(m => ({ default: m.CalendarPage })));
@@ -59,9 +60,22 @@ function AppRoutes() {
   const location = useLocation();
   const navigate = useNavigate();
   const pathname = location.pathname;
+  const { user } = useAuth();
 
   // Détecter le mode PWA
   const isPWAMode = isPWA();
+
+  // Initialiser OneSignal quand l'utilisateur est connecté
+  useEffect(() => {
+    if (user) {
+      console.log('🔔 User logged in, initializing OneSignal...');
+      oneSignalService.initialize().then(() => {
+        console.log('✅ OneSignal initialized');
+      }).catch((error) => {
+        console.error('❌ OneSignal init error:', error);
+      });
+    }
+  }, [user]);
 
   // 🎯 Redirection PWA : Landing page → Login
   useEffect(() => {
