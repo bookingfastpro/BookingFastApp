@@ -53,6 +53,11 @@ class OneSignalService {
           allowLocalhostAsSecureOrigin: true,
           notifyButton: {
             enable: false
+          },
+          promptOptions: {
+            slidedown: {
+              enabled: false
+            }
           }
         });
 
