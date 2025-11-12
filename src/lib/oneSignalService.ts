@@ -1,6 +1,12 @@
-import OneSignal from 'react-onesignal';
 import { supabase } from './supabase';
 import { logger } from '../utils/logger';
+
+// Déclaration globale pour le SDK OneSignal
+declare global {
+  interface Window {
+    OneSignal: any;
+  }
+}
 
 interface OneSignalConfig {
   appId: string;
@@ -26,6 +32,31 @@ class OneSignalService {
     logger.debug('REST API Key configured:', !!this.restApiKey);
   }
 
+  private waitForOneSignal(): Promise<void> {
+    return new Promise((resolve) => {
+      if (window.OneSignal) {
+        resolve();
+        return;
+      }
+
+      const checkInterval = setInterval(() => {
+        if (window.OneSignal) {
+          clearInterval(checkInterval);
+          resolve();
+        }
+      }, 100);
+
+      // Timeout après 10 secondes
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        if (!window.OneSignal) {
+          logger.error('OneSignal SDK failed to load after 10 seconds');
+        }
+        resolve();
+      }, 10000);
+    });
+  }
+
   async initialize(): Promise<void> {
     if (this.initialized) {
       logger.debug('OneSignal already initialized');
@@ -46,18 +77,16 @@ class OneSignalService {
 
     this.initPromise = (async () => {
       try {
-        logger.debug('Initializing OneSignal...');
+        logger.debug('Initializing window.OneSignal...');
 
-        await OneSignal.init({
+        // Attendre que le SDK OneSignal soit chargé
+        await this.waitForOneSignal();
+
+        await window.OneSignal.init({
           appId: this.appId,
           allowLocalhostAsSecureOrigin: true,
           notifyButton: {
             enable: false
-          },
-          promptOptions: {
-            slidedown: {
-              enabled: false
-            }
           }
         });
 
@@ -83,7 +112,7 @@ class OneSignalService {
   }
 
   private setupEventListeners(): void {
-    OneSignal.Notifications.addEventListener('click', (event) => {
+    window.OneSignal.Notifications.addEventListener('click', (event) => {
       logger.debug('Notification clicked:', event);
 
       const data = event.notification.additionalData;
@@ -99,7 +128,7 @@ class OneSignalService {
       }
     });
 
-    OneSignal.Notifications.addEventListener('permissionChange', (permissionChange) => {
+    window.OneSignal.Notifications.addEventListener('permissionChange', (permissionChange) => {
       logger.debug('Permission changed:', permissionChange);
     });
   }
@@ -111,7 +140,7 @@ class OneSignalService {
         await this.initialize();
       }
 
-      const userId = await OneSignal.User.PushSubscription.id;
+      const userId = await window.OneSignal.User.PushSubscription.id;
       return userId;
     } catch (error) {
       logger.error('Error getting player ID:', error);
@@ -125,7 +154,7 @@ class OneSignalService {
         await this.initialize();
       }
 
-      await OneSignal.login(userId);
+      await window.OneSignal.login(userId);
 
       const playerId = await this.getPlayerId();
       if (playerId) {
@@ -147,7 +176,7 @@ class OneSignalService {
         }
       }
 
-      await OneSignal.User.addTag('user_id', userId);
+      await window.OneSignal.User.addTag('user_id', userId);
 
       logger.debug('User registered with OneSignal:', userId);
     } catch (error) {
@@ -162,7 +191,7 @@ class OneSignalService {
       }
 
       for (const [key, value] of Object.entries(tags)) {
-        await OneSignal.User.addTag(key, value);
+        await window.OneSignal.User.addTag(key, value);
       }
 
       logger.debug('Tags set:', tags);
@@ -177,7 +206,7 @@ class OneSignalService {
         await this.initialize();
       }
 
-      const permission = await OneSignal.Notifications.permission;
+      const permission = await window.OneSignal.Notifications.permission;
       return permission;
     } catch (error) {
       logger.error('Error checking push status:', error);
@@ -264,7 +293,7 @@ class OneSignalService {
         await this.initialize();
       }
 
-      const permission = await OneSignal.Notifications.permission;
+      const permission = await window.OneSignal.Notifications.permission;
       return permission ? 'granted' : 'default';
     } catch (error) {
       logger.error('Error getting notification permission:', error);
@@ -309,11 +338,11 @@ class OneSignalService {
         return false;
       }
 
-      logger.debug('Calling OneSignal.Notifications.requestPermission()...');
+      logger.debug('Calling window.OneSignal.Notifications.requestPermission()...');
 
-      const permission = await OneSignal.Notifications.requestPermission();
+      const permission = await window.OneSignal.Notifications.requestPermission();
 
-      logger.debug('OneSignal.Notifications.requestPermission() returned:', permission);
+      logger.debug('window.OneSignal.Notifications.requestPermission() returned:', permission);
 
       if (permission) {
         logger.debug('Notification permission granted');
