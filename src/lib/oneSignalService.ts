@@ -283,10 +283,23 @@ class OneSignalService {
       }
 
       logger.debug('Showing OneSignal slidedown...');
-      await (OneSignal as any).Slidedown?.promptPush();
-      logger.debug('Slidedown shown successfully');
+
+      // Vérifier si le slidedown est disponible
+      const slidedown = (window as any).OneSignal?.Slidedown;
+
+      if (slidedown && typeof slidedown.promptPush === 'function') {
+        logger.debug('Using OneSignal Slidedown.promptPush()');
+        await slidedown.promptPush();
+        logger.debug('Slidedown shown successfully');
+      } else {
+        // Fallback: utiliser la méthode de demande de permission standard
+        logger.debug('Slidedown not available, using direct permission request');
+        const granted = await this.requestPermission();
+        logger.debug('Direct permission result:', granted);
+      }
     } catch (error) {
       logger.error('Error showing slidedown:', error);
+      // En cas d'erreur, utiliser la méthode standard
       await this.requestPermission();
     }
   }
