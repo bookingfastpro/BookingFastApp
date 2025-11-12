@@ -150,8 +150,16 @@
         addLog(`Permission actuelle: ${permission ? 'granted' : 'default/denied'}`, 'debug');
 
       } catch (error) {
-        addLog(`❌ Erreur d'initialisation: ${error.message}`, 'error');
-        console.error(error);
+        if (error.message.includes('already initialized')) {
+          addLog('⚠️ OneSignal déjà initialisé (c\'est OK)', 'warning');
+
+          // Vérifier l'état quand même
+          const permission = await OneSignal.Notifications.permission;
+          addLog(`Permission actuelle: ${permission ? 'granted' : 'default/denied'}`, 'debug');
+        } else {
+          addLog(`❌ Erreur d'initialisation: ${error.message}`, 'error');
+          console.error(error);
+        }
       }
     }
 
@@ -164,15 +172,33 @@
         if (granted) {
           addLog('✅ Permission accordée!', 'success');
 
-          // Attendre un peu que le player ID soit généré
-          setTimeout(async () => {
+          // Attendre que le Player ID soit généré
+          addLog('Attente de génération du Player ID...', 'debug');
+
+          let attempts = 0;
+          const maxAttempts = 10;
+
+          const checkPlayerId = async () => {
             const playerId = await OneSignal.User.PushSubscription.id;
+
             if (playerId) {
-              addLog(`Player ID obtenu: ${playerId}`, 'success');
+              addLog(`✅ Player ID généré: ${playerId}`, 'success');
+
+              // Copier dans le presse-papier
+              navigator.clipboard.writeText(playerId).then(() => {
+                addLog('Player ID copié dans le presse-papier!', 'success');
+              });
+
+            } else if (attempts < maxAttempts) {
+              attempts++;
+              addLog(`En attente... tentative ${attempts}/${maxAttempts}`, 'debug');
+              setTimeout(checkPlayerId, 500);
             } else {
-              addLog('⚠️ Player ID non disponible immédiatement', 'warning');
+              addLog('⚠️ Player ID non généré après 5 secondes. Essayez de recharger la page.', 'warning');
             }
-          }, 2000);
+          };
+
+          setTimeout(checkPlayerId, 500);
 
         } else {
           addLog('❌ Permission refusée par l\'utilisateur', 'error');

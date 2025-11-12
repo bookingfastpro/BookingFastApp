@@ -105,10 +105,35 @@ class OneSignalService {
         await this.initialize();
       }
 
+      logger.debug('Requesting notification permission...');
       const permission = await OneSignal.Notifications.requestPermission();
-      logger.debug('Notification permission:', permission);
+      logger.debug('Notification permission result:', permission);
 
-      return permission;
+      if (permission) {
+        logger.debug('Permission granted, waiting for Player ID generation...');
+
+        // Attendre que le Player ID soit généré (peut prendre quelques secondes)
+        let attempts = 0;
+        const maxAttempts = 10;
+
+        while (attempts < maxAttempts) {
+          await new Promise(resolve => setTimeout(resolve, 500));
+          const playerId = await OneSignal.User.PushSubscription.id;
+
+          if (playerId) {
+            logger.debug('Player ID generated:', playerId);
+            return true;
+          }
+
+          attempts++;
+          logger.debug(`Waiting for Player ID... attempt ${attempts}/${maxAttempts}`);
+        }
+
+        logger.warn('Player ID not generated after waiting');
+        return true; // Permission accordée même si pas de Player ID
+      }
+
+      return false;
     } catch (error) {
       logger.error('Error requesting permission:', error);
       return false;
