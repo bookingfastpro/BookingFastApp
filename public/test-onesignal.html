@@ -88,9 +88,11 @@
 
   <div class="card">
     <h2>Actions</h2>
+    <button onclick="enableDebug()">0. Activer Debug OneSignal</button>
     <button onclick="testInit()">1. Initialiser OneSignal</button>
     <button onclick="testPermission()">2. Demander Permission</button>
     <button onclick="testGetPlayerId()">3. Obtenir Player ID</button>
+    <button onclick="checkSubscriptionState()">4. Vérifier état d'abonnement</button>
     <button onclick="clearLogs()">Effacer les logs</button>
   </div>
 
@@ -167,10 +169,19 @@
       addLog('Demande de permission...', 'debug');
 
       try {
+        // Vérifier l'état avant
+        const permBefore = await OneSignal.Notifications.permission;
+        addLog(`Permission avant: ${permBefore}`, 'debug');
+
         const granted = await OneSignal.Notifications.requestPermission();
+        addLog(`Résultat requestPermission: ${granted}`, 'debug');
 
         if (granted) {
           addLog('✅ Permission accordée!', 'success');
+
+          // Vérifier si on est abonné
+          const isPushEnabled = await OneSignal.User.PushSubscription.optedIn;
+          addLog(`Push enabled: ${isPushEnabled}`, 'debug');
 
           // Attendre que le Player ID soit généré
           addLog('Attente de génération du Player ID...', 'debug');
@@ -180,6 +191,9 @@
 
           const checkPlayerId = async () => {
             const playerId = await OneSignal.User.PushSubscription.id;
+            const token = await OneSignal.User.PushSubscription.token;
+
+            addLog(`Tentative ${attempts + 1}: Player ID = ${playerId || 'null'}, Token = ${token || 'null'}`, 'debug');
 
             if (playerId) {
               addLog(`✅ Player ID généré: ${playerId}`, 'success');
@@ -191,10 +205,12 @@
 
             } else if (attempts < maxAttempts) {
               attempts++;
-              addLog(`En attente... tentative ${attempts}/${maxAttempts}`, 'debug');
               setTimeout(checkPlayerId, 500);
             } else {
-              addLog('⚠️ Player ID non généré après 5 secondes. Essayez de recharger la page.', 'warning');
+              addLog('⚠️ Player ID non généré après 5 secondes.', 'warning');
+              addLog('💡 Vérifiez votre Dashboard OneSignal:', 'warning');
+              addLog('1. Site URL doit être: https://bookingfast.pro', 'warning');
+              addLog('2. Auto Resubscribe doit être activé', 'warning');
             }
           };
 
@@ -202,11 +218,19 @@
 
         } else {
           addLog('❌ Permission refusée par l\'utilisateur', 'error');
+          addLog(`Permission native: ${Notification.permission}`, 'debug');
         }
       } catch (error) {
         addLog(`❌ Erreur: ${error.message}`, 'error');
         console.error(error);
       }
+    }
+
+    function enableDebug() {
+      addLog('Activation du mode debug OneSignal...', 'debug');
+      localStorage.setItem('loglevel:OneSignalSDK', 'trace');
+      addLog('✅ Debug activé! Ouvrez la console (F12) pour voir les logs détaillés', 'success');
+      addLog('⚠️ Rechargez la page pour que le debug prenne effet', 'warning');
     }
 
     async function testGetPlayerId() {
@@ -226,6 +250,35 @@
         } else {
           addLog('⚠️ Aucun Player ID. Avez-vous accepté les notifications?', 'warning');
         }
+      } catch (error) {
+        addLog(`❌ Erreur: ${error.message}`, 'error');
+        console.error(error);
+      }
+    }
+
+    async function checkSubscriptionState() {
+      addLog('=== ÉTAT D\'ABONNEMENT COMPLET ===', 'debug');
+
+      try {
+        const permission = await OneSignal.Notifications.permission;
+        const nativePermission = Notification.permission;
+        const playerId = await OneSignal.User.PushSubscription.id;
+        const token = await OneSignal.User.PushSubscription.token;
+        const optedIn = await OneSignal.User.PushSubscription.optedIn;
+
+        addLog(`Permission OneSignal: ${permission}`, 'debug');
+        addLog(`Permission Native: ${nativePermission}`, 'debug');
+        addLog(`Player ID: ${playerId || 'null'}`, playerId ? 'success' : 'warning');
+        addLog(`Push Token: ${token || 'null'}`, token ? 'success' : 'warning');
+        addLog(`Opted In: ${optedIn}`, 'debug');
+
+        // Vérifier Service Worker
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        addLog(`Service Workers: ${registrations.length} trouvé(s)`, 'debug');
+        registrations.forEach((reg, i) => {
+          addLog(`  SW ${i + 1}: ${reg.scope}`, 'debug');
+        });
+
       } catch (error) {
         addLog(`❌ Erreur: ${error.message}`, 'error');
         console.error(error);
