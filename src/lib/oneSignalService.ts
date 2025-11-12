@@ -12,6 +12,8 @@ interface OneSignalConfig {
 
 class OneSignalService {
   private initialized: boolean = false;
+  private initializing: boolean = false;
+  private initPromise: Promise<void> | null = null;
   private appId: string;
   private restApiKey: string;
 
@@ -26,30 +28,49 @@ class OneSignalService {
       return;
     }
 
+    if (this.initializing) {
+      logger.debug('OneSignal initialization in progress, waiting...');
+      return this.initPromise!;
+    }
+
     if (!this.appId) {
       logger.error('OneSignal App ID not configured');
       return;
     }
 
-    try {
-      logger.debug('Initializing OneSignal...');
+    this.initializing = true;
 
-      await OneSignal.init({
-        appId: this.appId,
-        allowLocalhostAsSecureOrigin: true,
-        notifyButton: {
-          enable: false
+    this.initPromise = (async () => {
+      try {
+        logger.debug('Initializing OneSignal...');
+
+        await OneSignal.init({
+          appId: this.appId,
+          allowLocalhostAsSecureOrigin: true,
+          notifyButton: {
+            enable: false
+          }
+        });
+
+        this.initialized = true;
+        this.initializing = false;
+        logger.debug('OneSignal initialized successfully');
+
+        this.setupEventListeners();
+      } catch (error) {
+        this.initializing = false;
+        if (error instanceof Error && error.message.includes('already initialized')) {
+          logger.debug('OneSignal was already initialized externally');
+          this.initialized = true;
+          this.setupEventListeners();
+        } else {
+          logger.error('Failed to initialize OneSignal:', error);
+          throw error;
         }
-      });
+      }
+    })();
 
-      this.initialized = true;
-      logger.debug('OneSignal initialized successfully');
-
-      this.setupEventListeners();
-    } catch (error) {
-      logger.error('Failed to initialize OneSignal:', error);
-      throw error;
-    }
+    return this.initPromise;
   }
 
   private setupEventListeners(): void {

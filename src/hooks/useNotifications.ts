@@ -29,20 +29,28 @@ export function useNotifications() {
   const [oneSignalInitialized, setOneSignalInitialized] = useState(false);
 
   useEffect(() => {
+    if (!user) return;
+
     const initOneSignal = async () => {
-      if (user && !oneSignalInitialized) {
-        try {
+      try {
+        if (oneSignalService.isInitialized()) {
+          await oneSignalService.registerUser(user.id);
+          setOneSignalInitialized(true);
+          logger.debug('OneSignal user registered:', user.id);
+        } else {
           await oneSignalService.initialize();
           await oneSignalService.registerUser(user.id);
           setOneSignalInitialized(true);
-          logger.debug('OneSignal initialized for user:', user.id);
-        } catch (err) {
-          logger.error('Failed to initialize OneSignal:', err);
+          logger.debug('OneSignal initialized and user registered:', user.id);
         }
+      } catch (err) {
+        logger.error('Failed to initialize OneSignal:', err);
       }
     };
 
-    initOneSignal();
+    if (!oneSignalInitialized) {
+      initOneSignal();
+    }
   }, [user, oneSignalInitialized]);
 
   const fetchNotifications = useCallback(async () => {
