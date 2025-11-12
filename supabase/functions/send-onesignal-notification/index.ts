@@ -32,12 +32,14 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    const oneSignalAppId = Deno.env.get("ONESIGNAL_APP_ID");
-    const oneSignalRestApiKey = Deno.env.get("ONESIGNAL_REST_API_KEY");
+    // ⚠️ TEMPORAIRE - Remplacez par vos vraies clés pour tester
+    // TODO: Utilisez les variables d'environnement en production
+    const oneSignalAppId = Deno.env.get("ONESIGNAL_APP_ID") || "METTEZ_VOTRE_APP_ID_ICI";
+    const oneSignalRestApiKey = Deno.env.get("ONESIGNAL_REST_API_KEY") || "METTEZ_VOTRE_REST_API_KEY_ICI";
 
-    if (!oneSignalAppId || !oneSignalRestApiKey) {
+    if (!oneSignalAppId || oneSignalAppId === "METTEZ_VOTRE_APP_ID_ICI") {
       console.error("❌ OneSignal credentials not configured");
-      throw new Error("OneSignal credentials not configured in environment variables");
+      throw new Error("OneSignal credentials not configured. Please add your App ID and REST API Key.");
     }
 
     const body: NotificationRequest = await req.json();
