@@ -21,29 +21,31 @@ L'intégration OneSignal permet d'envoyer des notifications push aux utilisateur
 
 ### 2. Variables d'environnement
 
-#### Fichier `.env` (Frontend)
+#### Fichier `.env` (Frontend - Racine du projet)
+
+Ajoutez cette variable dans votre fichier `.env` à la racine du projet :
 
 ```bash
 VITE_ONESIGNAL_APP_ID=votre_app_id_onesignal
 ```
 
-#### Docker Compose (Backend - Edge Functions)
+#### Fichier `supabase/.env` (Backend - Docker)
 
-Ajoutez ces variables dans votre `docker-compose.yml` pour Supabase :
-
-```yaml
-services:
-  functions:
-    environment:
-      ONESIGNAL_APP_ID: votre_app_id
-      ONESIGNAL_REST_API_KEY: votre_rest_api_key
-```
-
-Ou si vous utilisez un fichier `.env` pour Docker :
+Les variables OneSignal sont déjà configurées dans `docker-compose.yml`. Ajoutez simplement ces lignes dans votre fichier `supabase/.env` :
 
 ```bash
-ONESIGNAL_APP_ID=votre_app_id
-ONESIGNAL_REST_API_KEY=votre_rest_api_key
+# 🔔 ONESIGNAL (optionnel - notifications push)
+ONESIGNAL_APP_ID=votre_onesignal_app_id
+ONESIGNAL_REST_API_KEY=votre_onesignal_rest_api_key
+```
+
+**Note:** Les variables sont automatiquement injectées dans le conteneur `functions` via le `docker-compose.yml` qui contient déjà la configuration :
+
+```yaml
+functions:
+  environment:
+    ONESIGNAL_APP_ID: ${ONESIGNAL_APP_ID}
+    ONESIGNAL_REST_API_KEY: ${ONESIGNAL_REST_API_KEY}
 ```
 
 ### 3. Configuration OneSignal Dashboard
