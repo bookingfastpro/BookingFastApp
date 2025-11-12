@@ -64,9 +64,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
 
-        if (_event === 'SIGNED_IN') {
-          console.log('✅ SIGNED_IN détecté - utilisateur connecté');
-          console.log('🔔 Initialisation OneSignal après connexion...');
+        // Initialiser OneSignal si une session existe
+        if (session?.user) {
+          console.log('🔔 Session active détectée, initialisation OneSignal...');
           oneSignalService.initialize().catch(err => {
             console.error('❌ Erreur init OneSignal:', err);
           });
