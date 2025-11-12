@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test OneSignal</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 24px;
+    }
+    h2 {
+      color: #666;
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .log {
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 12px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .log-item {
+      margin-bottom: 8px;
+      padding: 8px;
+      border-radius: 4px;
+    }
+    .log-debug { background: #e3f2fd; }
+    .log-success { background: #e8f5e9; color: #2e7d32; }
+    .log-error { background: #ffebee; color: #c62828; }
+    .log-warning { background: #fff3e0; color: #ef6c00; }
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 12px;
+    }
+    .status-ok { background: #e8f5e9; color: #2e7d32; }
+    .status-error { background: #ffebee; color: #c62828; }
+  </style>
+</head>
+<body>
+  <h1>🔔 Test OneSignal - Diagnostic</h1>
+
+  <div class="card">
+    <h2>Configuration</h2>
+    <div id="config">Chargement...</div>
+  </div>
+
+  <div class="card">
+    <h2>Actions</h2>
+    <button onclick="testInit()">1. Initialiser OneSignal</button>
+    <button onclick="testPermission()">2. Demander Permission</button>
+    <button onclick="testGetPlayerId()">3. Obtenir Player ID</button>
+    <button onclick="clearLogs()">Effacer les logs</button>
+  </div>
+
+  <div class="card">
+    <h2>Logs</h2>
+    <div id="logs" class="log"></div>
+  </div>
+
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+  <script>
+    const APP_ID = 'fc7cc56d-5928-4587-add0-c9f7aed71f43';
+
+    function addLog(message, type = 'debug') {
+      const logs = document.getElementById('logs');
+      const time = new Date().toLocaleTimeString();
+      const div = document.createElement('div');
+      div.className = `log-item log-${type}`;
+      div.textContent = `[${time}] ${message}`;
+      logs.insertBefore(div, logs.firstChild);
+    }
+
+    function clearLogs() {
+      document.getElementById('logs').innerHTML = '';
+    }
+
+    // Afficher la configuration
+    window.addEventListener('load', () => {
+      const config = document.getElementById('config');
+      const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+
+      config.innerHTML = `
+        <p><strong>App ID:</strong> ${APP_ID}</p>
+        <p><strong>URL:</strong> ${window.location.href}</p>
+        <p><strong>Protocole:</strong> ${window.location.protocol} <span class="status ${isSecure ? 'status-ok' : 'status-error'}">${isSecure ? 'OK' : 'HTTPS requis'}</span></p>
+        <p><strong>Navigateur:</strong> ${navigator.userAgent}</p>
+      `;
+
+      addLog('Page chargée', 'debug');
+    });
+
+    async function testInit() {
+      addLog('Tentative d\'initialisation...', 'debug');
+
+      try {
+        await OneSignal.init({
+          appId: APP_ID,
+          allowLocalhostAsSecureOrigin: true,
+          notifyButton: {
+            enable: false
+          }
+        });
+
+        addLog('✅ OneSignal initialisé avec succès!', 'success');
+
+        // Vérifier l'état
+        const permission = await OneSignal.Notifications.permission;
+        addLog(`Permission actuelle: ${permission ? 'granted' : 'default/denied'}`, 'debug');
+
+      } catch (error) {
+        addLog(`❌ Erreur d'initialisation: ${error.message}`, 'error');
+        console.error(error);
+      }
+    }
+
+    async function testPermission() {
+      addLog('Demande de permission...', 'debug');
+
+      try {
+        const granted = await OneSignal.Notifications.requestPermission();
+
+        if (granted) {
+          addLog('✅ Permission accordée!', 'success');
+
+          // Attendre un peu que le player ID soit généré
+          setTimeout(async () => {
+            const playerId = await OneSignal.User.PushSubscription.id;
+            if (playerId) {
+              addLog(`Player ID obtenu: ${playerId}`, 'success');
+            } else {
+              addLog('⚠️ Player ID non disponible immédiatement', 'warning');
+            }
+          }, 2000);
+
+        } else {
+          addLog('❌ Permission refusée par l\'utilisateur', 'error');
+        }
+      } catch (error) {
+        addLog(`❌ Erreur: ${error.message}`, 'error');
+        console.error(error);
+      }
+    }
+
+    async function testGetPlayerId() {
+      addLog('Récupération du Player ID...', 'debug');
+
+      try {
+        const playerId = await OneSignal.User.PushSubscription.id;
+
+        if (playerId) {
+          addLog(`✅ Player ID: ${playerId}`, 'success');
+
+          // Copier dans le presse-papier
+          navigator.clipboard.writeText(playerId).then(() => {
+            addLog('Player ID copié dans le presse-papier!', 'success');
+          });
+
+        } else {
+          addLog('⚠️ Aucun Player ID. Avez-vous accepté les notifications?', 'warning');
+        }
+      } catch (error) {
+        addLog(`❌ Erreur: ${error.message}`, 'error');
+        console.error(error);
+      }
+    }
+
+    // Logs automatiques
+    window.addEventListener('error', (e) => {
+      addLog(`Erreur JS: ${e.message}`, 'error');
+    });
+  </script>
+</body>
+</html>

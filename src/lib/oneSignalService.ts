@@ -20,6 +20,10 @@ class OneSignalService {
   constructor() {
     this.appId = import.meta.env.VITE_ONESIGNAL_APP_ID || '';
     this.restApiKey = import.meta.env.VITE_ONESIGNAL_REST_API_KEY || '';
+
+    logger.debug('OneSignalService constructor');
+    logger.debug('App ID configured:', !!this.appId);
+    logger.debug('REST API Key configured:', !!this.restApiKey);
   }
 
   async initialize(): Promise<void> {
@@ -275,6 +279,29 @@ class OneSignalService {
     } catch (error) {
       logger.error('Error getting notification permission:', error);
       return 'default';
+    }
+  }
+
+  async requestPermission(): Promise<boolean> {
+    try {
+      if (!this.initialized) {
+        await this.initialize();
+      }
+
+      logger.debug('Requesting notification permission...');
+
+      const permission = await OneSignal.Notifications.requestPermission();
+
+      if (permission) {
+        logger.debug('Notification permission granted');
+        return true;
+      } else {
+        logger.warn('Notification permission denied');
+        return false;
+      }
+    } catch (error) {
+      logger.error('Error requesting notification permission:', error);
+      return false;
     }
   }
 

@@ -42,17 +42,32 @@ export function NotificationBell() {
 
   const handleRequestPermission = async () => {
     try {
+      logger.debug('handleRequestPermission called');
+      logger.debug('OneSignal initialized:', oneSignalInitialized);
+
+      if (!oneSignalInitialized) {
+        logger.warn('OneSignal not initialized yet');
+        alert('OneSignal n\'est pas encore initialisé. Veuillez réessayer dans quelques secondes.');
+        return;
+      }
+
       const granted = await oneSignalService.requestPermission();
+      logger.debug('Permission result:', granted);
+
       if (granted) {
         setPushPermission('granted');
         setShowPushPrompt(false);
         logger.debug('Push notifications enabled');
+        alert('Notifications push activées avec succès!');
       } else {
         setPushPermission('denied');
         setShowPushPrompt(false);
+        logger.warn('Push notifications denied by user');
+        alert('Vous avez refusé les notifications push. Vous pouvez les réactiver dans les paramètres de votre navigateur.');
       }
     } catch (error) {
       logger.error('Error requesting permission:', error);
+      alert('Erreur lors de l\'activation des notifications: ' + (error as Error).message);
     }
   };
 
