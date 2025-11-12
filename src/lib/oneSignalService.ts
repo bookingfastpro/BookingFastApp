@@ -53,15 +53,6 @@ class OneSignalService {
           allowLocalhostAsSecureOrigin: true,
           notifyButton: {
             enable: false
-          },
-          promptOptions: {
-            slidedown: {
-              enabled: true,
-              autoPrompt: false,
-              actionMessage: "Recevez des alertes en temps réel pour vos réservations, même quand l'app est fermée",
-              acceptButton: "Activer",
-              cancelButton: "Plus tard"
-            }
           }
         });
 
@@ -282,25 +273,13 @@ class OneSignalService {
         await this.initialize();
       }
 
-      logger.debug('Showing OneSignal slidedown...');
-
-      // Vérifier si le slidedown est disponible
-      const slidedown = (window as any).OneSignal?.Slidedown;
-
-      if (slidedown && typeof slidedown.promptPush === 'function') {
-        logger.debug('Using OneSignal Slidedown.promptPush()');
-        await slidedown.promptPush();
-        logger.debug('Slidedown shown successfully');
-      } else {
-        // Fallback: utiliser la méthode de demande de permission standard
-        logger.debug('Slidedown not available, using direct permission request');
-        const granted = await this.requestPermission();
-        logger.debug('Direct permission result:', granted);
-      }
+      logger.debug('Requesting notification permission...');
+      const granted = await this.requestPermission();
+      logger.debug('Permission request result:', granted);
+      return;
     } catch (error) {
-      logger.error('Error showing slidedown:', error);
-      // En cas d'erreur, utiliser la méthode standard
-      await this.requestPermission();
+      logger.error('Error requesting permission:', error);
+      throw error;
     }
   }
 

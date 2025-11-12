@@ -51,20 +51,26 @@ export function NotificationBell() {
         return;
       }
 
-      await oneSignalService.showSlidedown();
+      // Fermer immédiatement la popup custom
       setShowPushPrompt(false);
+      setIsOpen(false);
 
+      // Demander la permission native du navigateur
+      await oneSignalService.showSlidedown();
+
+      // Vérifier le résultat après un court délai
       setTimeout(async () => {
         const permission = await oneSignalService.getNotificationPermission();
         setPushPermission(permission);
 
         if (permission === 'granted') {
           logger.debug('Push notifications enabled');
+        } else if (permission === 'denied') {
+          logger.warn('Push notifications denied');
         }
-      }, 1500);
+      }, 500);
     } catch (error) {
       logger.error('Error requesting permission:', error);
-      alert('Erreur lors de l\'activation des notifications: ' + (error as Error).message);
     }
   };
 
