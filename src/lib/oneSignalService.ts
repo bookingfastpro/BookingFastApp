@@ -27,9 +27,9 @@ class OneSignalService {
     this.appId = import.meta.env.VITE_ONESIGNAL_APP_ID || '';
     this.restApiKey = import.meta.env.VITE_ONESIGNAL_REST_API_KEY || '';
 
-    logger.debug('OneSignalService constructor');
-    logger.debug('App ID configured:', !!this.appId);
-    logger.debug('REST API Key configured:', !!this.restApiKey);
+    console.log('[OneSignal] Constructor');
+    console.log('[OneSignal] App ID configured:', !!this.appId);
+    console.log('[OneSignal] REST API Key configured:', !!this.restApiKey);
   }
 
   private waitForOneSignal(): Promise<void> {
@@ -58,18 +58,22 @@ class OneSignalService {
   }
 
   async initialize(): Promise<void> {
+    console.log('[OneSignal] initialize() called');
+    console.log('[OneSignal] initialized:', this.initialized);
+    console.log('[OneSignal] initializing:', this.initializing);
+
     if (this.initialized) {
-      logger.debug('OneSignal already initialized');
+      console.log('[OneSignal] Already initialized');
       return;
     }
 
     if (this.initializing) {
-      logger.debug('OneSignal initialization in progress, waiting...');
+      console.log('[OneSignal] Initialization in progress, waiting...');
       return this.initPromise!;
     }
 
     if (!this.appId) {
-      logger.error('OneSignal App ID not configured');
+      console.error('[OneSignal] App ID not configured!');
       return;
     }
 
@@ -77,10 +81,11 @@ class OneSignalService {
 
     this.initPromise = (async () => {
       try {
-        logger.debug('Initializing window.OneSignal...');
+        console.log('[OneSignal] Starting initialization...');
 
         // Attendre que le SDK OneSignal soit chargé
         await this.waitForOneSignal();
+        console.log('[OneSignal] SDK loaded');
 
         await window.OneSignal.init({
           appId: this.appId,
@@ -101,17 +106,18 @@ class OneSignalService {
 
         this.initialized = true;
         this.initializing = false;
-        logger.debug('OneSignal initialized successfully');
+        console.log('[OneSignal] ✅ Initialized successfully');
+        console.log('[OneSignal] Slidedown should appear automatically...');
 
         this.setupEventListeners();
       } catch (error) {
         this.initializing = false;
         if (error instanceof Error && error.message.includes('already initialized')) {
-          logger.debug('OneSignal was already initialized externally');
+          console.log('[OneSignal] Was already initialized externally');
           this.initialized = true;
           this.setupEventListeners();
         } else {
-          logger.error('Failed to initialize OneSignal:', error);
+          console.error('[OneSignal] ❌ Failed to initialize:', error);
           throw error;
         }
       }
