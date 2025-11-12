@@ -49,17 +49,21 @@ export function NotificationSettings() {
 
   const handleEnablePush = async () => {
     try {
-      const granted = await oneSignalService.requestPermission();
-      if (granted) {
-        setPushPermission('granted');
-        setPushEnabled(true);
+      await oneSignalService.showSlidedown();
 
-        if (user) {
-          await oneSignalService.registerUser(user.id);
-          const id = await oneSignalService.getPlayerId();
-          setPlayerId(id);
+      setTimeout(async () => {
+        const granted = await oneSignalService.isPushEnabled();
+        if (granted) {
+          setPushPermission('granted');
+          setPushEnabled(true);
+
+          if (user) {
+            await oneSignalService.registerUser(user.id);
+            const id = await oneSignalService.getPlayerId();
+            setPlayerId(id);
+          }
         }
-      }
+      }, 1000);
     } catch (error) {
       logger.error('Error enabling push:', error);
     }

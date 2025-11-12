@@ -53,6 +53,15 @@ class OneSignalService {
           allowLocalhostAsSecureOrigin: true,
           notifyButton: {
             enable: false
+          },
+          promptOptions: {
+            slidedown: {
+              enabled: true,
+              autoPrompt: false,
+              actionMessage: "Recevez des alertes en temps réel pour vos réservations, même quand l'app est fermée",
+              acceptButton: "Activer",
+              cancelButton: "Plus tard"
+            }
           }
         });
 
@@ -99,46 +108,6 @@ class OneSignalService {
     });
   }
 
-  async requestPermission(): Promise<boolean> {
-    try {
-      if (!this.initialized) {
-        await this.initialize();
-      }
-
-      logger.debug('Requesting notification permission...');
-      const permission = await OneSignal.Notifications.requestPermission();
-      logger.debug('Notification permission result:', permission);
-
-      if (permission) {
-        logger.debug('Permission granted, waiting for Player ID generation...');
-
-        // Attendre que le Player ID soit généré (peut prendre quelques secondes)
-        let attempts = 0;
-        const maxAttempts = 10;
-
-        while (attempts < maxAttempts) {
-          await new Promise(resolve => setTimeout(resolve, 500));
-          const playerId = await OneSignal.User.PushSubscription.id;
-
-          if (playerId) {
-            logger.debug('Player ID generated:', playerId);
-            return true;
-          }
-
-          attempts++;
-          logger.debug(`Waiting for Player ID... attempt ${attempts}/${maxAttempts}`);
-        }
-
-        logger.warn('Player ID not generated after waiting');
-        return true; // Permission accordée même si pas de Player ID
-      }
-
-      return false;
-    } catch (error) {
-      logger.error('Error requesting permission:', error);
-      return false;
-    }
-  }
 
   async getPlayerId(): Promise<string | null> {
     try {
@@ -304,6 +273,21 @@ class OneSignalService {
     } catch (error) {
       logger.error('Error getting notification permission:', error);
       return 'default';
+    }
+  }
+
+  async showSlidedown(): Promise<void> {
+    try {
+      if (!this.initialized) {
+        await this.initialize();
+      }
+
+      logger.debug('Showing OneSignal slidedown...');
+      await (OneSignal as any).Slidedown?.promptPush();
+      logger.debug('Slidedown shown successfully');
+    } catch (error) {
+      logger.error('Error showing slidedown:', error);
+      await this.requestPermission();
     }
   }
 
