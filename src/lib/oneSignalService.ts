@@ -115,13 +115,14 @@ class OneSignalService {
       const playerId = await this.getPlayerId();
       if (playerId) {
         const { error } = await supabase
-          .from('profiles')
+          .from('user_onesignal')
           .upsert({
-            id: userId,
-            onesignal_player_id: playerId,
+            user_id: userId,
+            player_id: playerId,
+            subscription_status: 'active',
             updated_at: new Date().toISOString()
           }, {
-            onConflict: 'id'
+            onConflict: 'user_id'
           });
 
         if (error) {
@@ -219,19 +220,19 @@ class OneSignalService {
     data?: Record<string, any>
   ): Promise<boolean> {
     try {
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('onesignal_player_id')
-        .eq('id', userId)
-        .single();
+      const { data: userOneSignal, error } = await supabase
+        .from('user_onesignal')
+        .select('player_id')
+        .eq('user_id', userId)
+        .maybeSingle();
 
-      if (error || !profile?.onesignal_player_id) {
+      if (error || !userOneSignal?.player_id) {
         logger.error('User does not have a OneSignal player ID');
         return false;
       }
 
       return await this.sendNotification(
-        [profile.onesignal_player_id],
+        [userOneSignal.player_id],
         heading,
         content,
         data

@@ -49,13 +49,13 @@ Deno.serve(async (req: Request) => {
       bookingId
     });
 
-    const { data: profile, error: profileError } = await supabase
-      .from('profiles')
-      .select('onesignal_player_id')
-      .eq('id', userId)
-      .single();
+    const { data: userOneSignal, error: oneSignalError } = await supabase
+      .from('user_onesignal')
+      .select('player_id')
+      .eq('user_id', userId)
+      .maybeSingle();
 
-    if (profileError || !profile?.onesignal_player_id) {
+    if (oneSignalError || !userOneSignal?.player_id) {
       console.warn('⚠️ User does not have OneSignal player ID:', userId);
 
       return new Response(
@@ -79,7 +79,7 @@ Deno.serve(async (req: Request) => {
 
     const oneSignalPayload = {
       app_id: oneSignalAppId,
-      include_player_ids: [profile.onesignal_player_id],
+      include_player_ids: [userOneSignal.player_id],
       headings: { en: title },
       contents: { en: message },
       data: notificationData,
