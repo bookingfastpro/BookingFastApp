@@ -89,27 +89,25 @@ class OneSignalService {
 
         await window.OneSignal.init({
           appId: this.appId,
-          allowLocalhostAsSecureOrigin: true,
-          notifyButton: {
-            enable: false
-          },
-          promptOptions: {
-            slidedown: {
-              enabled: true,
-              autoPrompt: true,
-              actionMessage: "Nous aimerions vous envoyer des notifications pour vos réservations",
-              acceptButtonText: "Autoriser",
-              cancelButtonText: "Non merci"
-            }
-          }
+          allowLocalhostAsSecureOrigin: true
         });
 
         this.initialized = true;
         this.initializing = false;
         console.log('[OneSignal] ✅ Initialized successfully');
-        console.log('[OneSignal] Slidedown should appear automatically...');
 
         this.setupEventListeners();
+
+        // Demander la permission
+        console.log('[OneSignal] Checking permission...');
+        const hasPermission = await window.OneSignal.Notifications.permission;
+        console.log('[OneSignal] Has permission:', hasPermission);
+
+        if (!hasPermission) {
+          console.log('[OneSignal] Requesting permission...');
+          const result = await window.OneSignal.Notifications.requestPermission();
+          console.log('[OneSignal] Permission result:', result);
+        }
       } catch (error) {
         this.initializing = false;
         if (error instanceof Error && error.message.includes('already initialized')) {
