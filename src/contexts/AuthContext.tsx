@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
+import { oneSignalService } from '../lib/oneSignalService';
 import type { User, Session } from '@supabase/supabase-js';
 
 interface AuthContextType {
@@ -62,11 +63,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log('🔐 Auth state changed:', _event, session ? '✅ Session active' : '❌ Pas de session');
         setSession(session);
         setUser(session?.user ?? null);
-        
+
         if (_event === 'SIGNED_IN') {
           console.log('✅ SIGNED_IN détecté - utilisateur connecté');
+          console.log('🔔 Initialisation OneSignal après connexion...');
+          oneSignalService.initialize().catch(err => {
+            console.error('❌ Erreur init OneSignal:', err);
+          });
         }
-        
+
         if (_event === 'SIGNED_UP' && session?.user) {
           console.log('🆕 Nouveau compte détecté, initialisation...');
           await initializeNewAccount(session.user.id);
