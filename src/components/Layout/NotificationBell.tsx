@@ -161,15 +161,6 @@ export function NotificationBell() {
                     <span>Push activées</span>
                   </div>
                 )}
-                {pushPermission === 'default' && (
-                  <button
-                    onClick={handleRequestPermission}
-                    className="flex items-center gap-1 mt-1 text-xs text-yellow-300 hover:text-yellow-100 transition-colors"
-                  >
-                    <BellRing className="w-3 h-3" />
-                    <span>Activer les notifications push</span>
-                  </button>
-                )}
               </div>
               <button
                 onClick={() => setIsOpen(false)}
