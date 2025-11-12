@@ -87,6 +87,15 @@ class OneSignalService {
           allowLocalhostAsSecureOrigin: true,
           notifyButton: {
             enable: false
+          },
+          promptOptions: {
+            slidedown: {
+              enabled: true,
+              autoPrompt: true,
+              actionMessage: "Nous aimerions vous envoyer des notifications pour vos réservations",
+              acceptButtonText: "Autoriser",
+              cancelButtonText: "Non merci"
+            }
           }
         });
 
