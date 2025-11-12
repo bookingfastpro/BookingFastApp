@@ -289,12 +289,37 @@ class OneSignalService {
         await this.initialize();
       }
 
-      logger.debug('Requesting notification permission...');
+      // Vérifier l'état actuel
+      const currentPermission = await this.getNotificationPermission();
+      logger.debug('Current permission state before request:', currentPermission);
+
+      if (currentPermission === 'granted') {
+        logger.debug('Permission already granted');
+        return true;
+      }
+
+      if (currentPermission === 'denied') {
+        logger.warn('Permission was denied previously. User must enable in browser settings.');
+        alert('Les notifications ont été bloquées. Veuillez les autoriser dans les paramètres de votre navigateur.');
+        return false;
+      }
+
+      logger.debug('Calling OneSignal.Notifications.requestPermission()...');
 
       const permission = await OneSignal.Notifications.requestPermission();
 
+      logger.debug('OneSignal.Notifications.requestPermission() returned:', permission);
+
       if (permission) {
         logger.debug('Notification permission granted');
+
+        // Attendre un peu pour que le player ID soit créé
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Vérifier le player ID
+        const playerId = await this.getPlayerId();
+        logger.debug('Player ID after permission granted:', playerId);
+
         return true;
       } else {
         logger.warn('Notification permission denied');
