@@ -18,6 +18,8 @@ import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { PublicRoute } from './components/Auth/PublicRoute';
 import { isPWA } from './utils/pwaDetection';
 import { CacheBuster } from './utils/cacheBuster';
+import { oneSignalService } from './lib/oneSignalService';
+import { logger } from './utils/logger';
 
 const DashboardPage = lazy(() => import('./components/Dashboard/DashboardPage').then(m => ({ default: m.DashboardPage })));
 const CalendarPage = lazy(() => import('./components/Calendar/CalendarPage').then(m => ({ default: m.CalendarPage })));
@@ -43,6 +45,19 @@ function App() {
     return () => {
       CacheBuster.stopVersionCheck();
     };
+  }, []);
+
+  useEffect(() => {
+    const initOneSignal = async () => {
+      try {
+        await oneSignalService.initialize();
+        logger.debug('OneSignal initialized in App');
+      } catch (error) {
+        logger.error('Failed to initialize OneSignal in App:', error);
+      }
+    };
+
+    initOneSignal();
   }, []);
 
   return (

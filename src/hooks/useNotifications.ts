@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { logger } from '../utils/logger';
+import { oneSignalService } from '../lib/oneSignalService';
 
 export interface Notification {
   id: string;
@@ -13,6 +14,10 @@ export interface Notification {
   is_read: boolean;
   created_at: string;
   read_at?: string;
+  onesignal_notification_id?: string;
+  onesignal_sent?: boolean;
+  onesignal_sent_at?: string;
+  onesignal_error?: string;
 }
 
 export function useNotifications() {
@@ -21,6 +26,24 @@ export function useNotifications() {
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [oneSignalInitialized, setOneSignalInitialized] = useState(false);
+
+  useEffect(() => {
+    const initOneSignal = async () => {
+      if (user && !oneSignalInitialized) {
+        try {
+          await oneSignalService.initialize();
+          await oneSignalService.registerUser(user.id);
+          setOneSignalInitialized(true);
+          logger.debug('OneSignal initialized for user:', user.id);
+        } catch (err) {
+          logger.error('Failed to initialize OneSignal:', err);
+        }
+      }
+    };
+
+    initOneSignal();
+  }, [user, oneSignalInitialized]);
 
   const fetchNotifications = useCallback(async () => {
     if (!user) {
@@ -227,6 +250,7 @@ export function useNotifications() {
     markAllAsRead,
     deleteNotification,
     clearAllNotifications,
-    refetch: fetchNotifications
+    refetch: fetchNotifications,
+    oneSignalInitialized
   };
 }

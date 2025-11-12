@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, X, Check, CheckCheck, Trash2, Calendar, Clock, AlertCircle } from 'lucide-react';
+import { Bell, X, Check, CheckCheck, Trash2, Calendar, Clock, AlertCircle, BellRing } from 'lucide-react';
 import { useNotifications } from '../../hooks/useNotifications';
 import { useNavigate } from 'react-router-dom';
+import { oneSignalService } from '../../lib/oneSignalService';
+import { logger } from '../../utils/logger';
 
 export function NotificationBell() {
   const navigate = useNavigate();
@@ -12,11 +14,47 @@ export function NotificationBell() {
     markAsRead,
     markAllAsRead,
     deleteNotification,
-    clearAllNotifications
+    clearAllNotifications,
+    oneSignalInitialized
   } = useNotifications();
 
   const [isOpen, setIsOpen] = useState(false);
+  const [showPushPrompt, setShowPushPrompt] = useState(false);
+  const [pushPermission, setPushPermission] = useState<'default' | 'granted' | 'denied'>('default');
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const checkPermission = async () => {
+      const permission = await oneSignalService.getNotificationPermission();
+      setPushPermission(permission);
+
+      if (permission === 'default' && oneSignalInitialized) {
+        setTimeout(() => {
+          setShowPushPrompt(true);
+        }, 3000);
+      }
+    };
+
+    if (oneSignalInitialized) {
+      checkPermission();
+    }
+  }, [oneSignalInitialized]);
+
+  const handleRequestPermission = async () => {
+    try {
+      const granted = await oneSignalService.requestPermission();
+      if (granted) {
+        setPushPermission('granted');
+        setShowPushPrompt(false);
+        logger.debug('Push notifications enabled');
+      } else {
+        setPushPermission('denied');
+        setShowPushPrompt(false);
+      }
+    } catch (error) {
+      logger.error('Error requesting permission:', error);
+    }
+  };
 
   // Fermer le dropdown quand on clique à l'extérieur et gérer le scroll
   useEffect(() => {
@@ -102,20 +140,60 @@ export function NotificationBell() {
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
-      {/* Bell Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
-        aria-label="Notifications"
-      >
-        <Bell className="w-6 h-6 text-gray-700" />
-        {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg animate-pulse">
-            {unreadCount > 9 ? '9+' : unreadCount}
-          </span>
-        )}
-      </button>
+    <>
+      {showPushPrompt && pushPermission === 'default' && (
+        <div className="fixed top-20 right-4 bg-white border-2 border-blue-500 rounded-2xl shadow-2xl p-4 z-50 max-w-sm animate-slideIn">
+          <div className="flex items-start gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <BellRing className="w-6 h-6 text-white animate-pulse" />
+            </div>
+            <div className="flex-1">
+              <h4 className="font-bold text-gray-900 mb-1">Activer les notifications push</h4>
+              <p className="text-sm text-gray-600 mb-3">
+                Recevez des alertes en temps réel pour vos réservations, même quand l'app est fermée
+              </p>
+              <div className="flex gap-2">
+                <button
+                  onClick={handleRequestPermission}
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-medium rounded-lg hover:from-blue-600 hover:to-purple-600 transition-all"
+                >
+                  Activer
+                </button>
+                <button
+                  onClick={() => setShowPushPrompt(false)}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 font-medium rounded-lg hover:bg-gray-200 transition-colors"
+                >
+                  Plus tard
+                </button>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowPushPrompt(false)}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className="relative" ref={dropdownRef}>
+        {/* Bell Button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="relative p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+          aria-label="Notifications"
+        >
+          <Bell className="w-6 h-6 text-gray-700" />
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg animate-pulse">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
+          {pushPermission === 'default' && (
+            <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-orange-500 rounded-full border-2 border-white"></span>
+          )}
+        </button>
 
       {/* Dropdown */}
       {isOpen && (
@@ -136,6 +214,21 @@ export function NotificationBell() {
                 <p className="text-sm text-blue-100">
                   {unreadCount > 0 ? `${unreadCount} non lue(s)` : 'Tout est lu'}
                 </p>
+                {pushPermission === 'granted' && (
+                  <div className="flex items-center gap-1 mt-1 text-xs text-green-300">
+                    <Check className="w-3 h-3" />
+                    <span>Push activées</span>
+                  </div>
+                )}
+                {pushPermission === 'default' && (
+                  <button
+                    onClick={handleRequestPermission}
+                    className="flex items-center gap-1 mt-1 text-xs text-yellow-300 hover:text-yellow-100 transition-colors"
+                  >
+                    <BellRing className="w-3 h-3" />
+                    <span>Activer les notifications push</span>
+                  </button>
+                )}
               </div>
               <button
                 onClick={() => setIsOpen(false)}
@@ -262,6 +355,7 @@ export function NotificationBell() {
           </div>
         </>
       )}
-    </div>
+      </div>
+    </>
   );
 }
