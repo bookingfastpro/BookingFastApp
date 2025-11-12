@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { logger } from '../utils/logger';
+import { sendPushForNotification } from '../lib/notificationEvents';
 
 export interface Notification {
   id: string;
@@ -191,6 +192,20 @@ export function useNotifications() {
             setNotifications(prev => [newNotification, ...prev].slice(0, 50));
             if (!newNotification.is_read) {
               setUnreadCount(prev => prev + 1);
+            }
+
+            if (newNotification.booking_id && !(newNotification as any).push_sent) {
+              sendPushForNotification(
+                newNotification.id,
+                newNotification.user_id,
+                newNotification.type,
+                newNotification.booking_id,
+                '',
+                '',
+                new Date().toISOString()
+              ).catch(err => {
+                logger.error('Failed to send push notification:', err);
+              });
             }
           } else if (payload.eventType === 'UPDATE') {
             const updatedNotification = payload.new as Notification;
