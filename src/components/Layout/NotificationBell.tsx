@@ -51,20 +51,17 @@ export function NotificationBell() {
         return;
       }
 
-      const granted = await oneSignalService.requestPermission();
-      logger.debug('Permission result:', granted);
+      await oneSignalService.showSlidedown();
+      setShowPushPrompt(false);
 
-      if (granted) {
-        setPushPermission('granted');
-        setShowPushPrompt(false);
-        logger.debug('Push notifications enabled');
-        alert('Notifications push activées avec succès!');
-      } else {
-        setPushPermission('denied');
-        setShowPushPrompt(false);
-        logger.warn('Push notifications denied by user');
-        alert('Vous avez refusé les notifications push. Vous pouvez les réactiver dans les paramètres de votre navigateur.');
-      }
+      setTimeout(async () => {
+        const permission = await oneSignalService.getNotificationPermission();
+        setPushPermission(permission);
+
+        if (permission === 'granted') {
+          logger.debug('Push notifications enabled');
+        }
+      }, 1500);
     } catch (error) {
       logger.error('Error requesting permission:', error);
       alert('Erreur lors de l\'activation des notifications: ' + (error as Error).message);
