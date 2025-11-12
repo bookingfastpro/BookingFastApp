@@ -90,7 +90,9 @@
     <h2>Actions</h2>
     <button onclick="enableDebug()">0. Activer Debug OneSignal</button>
     <button onclick="testInit()">1. Initialiser OneSignal</button>
-    <button onclick="testPermission()">2. Demander Permission</button>
+    <button onclick="showSlidedown()">2a. Afficher Slidedown OneSignal</button>
+    <button onclick="testPermission()">2b. Demander Permission (direct)</button>
+    <button onclick="testNativePermission()">2c. Permission Native (sans OneSignal)</button>
     <button onclick="testGetPlayerId()">3. Obtenir Player ID</button>
     <button onclick="checkSubscriptionState()">4. Vérifier état d'abonnement</button>
     <button onclick="clearLogs()">Effacer les logs</button>
@@ -142,6 +144,15 @@
           allowLocalhostAsSecureOrigin: true,
           notifyButton: {
             enable: false
+          },
+          promptOptions: {
+            slidedown: {
+              enabled: true,
+              autoPrompt: false,
+              actionMessage: "Recevez des alertes en temps réel pour vos réservations, même quand l'app est fermée",
+              acceptButton: "Activer",
+              cancelButton: "Plus tard"
+            }
           }
         });
 
@@ -150,6 +161,10 @@
         // Vérifier l'état
         const permission = await OneSignal.Notifications.permission;
         addLog(`Permission actuelle: ${permission ? 'granted' : 'default/denied'}`, 'debug');
+
+        // Vérifier la configuration du slidedown
+        const slidedownOptions = await OneSignal.Slidedown.getOptions();
+        addLog(`Slidedown configuré: ${JSON.stringify(slidedownOptions)}`, 'debug');
 
       } catch (error) {
         if (error.message.includes('already initialized')) {
@@ -162,6 +177,38 @@
           addLog(`❌ Erreur d'initialisation: ${error.message}`, 'error');
           console.error(error);
         }
+      }
+    }
+
+    async function showSlidedown() {
+      addLog('Affichage du Slidedown OneSignal...', 'debug');
+
+      try {
+        await OneSignal.Slidedown.promptPush();
+        addLog('✅ Slidedown affiché', 'success');
+      } catch (error) {
+        addLog(`❌ Erreur: ${error.message}`, 'error');
+        console.error(error);
+      }
+    }
+
+    async function testNativePermission() {
+      addLog('=== TEST PERMISSION NATIVE (sans OneSignal) ===', 'debug');
+      addLog('État avant: ' + Notification.permission, 'debug');
+
+      try {
+        const result = await Notification.requestPermission();
+        addLog('Résultat: ' + result, result === 'granted' ? 'success' : 'error');
+
+        if (result === 'granted') {
+          new Notification('Test réussi!', {
+            body: 'La permission native fonctionne',
+            icon: '/pwa-192x192.png'
+          });
+          addLog('✅ Notification test envoyée', 'success');
+        }
+      } catch (error) {
+        addLog(`❌ Erreur: ${error.message}`, 'error');
       }
     }
 
