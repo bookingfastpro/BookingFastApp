@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings, Building2, Palette, Clock, Euro, Mail, CreditCard, Users, Shield, Crown, Key, Sparkles, BarChart3, ExternalLink, UserPlus, Package, ArrowLeft, Bell } from 'lucide-react';
+import { Settings, Building2, Palette, Clock, Euro, Mail, CreditCard, Users, Shield, Crown, Key, Sparkles, BarChart3, ExternalLink, UserPlus, Package, ArrowLeft } from 'lucide-react';
 import { Share2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTeam } from '../../hooks/useTeam';
@@ -8,7 +8,6 @@ import { SubscriptionStatus } from './SubscriptionStatus';
 import { AffiliateManagement } from './AffiliateManagement';
 import { IframeSettings } from './IframeSettings';
 import { TeamManagement } from './TeamManagement';
-import { PushNotificationSettings } from './PushNotificationSettings';
 import { PluginsPage } from '../Plugins/PluginsPage';
 import { SuperAdminPanel } from '../SuperAdmin/SuperAdminPanel';
 import { supabase } from '../../lib/supabase';
@@ -16,7 +15,7 @@ import { supabase } from '../../lib/supabase';
 export function AdminPage() {
   const { user } = useAuth();
   const { isOwner } = useTeam();
-  const [activeTab, setActiveTab] = useState<'settings' | 'subscription' | 'affiliate' | 'iframe' | 'team' | 'plugins' | 'superadmin' | 'notifications'>('settings');
+  const [activeTab, setActiveTab] = useState<'settings' | 'subscription' | 'affiliate' | 'iframe' | 'team' | 'plugins' | 'superadmin'>('settings');
   const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const [checkingAdmin, setCheckingAdmin] = useState(true);
 
@@ -61,34 +60,28 @@ export function AdminPage() {
   }, [user]);
 
   const tabs = [
-    {
-      id: 'settings',
-      label: 'Paramètres',
-      icon: Settings,
+    { 
+      id: 'settings', 
+      label: 'Paramètres', 
+      icon: Settings, 
       description: 'Configuration générale'
     },
-    {
-      id: 'notifications',
-      label: 'Notifications',
-      icon: Bell,
-      description: 'Notifications push'
-    },
-    {
-      id: 'subscription',
-      label: 'Abonnement',
-      icon: Crown,
+    { 
+      id: 'subscription', 
+      label: 'Abonnement', 
+      icon: Crown, 
       description: 'Statut et codes secrets'
     },
-    {
-      id: 'affiliate',
-      label: 'Affiliation',
-      icon: Share2,
+    { 
+      id: 'affiliate', 
+      label: 'Affiliation', 
+      icon: Share2, 
       description: 'Programme de parrainage'
     },
-    {
-      id: 'iframe',
-      label: 'Iframe',
-      icon: ExternalLink,
+    { 
+      id: 'iframe', 
+      label: 'Iframe', 
+      icon: ExternalLink, 
       description: 'Lien de réservation'
     },
   ];
@@ -131,8 +124,6 @@ export function AdminPage() {
     switch (activeTab) {
       case 'settings':
         return <BusinessSettingsForm />;
-      case 'notifications':
-        return <PushNotificationSettings />;
       case 'subscription':
         return <SubscriptionStatus />;
       case 'plugins':

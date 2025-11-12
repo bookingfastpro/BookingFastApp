@@ -71,23 +71,6 @@ function AppRoutes() {
     }
   }, [isPWAMode, pathname, navigate]);
 
-  // 🔔 Gérer les paramètres de notification dans l'URL
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const bookingId = searchParams.get('bookingId');
-    const action = searchParams.get('action');
-
-    if (bookingId) {
-      console.log('🔔 Notification action detected:', { bookingId, action });
-
-      if (action === 'confirm') {
-        console.log('🔔 Action: Confirm booking', bookingId);
-      } else if (action === 'contact') {
-        console.log('🔔 Action: Contact client', bookingId);
-      }
-    }
-  }, [location.search]);
-
   // 🎯 Pages TOUJOURS publiques (pas de vérification auth)
   const isAlwaysPublicPage =
     pathname.startsWith('/booking/') ||

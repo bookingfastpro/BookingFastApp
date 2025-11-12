@@ -236,11 +236,7 @@ services:
       
       # 📧 BREVO CONFIGURATION (OPTIONNEL)
       BREVO_API_KEY: ${BREVO_API_KEY}
-
-      # 🔔 ONESIGNAL CONFIGURATION (OPTIONNEL)
-      ONESIGNAL_APP_ID: ${ONESIGNAL_APP_ID}
-      ONESIGNAL_REST_API_KEY: ${ONESIGNAL_REST_API_KEY}
-
+      
       # Configuration Edge Runtime
       VERIFY_JWT: ${FUNCTIONS_VERIFY_JWT:-false}
       IMPORT_MAP_PATH: /home/deno/functions/import_map.json
