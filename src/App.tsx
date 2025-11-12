@@ -31,7 +31,6 @@ const POSPage = lazy(() => import('./components/POS/POSPage').then(m => ({ defau
 const PluginsPage = lazy(() => import('./components/Plugins/PluginsPage').then(m => ({ default: m.PluginsPage })));
 const LoginPage = lazy(() => import('./components/Auth/LoginPage').then(m => ({ default: m.LoginPage })));
 const InvoicesPage = lazy(() => import('./components/Invoices/InvoicesPage').then(m => ({ default: m.InvoicesPage })));
-const OneSignalTest = lazy(() => import('./pages/OneSignalTest').then(m => ({ default: m.default })));
 
 function App() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -176,7 +175,6 @@ function AppRoutes() {
                 </PluginGuard>
               } />
               <Route path="/plugins" element={<PluginsPage />} />
-              <Route path="/onesignal-test" element={<OneSignalTest />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Routes>
           </Suspense>

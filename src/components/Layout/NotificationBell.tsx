@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Bell, X, Check, CheckCheck, Trash2, Calendar, Clock, AlertCircle } from 'lucide-react';
 import { useNotifications } from '../../hooks/useNotifications';
 import { useNavigate } from 'react-router-dom';
-import { oneSignalService } from '../../lib/oneSignalService';
-import { logger } from '../../utils/logger';
 
 export function NotificationBell() {
   const navigate = useNavigate();
@@ -14,24 +12,11 @@ export function NotificationBell() {
     markAsRead,
     markAllAsRead,
     deleteNotification,
-    clearAllNotifications,
-    oneSignalInitialized
+    clearAllNotifications
   } = useNotifications();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [pushPermission, setPushPermission] = useState<'default' | 'granted' | 'denied'>('default');
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const checkPermission = async () => {
-      const permission = await oneSignalService.getNotificationPermission();
-      setPushPermission(permission);
-    };
-
-    if (oneSignalInitialized) {
-      checkPermission();
-    }
-  }, [oneSignalInitialized]);
 
   // Fermer le dropdown quand on clique à l'extérieur et gérer le scroll
   useEffect(() => {
@@ -117,24 +102,20 @@ export function NotificationBell() {
   };
 
   return (
-    <>
-      <div className="relative" ref={dropdownRef}>
-        {/* Bell Button */}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="relative p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
-          aria-label="Notifications"
-        >
-          <Bell className="w-6 h-6 text-gray-700" />
-          {unreadCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg animate-pulse">
-              {unreadCount > 9 ? '9+' : unreadCount}
-            </span>
-          )}
-          {pushPermission === 'default' && (
-            <span className="absolute -bottom-1 -right-1 w-3 h-3 bg-orange-500 rounded-full border-2 border-white"></span>
-          )}
-        </button>
+    <div className="relative" ref={dropdownRef}>
+      {/* Bell Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative p-2 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+        aria-label="Notifications"
+      >
+        <Bell className="w-6 h-6 text-gray-700" />
+        {unreadCount > 0 && (
+          <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg animate-pulse">
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </span>
+        )}
+      </button>
 
       {/* Dropdown */}
       {isOpen && (
@@ -155,12 +136,6 @@ export function NotificationBell() {
                 <p className="text-sm text-blue-100">
                   {unreadCount > 0 ? `${unreadCount} non lue(s)` : 'Tout est lu'}
                 </p>
-                {pushPermission === 'granted' && (
-                  <div className="flex items-center gap-1 mt-1 text-xs text-green-300">
-                    <Check className="w-3 h-3" />
-                    <span>Push activées</span>
-                  </div>
-                )}
               </div>
               <button
                 onClick={() => setIsOpen(false)}
@@ -287,7 +262,6 @@ export function NotificationBell() {
           </div>
         </>
       )}
-      </div>
-    </>
+    </div>
   );
 }
