@@ -84,7 +84,6 @@ export function useAdmin() {
         .order('created_at', { ascending: false });
 
       if (usersError) throw usersError;
-      setUsers(usersData || []);
 
       // Charger les abonnements avec les relations
       const { data: subscriptionsData, error: subscriptionsError } = await supabase
@@ -102,18 +101,39 @@ export function useAdmin() {
         (subscriptionsData || []).map(async (sub) => {
           const { data: profile } = await supabase
             .from('profiles')
-            .select('id, email, full_name, is_super_admin, subscription_status, trial_started_at, trial_ends_at, created_at')
+            .select('id, email, full_name, is_super_admin, created_at')
             .eq('id', sub.user_id)
             .maybeSingle();
 
           return {
             ...sub,
-            user: profile
+            user: profile ? {
+              ...profile,
+              subscription_status: sub.status as 'trial' | 'active' | 'expired' | 'cancelled' | null,
+              trial_started_at: null,
+              trial_ends_at: null
+            } : null
           };
         })
       );
 
       setSubscriptions(enrichedSubscriptions);
+
+      // Enrichir les utilisateurs avec leur statut d'abonnement
+      const enrichedUsers = (usersData || []).map(user => {
+        const userSubscription = enrichedSubscriptions.find(
+          sub => sub.user_id === user.id && sub.status === 'active'
+        );
+
+        return {
+          ...user,
+          subscription_status: userSubscription ? userSubscription.status : null,
+          trial_started_at: null,
+          trial_ends_at: null
+        };
+      });
+
+      setUsers(enrichedUsers);
 
       // Charger les plans d'abonnement
       const { data: plansData, error: plansError } = await supabase
