@@ -91,6 +91,7 @@ export function useAdmin() {
         .from('subscriptions')
         .select(`
           *,
+          user:profiles!subscriptions_user_id_fkey(id, email, full_name, is_super_admin, subscription_status, trial_started_at, trial_ends_at, created_at),
           plan:subscription_plans(*)
         `)
         .order('created_at', { ascending: false });
