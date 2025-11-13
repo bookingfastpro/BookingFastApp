@@ -234,12 +234,12 @@ export function useBusinessSettings() {
       if (existingSettings?.id) {
         // Mise à jour
         console.log('📝 Mise à jour des paramètres existants:', existingSettings.id);
+        const { id, created_at, updated_at, ...settingsWithoutMeta } = newSettings as any;
         const { data, error } = await supabase!
           .from('business_settings')
           .update({
-            ...newSettings,
+            ...settingsWithoutMeta,
             user_id: targetUserId,
-            updated_at: new Date().toISOString()
           })
           .eq('id', existingSettings.id)
           .select()
@@ -254,13 +254,12 @@ export function useBusinessSettings() {
       } else {
         // Création
         console.log('✨ Création de nouveaux paramètres');
+        const { id, created_at, updated_at, ...settingsWithoutMeta } = newSettings as any;
         const { data, error } = await supabase!
           .from('business_settings')
           .insert({
-            ...newSettings,
+            ...settingsWithoutMeta,
             user_id: targetUserId,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
           })
           .select()
           .single();
