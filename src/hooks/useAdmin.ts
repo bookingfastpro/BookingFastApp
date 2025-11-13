@@ -269,14 +269,7 @@ export function useAdmin() {
 
       if (error) throw error;
 
-      // 3. Mettre à jour le statut de l'utilisateur
-      await supabase
-        .from('users')
-        .update({ 
-          subscription_status: 'active',
-          trial_ends_at: null
-        })
-        .eq('id', userId);
+      // 3. Mettre à jour le statut de l'utilisateur (géré par la table subscriptions)
 
       // 4. Créer les plugin_subscriptions pour tous les plugins du plan
       const { data: plugins } = await supabase
@@ -502,21 +495,8 @@ export function useAdmin() {
 
       console.log('✅ Compteur mis à jour:', accessCode.current_uses + 1);
 
-      // 9. Mettre à jour le statut de l'utilisateur
-      const { error: userUpdateError } = await supabase
-        .from('users')
-        .update({ 
-          subscription_status: 'active',
-          trial_ends_at: accessGrantedUntil
-        })
-        .eq('id', user.id);
-
-      if (userUpdateError) {
-        console.error('❌ Erreur lors de la mise à jour de l\'utilisateur:', userUpdateError);
-        throw userUpdateError;
-      }
-
-      console.log('✅ Statut utilisateur mis à jour');
+      // 9. Mettre à jour le statut de l'utilisateur (géré par la table subscriptions)
+      console.log('✅ Statut utilisateur géré via subscriptions');
 
       await loadData();
       console.log('🎉 Rédemption terminée avec succès !');

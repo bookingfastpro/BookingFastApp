@@ -83,10 +83,10 @@ export function useAffiliateAdmin() {
 
       // Vérifier si l'utilisateur est super admin
       const { data: userData, error: userError } = await supabase
-        .from('users')
+        .from('profiles')
         .select('is_super_admin')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
       if (userError || !userData?.is_super_admin) {
         throw new Error('Accès refusé - Super admin requis');
