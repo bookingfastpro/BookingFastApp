@@ -124,6 +124,13 @@ export function SubscriptionStatus() {
         console.log('👑 PROPRIÉTAIRE - Chargement données propres:', targetUserId);
       }
 
+      // Charger la date de création du profil
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('created_at')
+        .eq('id', targetUserId)
+        .maybeSingle();
+
       // Charger les données d'abonnement depuis la table subscriptions
       console.log('🔍 Chargement données abonnement depuis table subscriptions...');
       const { data: subscriptionData, error: subError } = await supabase
@@ -157,7 +164,8 @@ export function SubscriptionStatus() {
           cancel_at_period_end: subscriptionData.cancel_at_period_end,
           stripe_subscription_id: subscriptionData.stripe_subscription_id,
           stripe_customer_id: subscriptionData.stripe_customer_id,
-          plan: subscriptionData.plan
+          plan: subscriptionData.plan,
+          created_at: profileData?.created_at
         };
 
         setUserStatus(mappedStatus);
