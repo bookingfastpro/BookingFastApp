@@ -42,7 +42,7 @@ export function useSubscription() {
         .from('subscriptions')
         .select('*')
         .eq('user_id', user!.id)
-        .single();
+        .maybeSingle();
 
       if (fetchError) {
         if (fetchError.code === 'PGRST116') {

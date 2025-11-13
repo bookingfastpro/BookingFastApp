@@ -124,28 +124,46 @@ export function SubscriptionStatus() {
         console.log('👑 PROPRIÉTAIRE - Chargement données propres:', targetUserId);
       }
 
-      // 🔥 CORRECTION : Charger DIRECTEMENT depuis la table profiles
-      console.log('🔍 Chargement données utilisateur depuis table profiles...');
-      const { data: userData, error: userError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', targetUserId)
+      // Charger les données d'abonnement depuis la table subscriptions
+      console.log('🔍 Chargement données abonnement depuis table subscriptions...');
+      const { data: subscriptionData, error: subError } = await supabase
+        .from('subscriptions')
+        .select(`
+          *,
+          plan:subscription_plans(*)
+        `)
+        .eq('user_id', targetUserId)
         .maybeSingle();
 
-      if (userError) {
-        console.error('❌ Erreur chargement utilisateur:', userError);
-      } else if (userData) {
-        console.log('✅ Données utilisateur trouvées:', {
-          subscription_status: userData.subscription_status,
-          subscription_tier: userData.subscription_tier,
-          trial_ends_at: userData.trial_ends_at,
-          current_period_end: userData.current_period_end,
-          cancel_at_period_end: userData.cancel_at_period_end,
-          stripe_subscription_id: userData.stripe_subscription_id
+      if (subError) {
+        console.error('❌ Erreur chargement abonnement:', subError);
+        setUserStatus(null);
+      } else if (subscriptionData) {
+        console.log('✅ Données abonnement trouvées:', {
+          status: subscriptionData.status,
+          plan_name: subscriptionData.plan?.name,
+          trial_end: subscriptionData.trial_end,
+          current_period_end: subscriptionData.current_period_end,
+          cancel_at_period_end: subscriptionData.cancel_at_period_end,
+          stripe_subscription_id: subscriptionData.stripe_subscription_id
         });
-        setUserStatus(userData);
+
+        // Mapper vers le format attendu par le composant
+        const mappedStatus = {
+          subscription_status: subscriptionData.status,
+          subscription_tier: subscriptionData.plan?.name,
+          trial_ends_at: subscriptionData.trial_end,
+          current_period_end: subscriptionData.current_period_end,
+          cancel_at_period_end: subscriptionData.cancel_at_period_end,
+          stripe_subscription_id: subscriptionData.stripe_subscription_id,
+          stripe_customer_id: subscriptionData.stripe_customer_id,
+          plan: subscriptionData.plan
+        };
+
+        setUserStatus(mappedStatus);
       } else {
-        console.log('⚠️ Aucune donnée utilisateur trouvée');
+        console.log('⚠️ Aucun abonnement trouvé');
+        setUserStatus(null);
       }
 
       // Charger les codes d'accès

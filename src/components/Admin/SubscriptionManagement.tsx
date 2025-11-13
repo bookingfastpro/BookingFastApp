@@ -33,18 +33,32 @@ export function SubscriptionManagement() {
     }
 
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('subscription_tier, subscription_status, stripe_subscription_id, stripe_customer_id, current_period_end, cancel_at_period_end, created_at')
-        .eq('id', user.id)
+      const { data: subscriptionData, error } = await supabase
+        .from('subscriptions')
+        .select(`
+          *,
+          plan:subscription_plans(*)
+        `)
+        .eq('user_id', user.id)
         .maybeSingle();
 
       if (error) throw error;
-      
-      console.log('📊 Subscription data:', data);
-      console.log('📅 current_period_end:', data?.current_period_end);
-      
-      setSubscription(data);
+
+      console.log('📊 Subscription data:', subscriptionData);
+      console.log('📅 current_period_end:', subscriptionData?.current_period_end);
+
+      // Mapper vers le format attendu
+      const mappedData = subscriptionData ? {
+        subscription_tier: subscriptionData.plan?.name,
+        subscription_status: subscriptionData.status,
+        stripe_subscription_id: subscriptionData.stripe_subscription_id,
+        stripe_customer_id: subscriptionData.stripe_customer_id,
+        current_period_end: subscriptionData.current_period_end,
+        cancel_at_period_end: subscriptionData.cancel_at_period_end,
+        created_at: subscriptionData.created_at
+      } : null;
+
+      setSubscription(mappedData);
     } catch (error) {
       console.error('Erreur chargement abonnement:', error);
     } finally {
