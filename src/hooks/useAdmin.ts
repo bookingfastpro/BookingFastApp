@@ -91,13 +91,29 @@ export function useAdmin() {
         .from('subscriptions')
         .select(`
           *,
-          user:profiles!subscriptions_user_id_fkey(id, email, full_name, is_super_admin, subscription_status, trial_started_at, trial_ends_at, created_at),
           plan:subscription_plans(*)
         `)
         .order('created_at', { ascending: false });
 
       if (subscriptionsError) throw subscriptionsError;
-      setSubscriptions(subscriptionsData || []);
+
+      // Enrichir avec les profils utilisateurs
+      const enrichedSubscriptions = await Promise.all(
+        (subscriptionsData || []).map(async (sub) => {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('id, email, full_name, is_super_admin, subscription_status, trial_started_at, trial_ends_at, created_at')
+            .eq('id', sub.user_id)
+            .maybeSingle();
+
+          return {
+            ...sub,
+            user: profile
+          };
+        })
+      );
+
+      setSubscriptions(enrichedSubscriptions);
 
       // Charger les plans d'abonnement
       const { data: plansData, error: plansError } = await supabase
