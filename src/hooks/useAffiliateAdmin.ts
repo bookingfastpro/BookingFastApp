@@ -108,7 +108,7 @@ export function useAffiliateAdmin() {
       const { data: affiliatesData, error: affiliatesError } = await supabase
         .from('affiliates')
         .select('*')
-        .order('total_commissions', { ascending: false });
+        .order('total_earnings', { ascending: false });
 
       if (affiliatesError) {
         throw affiliatesError;
@@ -175,12 +175,12 @@ export function useAffiliateAdmin() {
 
     // Top performers
     const topPerformers = affiliatesData
-      .sort((a, b) => b.total_commissions - a.total_commissions)
+      .sort((a, b) => (b.total_earnings || 0) - (a.total_earnings || 0))
       .slice(0, 5)
       .map(affiliate => ({
         affiliate,
         user: null, // À enrichir si nécessaire
-        commissions: affiliate.total_commissions
+        commissions: affiliate.total_earnings || 0
       }));
 
     setStats({

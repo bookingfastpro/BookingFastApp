@@ -11,15 +11,21 @@ export interface AffiliateSettings {
 export interface Affiliate {
   id: string;
   user_id: string;
-  affiliate_code: string;
-  total_referrals: number;
-  successful_conversions: number;
-  total_commissions: number;
-  pending_commissions: number;
-  paid_commissions: number;
-  is_active: boolean;
+  code: string;
+  commission_rate: number;
+  total_earnings: number;
+  status: string;
+  payment_info: any;
   created_at: string;
   updated_at: string;
+  // Computed fields
+  total_referrals?: number;
+  successful_conversions?: number;
+  total_commissions?: number;
+  pending_commissions?: number;
+  paid_commissions?: number;
+  affiliate_code?: string;
+  is_active?: boolean;
 }
 
 export interface AffiliateReferral {

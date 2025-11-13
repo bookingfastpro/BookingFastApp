@@ -175,33 +175,33 @@ export function AffiliateAdminPanel() {
                     </td>
                     <td className="px-6 py-4">
                       <span className="font-mono text-sm bg-purple-100 text-purple-700 px-2 py-1 rounded">
-                        {affiliate.affiliate_code}
+                        {affiliate.code}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-medium text-gray-900">{affiliate.total_referrals}</div>
+                      <div className="text-sm font-medium text-gray-900">{affiliate.total_referrals || 0}</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">
-                        {affiliate.successful_conversions}
+                        {affiliate.successful_conversions || 0}
                         <span className="text-xs text-gray-500 ml-1">
-                          ({affiliate.total_referrals > 0 ? ((affiliate.successful_conversions / affiliate.total_referrals) * 100).toFixed(1) : 0}%)
+                          ({(affiliate.total_referrals || 0) > 0 ? (((affiliate.successful_conversions || 0) / (affiliate.total_referrals || 1)) * 100).toFixed(1) : 0}%)
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm font-bold text-green-600">{affiliate.total_commissions.toFixed(2)}€</div>
+                      <div className="text-sm font-bold text-green-600">{(affiliate.total_earnings || 0).toFixed(2)}€</div>
                       <div className="text-xs text-gray-500">
-                        En attente: {affiliate.pending_commissions.toFixed(2)}€
+                        En attente: {(affiliate.pending_commissions || 0).toFixed(2)}€
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                        affiliate.is_active 
+                        affiliate.status === 'active'
                           ? 'bg-green-100 text-green-700'
                           : 'bg-red-100 text-red-700'
                       }`}>
-                        {affiliate.is_active ? '✅ Actif' : '❌ Inactif'}
+                        {affiliate.status === 'active' ? '✅ Actif' : '❌ Inactif'}
                       </span>
                     </td>
                   </tr>
@@ -242,7 +242,7 @@ export function AffiliateAdminPanel() {
                   <tr key={commission.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">
-                        {affiliates.find(a => a.id === commission.affiliate_id)?.affiliate_code}
+                        {affiliates.find(a => a.id === commission.affiliate_id)?.code}
                       </div>
                     </td>
                     <td className="px-6 py-4">
