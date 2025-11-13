@@ -82,28 +82,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const initializeNewAccount = async (userId: string) => {
     if (!supabase) return;
-    
+
     try {
       console.log('🔧 Initialisation du compte:', userId);
-      
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: userId,
-          email: user?.email || '',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        });
-      
-      if (profileError) {
-        console.error('❌ Erreur création profil:', profileError);
-      } else {
-        console.log('✅ Profil créé');
-      }
-      
+
+      // Le profil est créé automatiquement par un trigger DB
+      console.log('✅ Profil créé automatiquement par trigger');
+
       const { error: settingsError } = await supabase
         .from('business_settings')
-        .upsert({
+        .insert({
           user_id: userId,
           business_name: 'Mon Entreprise',
           primary_color: '#3B82F6',
@@ -120,16 +108,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           buffer_minutes: 15,
           default_deposit_percentage: 30,
           email_notifications: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
         });
-      
+
       if (settingsError) {
         console.error('❌ Erreur création paramètres:', settingsError);
       } else {
         console.log('✅ Paramètres créés');
       }
-      
+
       console.log('✅ Initialisation terminée');
     } catch (error) {
       console.error('❌ Erreur initialisation compte:', error);
