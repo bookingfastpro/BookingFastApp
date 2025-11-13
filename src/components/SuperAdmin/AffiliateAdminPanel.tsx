@@ -251,7 +251,7 @@ export function AffiliateAdminPanel() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="text-sm text-gray-900">{commission.commission_month}</div>
+                      <div className="text-sm text-gray-900">{new Date(commission.created_at).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long' })}</div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm font-bold text-green-600">{commission.amount.toFixed(2)}€</div>

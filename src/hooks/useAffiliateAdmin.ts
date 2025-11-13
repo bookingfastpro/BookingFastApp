@@ -137,7 +137,7 @@ export function useAffiliateAdmin() {
           *,
           referral:affiliate_referrals(*)
         `)
-        .order('commission_month', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (commissionsError) {
         throw commissionsError;
@@ -170,7 +170,7 @@ export function useAffiliateAdmin() {
     // Commissions du mois actuel
     const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
     const monthlyCommissions = commissionsData
-      .filter(c => c.commission_month.startsWith(currentMonth))
+      .filter(c => c.created_at.startsWith(currentMonth))
       .reduce((sum, c) => sum + c.amount, 0);
 
     // Top performers

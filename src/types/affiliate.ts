@@ -51,9 +51,9 @@ export interface AffiliateCommission {
   affiliate_id: string;
   referral_id: string;
   amount: number;
-  commission_month: string;
   status: 'pending' | 'paid' | 'cancelled';
   paid_at?: string;
+  payment_reference?: string;
   created_at: string;
   updated_at: string;
   referral?: AffiliateReferral;
