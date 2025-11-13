@@ -90,6 +90,26 @@ const checkWorkflowConditions = (workflow: SmsWorkflow, booking: Booking): boole
   });
 };
 
+const normalizePhoneNumber = (phone: string): string => {
+  if (!phone) return '';
+
+  let cleaned = phone.replace(/\s+/g, '');
+
+  if (cleaned.startsWith('+')) {
+    return cleaned;
+  }
+
+  if (cleaned.startsWith('0')) {
+    return '+33' + cleaned.substring(1);
+  }
+
+  if (cleaned.startsWith('33')) {
+    return '+' + cleaned;
+  }
+
+  return '+33' + cleaned;
+};
+
 const sendSmsViaTwilio = async (
   userId: string,
   toPhone: string,
@@ -107,6 +127,14 @@ const sendSmsViaTwilio = async (
     return false;
   }
 
+  const normalizedPhone = normalizePhoneNumber(toPhone);
+  console.log('📱 Numéro normalisé:', normalizedPhone);
+
+  if (!normalizedPhone.startsWith('+')) {
+    console.error('❌ Numéro de téléphone invalide après normalisation:', normalizedPhone);
+    return false;
+  }
+
   try {
     console.log('📱 ENVOI SMS RÉEL VIA TWILIO...');
 
@@ -120,7 +148,7 @@ const sendSmsViaTwilio = async (
       },
       body: JSON.stringify({
         user_id: userId,
-        to_phone: toPhone,
+        to_phone: normalizedPhone,
         message: message,
         workflow_id: workflowId,
         booking_id: bookingId
