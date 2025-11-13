@@ -91,7 +91,6 @@ export function useAdmin() {
         .from('subscriptions')
         .select(`
           *,
-          user:profiles(*),
           plan:subscription_plans(*)
         `)
         .order('created_at', { ascending: false });
@@ -126,8 +125,7 @@ export function useAdmin() {
         .from('code_redemptions')
         .select(`
           *,
-          code:access_codes(*),
-          user:profiles(*)
+          code:access_codes(*)
         `)
         .order('redeemed_at', { ascending: false });
 
