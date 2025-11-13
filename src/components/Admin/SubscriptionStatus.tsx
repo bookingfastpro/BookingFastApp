@@ -124,10 +124,10 @@ export function SubscriptionStatus() {
         console.log('👑 PROPRIÉTAIRE - Chargement données propres:', targetUserId);
       }
 
-      // 🔥 CORRECTION : Charger DIRECTEMENT depuis la table users
-      console.log('🔍 Chargement données utilisateur depuis table users...');
+      // 🔥 CORRECTION : Charger DIRECTEMENT depuis la table profiles
+      console.log('🔍 Chargement données utilisateur depuis table profiles...');
       const { data: userData, error: userError } = await supabase
-        .from('users')
+        .from('profiles')
         .select('*')
         .eq('id', targetUserId)
         .maybeSingle();

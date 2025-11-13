@@ -33,7 +33,7 @@ export function AdminPage() {
       try {
         console.log('🔍 Vérification statut super admin pour:', user.email);
         const { data, error } = await supabase
-          .from('users')
+          .from('profiles')
           .select('is_super_admin')
           .eq('id', user.id)
           .maybeSingle();
