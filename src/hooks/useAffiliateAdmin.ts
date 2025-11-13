@@ -23,7 +23,7 @@ export function useAffiliateAdmin() {
 
     // Récupérer les données utilisateur
     const { data: users, error } = await supabase
-      .from('users')
+      .from('profiles')
       .select('id, email, full_name')
       .in('id', userIds);
 
@@ -53,7 +53,7 @@ export function useAffiliateAdmin() {
 
     // Récupérer les données utilisateur
     const { data: users, error } = await supabase
-      .from('users')
+      .from('profiles')
       .select('id, email, full_name')
       .in('id', userIds);
 

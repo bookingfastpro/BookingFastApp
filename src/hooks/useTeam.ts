@@ -278,7 +278,7 @@ export function useTeam() {
       console.log('📧 Création invitation pour:', memberData.email);
 
       const { data: existingUser, error: userError } = await supabase
-        .from('users')
+        .from('profiles')
         .select('id, email')
         .eq('email', memberData.email.toLowerCase())
         .maybeSingle();

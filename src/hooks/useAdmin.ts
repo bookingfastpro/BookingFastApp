@@ -79,7 +79,7 @@ export function useAdmin() {
 
       // Charger les utilisateurs
       const { data: usersData, error: usersError } = await supabase
-        .from('users')
+        .from('profiles')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -91,7 +91,7 @@ export function useAdmin() {
         .from('subscriptions')
         .select(`
           *,
-          user:users(*),
+          user:profiles(*),
           plan:subscription_plans(*)
         `)
         .order('created_at', { ascending: false });
@@ -127,7 +127,7 @@ export function useAdmin() {
         .select(`
           *,
           code:access_codes(*),
-          user:users(*)
+          user:profiles(*)
         `)
         .order('redeemed_at', { ascending: false });
 
@@ -152,10 +152,10 @@ export function useAdmin() {
       if (!user) return false;
 
       const { data, error } = await supabase
-        .from('users')
+        .from('profiles')
         .select('is_super_admin')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       return data?.is_super_admin || false;
