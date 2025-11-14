@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, CreditCard as Edit, Trash2, Package, Save, X, Image, Clock, Calculator } from 'lucide-react';
+import { Plus, CreditCard as Edit, Trash2, Package, Save, X, Image, Clock, Calculator, Download, Upload, AlertTriangle } from 'lucide-react';
 import { useServices } from '../../hooks/useServices';
 import { useTeam } from '../../hooks/useTeam';
 import { useBusinessSettings } from '../../hooks/useBusinessSettings';
@@ -15,6 +15,9 @@ export function ServicesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [saving, setSaving] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importing, setImporting] = useState(false);
   
   const usageLimits = getUsageLimits();
   const userServicesCount = services.filter(s => s.description !== 'Service personnalisé').length;
@@ -195,6 +198,91 @@ export function ServicesPage() {
     }
   };
 
+  const handleExportServices = () => {
+    const exportData = services
+      .filter(service => service.description !== 'Service personnalisé')
+      .map(service => ({
+        name: service.name,
+        price_ht: service.price_ht,
+        price_ttc: service.price_ttc,
+        image_url: service.image_url,
+        description: service.description,
+        duration_minutes: service.duration_minutes,
+        capacity: service.capacity,
+        unit_name: service.unit_name,
+        availability_hours: service.availability_hours
+      }));
+
+    const jsonString = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `services-export-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportServices = async () => {
+    if (!importFile) return;
+
+    setImporting(true);
+    try {
+      const text = await importFile.text();
+      const importedServices = JSON.parse(text);
+
+      if (!Array.isArray(importedServices)) {
+        throw new Error('Le fichier doit contenir un tableau de services');
+      }
+
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (const service of importedServices) {
+        if (!service.name || !service.price_ttc || !service.duration_minutes) {
+          errorCount++;
+          continue;
+        }
+
+        try {
+          await addService({
+            name: service.name,
+            price_ht: service.price_ht || calculatePriceHT(service.price_ttc, taxRate),
+            price_ttc: service.price_ttc,
+            image_url: service.image_url || '',
+            description: service.description || '',
+            duration_minutes: service.duration_minutes,
+            capacity: service.capacity || 1,
+            unit_name: service.unit_name || '',
+            availability_hours: service.availability_hours || {
+              monday: { ranges: [{ start: '08:00', end: '18:00' }], closed: false },
+              tuesday: { ranges: [{ start: '08:00', end: '18:00' }], closed: false },
+              wednesday: { ranges: [{ start: '08:00', end: '18:00' }], closed: false },
+              thursday: { ranges: [{ start: '08:00', end: '18:00' }], closed: false },
+              friday: { ranges: [{ start: '08:00', end: '18:00' }], closed: false },
+              saturday: { ranges: [{ start: '09:00', end: '17:00' }], closed: false },
+              sunday: { ranges: [{ start: '10:00', end: '16:00' }], closed: true }
+            }
+          });
+          successCount++;
+        } catch (error) {
+          errorCount++;
+          console.error('Erreur import service:', error);
+        }
+      }
+
+      alert(`Import terminé:\n✅ ${successCount} services importés\n❌ ${errorCount} erreurs`);
+      setShowImportModal(false);
+      setImportFile(null);
+    } catch (error) {
+      alert(`Erreur lors de l'import: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
+    } finally {
+      setImporting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -208,6 +296,25 @@ export function ServicesPage() {
 
   return (
     <div className="p-4 sm:p-6 h-full overflow-y-auto bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 mobile-optimized">
+      {/* Boutons d'import/export */}
+      <div className="flex gap-3 mb-6">
+        <button
+          onClick={() => setShowImportModal(true)}
+          className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-medium text-sm"
+        >
+          <Upload className="w-4 h-4" />
+          Importer
+        </button>
+        <button
+          onClick={handleExportServices}
+          disabled={services.filter(s => s.description !== 'Service personnalisé').length === 0}
+          className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        >
+          <Download className="w-4 h-4" />
+          Exporter ({services.filter(s => s.description !== 'Service personnalisé').length})
+        </button>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
@@ -618,6 +725,87 @@ export function ServicesPage() {
           </div>
         </form>
       </Modal>
+
+      {/* Modal d'import */}
+      {showImportModal && (
+        <Modal
+          isOpen={showImportModal}
+          onClose={() => setShowImportModal(false)}
+          title="Importer des services"
+          size="md"
+        >
+          <div className="space-y-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5" />
+                Format du fichier
+              </h4>
+              <p className="text-sm text-blue-700 mb-2">
+                Le fichier doit être au format JSON et contenir un tableau d'objets avec les champs suivants:
+              </p>
+              <ul className="text-sm text-blue-700 list-disc list-inside space-y-1">
+                <li><code className="bg-blue-100 px-1 rounded">name</code> (nom du service) *</li>
+                <li><code className="bg-blue-100 px-1 rounded">price_ttc</code> (prix TTC) *</li>
+                <li><code className="bg-blue-100 px-1 rounded">duration_minutes</code> (durée en minutes) *</li>
+                <li><code className="bg-blue-100 px-1 rounded">description</code> (description)</li>
+                <li><code className="bg-blue-100 px-1 rounded">capacity</code> (capacité)</li>
+                <li><code className="bg-blue-100 px-1 rounded">image_url</code> (URL de l'image)</li>
+              </ul>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Sélectionner le fichier JSON
+              </label>
+              <input
+                type="file"
+                accept=".json"
+                onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+              />
+            </div>
+
+            {importFile && (
+              <div className="bg-green-50 border border-green-200 rounded-xl p-3">
+                <div className="text-sm text-green-700">
+                  <strong>Fichier sélectionné:</strong> {importFile.name}
+                </div>
+                <div className="text-xs text-green-600 mt-1">
+                  Taille: {(importFile.size / 1024).toFixed(2)} KB
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 pt-4">
+              <button
+                type="button"
+                onClick={() => setShowImportModal(false)}
+                disabled={importing}
+                className="flex-1 px-4 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-300 font-medium disabled:opacity-50"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={handleImportServices}
+                disabled={!importFile || importing}
+                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-3 rounded-xl hover:from-purple-700 hover:to-pink-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium flex items-center justify-center gap-2"
+              >
+                {importing ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    Import en cours...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4" />
+                    Importer
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
