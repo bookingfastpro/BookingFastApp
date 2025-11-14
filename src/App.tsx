@@ -5,6 +5,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { Navbar } from './components/Layout/Navbar';
 import { LoadingSpinner } from './components/UI/LoadingSpinner';
 import { UpdateModal } from './components/UI/UpdateModal';
+import { MaintenanceModal } from './components/UI/MaintenanceModal';
 import { GoogleCalendarCallback } from './components/Admin/GoogleCalendarCallback';
 import { PluginGuard } from './components/Plugins/PluginGuard';
 import { IframeBookingPage } from './components/IframeBooking/IframeBookingPage';
@@ -18,6 +19,7 @@ import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { PublicRoute } from './components/Auth/PublicRoute';
 import { isPWA } from './utils/pwaDetection';
 import { CacheBuster } from './utils/cacheBuster';
+import { useDatabaseStatus } from './hooks/useDatabaseStatus';
 
 const DashboardPage = lazy(() => import('./components/Dashboard/DashboardPage').then(m => ({ default: m.DashboardPage })));
 const CalendarPage = lazy(() => import('./components/Calendar/CalendarPage').then(m => ({ default: m.CalendarPage })));
@@ -34,6 +36,7 @@ const InvoicesPage = lazy(() => import('./components/Invoices/InvoicesPage').the
 
 function App() {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const { isConnected, isChecking } = useDatabaseStatus();
 
   useEffect(() => {
     CacheBuster.startVersionCheck(() => {
@@ -49,6 +52,7 @@ function App() {
     <AuthProvider>
       <TeamProvider>
         <UpdateModal isOpen={showUpdateModal} />
+        <MaintenanceModal isOpen={!isConnected} isReconnecting={isChecking} />
         <AppRoutes />
       </TeamProvider>
     </AuthProvider>
