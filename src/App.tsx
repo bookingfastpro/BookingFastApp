@@ -39,9 +39,16 @@ function App() {
   const { isConnected, isChecking } = useDatabaseStatus();
 
   useEffect(() => {
-    CacheBuster.startVersionCheck(() => {
-      setShowUpdateModal(true);
-    });
+    // Désactiver la vérification de version en mode développement
+    const isDevelopment = import.meta.env.DEV || window.location.hostname === 'localhost';
+
+    if (!isDevelopment) {
+      CacheBuster.startVersionCheck(() => {
+        setShowUpdateModal(true);
+      });
+    } else {
+      console.log('🔧 Mode développement : Vérification de version désactivée');
+    }
 
     return () => {
       CacheBuster.stopVersionCheck();
