@@ -94,6 +94,7 @@ export function usePaymentLinks() {
           booking_id: bookingId,
           user_id: user.id,
           amount: amount,
+          description: `Paiement pour réservation #${bookingId.slice(0, 8)}`,
           status: 'pending',
           expires_at: expiresAt.toISOString(),
           short_code: shortCode
