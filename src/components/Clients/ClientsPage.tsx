@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { User, Mail, Phone, Search, Filter, ChevronLeft, ChevronRight, Edit, Eye, Trash2, Plus, Calendar, ArrowUpDown, AlertTriangle } from 'lucide-react';
+import { User, Mail, Phone, Search, Filter, ChevronLeft, ChevronRight, Edit, Eye, Trash2, Plus, Calendar, ArrowUpDown, AlertTriangle, Download, Upload } from 'lucide-react';
 import { useClients } from '../../hooks/useClients';
 import { useBookings } from '../../hooks/useBookings';
 import { useTeam } from '../../hooks/useTeam';
@@ -14,7 +14,7 @@ interface ClientsPageProps {
 }
 
 export function ClientsPage({ onEditClient }: ClientsPageProps) {
-  const { clients, loading, deleteClient, updateClient } = useClients();
+  const { clients, loading, deleteClient, updateClient, addClient } = useClients();
   const { bookings } = useBookings();
   const { hasPermission } = useTeam();
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
@@ -34,6 +34,9 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
     email: '',
     phone: ''
   });
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importing, setImporting] = useState(false);
 
   const itemsPerPage = 12;
 
@@ -147,6 +150,72 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
     }
   };
 
+  const handleExportClients = () => {
+    const exportData = clients.map(client => ({
+      firstname: client.firstname,
+      lastname: client.lastname,
+      email: client.email,
+      phone: client.phone,
+      created_at: client.created_at
+    }));
+
+    const jsonString = JSON.stringify(exportData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `clients-export-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImportClients = async () => {
+    if (!importFile) return;
+
+    setImporting(true);
+    try {
+      const text = await importFile.text();
+      const importedClients = JSON.parse(text);
+
+      if (!Array.isArray(importedClients)) {
+        throw new Error('Le fichier doit contenir un tableau de clients');
+      }
+
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (const client of importedClients) {
+        if (!client.firstname || !client.lastname || !client.email || !client.phone) {
+          errorCount++;
+          continue;
+        }
+
+        try {
+          await addClient({
+            firstname: client.firstname,
+            lastname: client.lastname,
+            email: client.email,
+            phone: client.phone
+          });
+          successCount++;
+        } catch (error) {
+          errorCount++;
+          console.error('Erreur import client:', error);
+        }
+      }
+
+      alert(`Import terminé:\n✅ ${successCount} clients importés\n❌ ${errorCount} erreurs`);
+      setShowImportModal(false);
+      setImportFile(null);
+    } catch (error) {
+      alert(`Erreur lors de l'import: ${error instanceof Error ? error.message : 'Erreur inconnue'}`);
+    } finally {
+      setImporting(false);
+    }
+  };
+
   // Obtenir les réservations d'un client
   const getClientBookings = (clientEmail: string): Booking[] => {
     return bookings.filter(booking => booking.client_email === clientEmail);
@@ -198,6 +267,25 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
           <p className="text-sm sm:text-base text-gray-600 mt-2">
             Liste complète de tous vos clients ({filteredClients.length})
           </p>
+        </div>
+
+        {/* Boutons d'import/export */}
+        <div className="flex gap-3 mb-6">
+          <button
+            onClick={() => setShowImportModal(true)}
+            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-medium text-sm"
+          >
+            <Upload className="w-4 h-4" />
+            Importer
+          </button>
+          <button
+            onClick={handleExportClients}
+            disabled={clients.length === 0}
+            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+          >
+            <Download className="w-4 h-4" />
+            Exporter ({clients.length})
+          </button>
         </div>
 
         {/* Filtres et recherche */}
@@ -844,6 +932,89 @@ export function ClientsPage({ onEditClient }: ClientsPageProps) {
               </Button>
             </div>
           </form>
+        </Modal>
+      )}
+
+      {/* Modal d'import */}
+      {showImportModal && (
+        <Modal
+          isOpen={showImportModal}
+          onClose={() => setShowImportModal(false)}
+          title="Importer des clients"
+          size="md"
+        >
+          <div className="space-y-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5" />
+                Format du fichier
+              </h4>
+              <p className="text-sm text-blue-700 mb-2">
+                Le fichier doit être au format JSON et contenir un tableau d'objets avec les champs suivants:
+              </p>
+              <ul className="text-sm text-blue-700 list-disc list-inside space-y-1">
+                <li><code className="bg-blue-100 px-1 rounded">firstname</code> (prénom)</li>
+                <li><code className="bg-blue-100 px-1 rounded">lastname</code> (nom)</li>
+                <li><code className="bg-blue-100 px-1 rounded">email</code> (email)</li>
+                <li><code className="bg-blue-100 px-1 rounded">phone</code> (téléphone)</li>
+              </ul>
+              <div className="mt-3 p-2 bg-blue-100 rounded text-xs text-blue-800 font-mono">
+                [{'{'}"firstname":"Jean","lastname":"Dupont","email":"jean@email.com","phone":"0612345678"{'}'}]
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Sélectionner le fichier JSON
+              </label>
+              <input
+                type="file"
+                accept=".json"
+                onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+              />
+            </div>
+
+            {importFile && (
+              <div className="bg-green-50 border border-green-200 rounded-xl p-3">
+                <div className="text-sm text-green-700">
+                  <strong>Fichier sélectionné:</strong> {importFile.name}
+                </div>
+                <div className="text-xs text-green-600 mt-1">
+                  Taille: {(importFile.size / 1024).toFixed(2)} KB
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 pt-4">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setShowImportModal(false)}
+                className="flex-1"
+                disabled={importing}
+              >
+                Annuler
+              </Button>
+              <Button
+                onClick={handleImportClients}
+                disabled={!importFile || importing}
+                className="flex-1"
+              >
+                {importing ? (
+                  <>
+                    <LoadingSpinner size="sm" />
+                    Import en cours...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4" />
+                    Importer
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
         </Modal>
       )}
     </>
