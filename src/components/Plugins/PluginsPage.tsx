@@ -594,15 +594,15 @@ function PluginModal({ plugin, isSubscribed, isTrialActive, isTrialExpired, tria
                       </div>
                     </div>
                     <ul className="space-y-2 mb-4">
-                      <li className="flex items-center gap-2 text-sm text-gray-700">
+                      <li key="billing" className="flex items-center gap-2 text-sm text-gray-700">
                         <Check className="w-4 h-4 text-green-600" />
                         Facturation mensuelle automatique
                       </li>
-                      <li className="flex items-center gap-2 text-sm text-gray-700">
+                      <li key="cancel" className="flex items-center gap-2 text-sm text-gray-700">
                         <Check className="w-4 h-4 text-green-600" />
                         Annulation à tout moment
                       </li>
-                      <li className="flex items-center gap-2 text-sm text-gray-700">
+                      <li key="access" className="flex items-center gap-2 text-sm text-gray-700">
                         <Check className="w-4 h-4 text-green-600" />
                         Accès immédiat après paiement
                       </li>
