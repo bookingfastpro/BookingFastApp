@@ -30,13 +30,14 @@ RUN npm ci
 
 COPY . .
 
-# Generate build timestamp if not provided and build
-RUN BUILD_TIME=$(date +%Y%m%d%H%M%S) && \
-    export VITE_APP_VERSION=${VITE_APP_VERSION:-$BUILD_TIME} && \
-    echo "Building with APP_VERSION: $VITE_APP_VERSION" && \
+# Generate unique build timestamp for each deployment
+RUN BUILD_TIME=$(date +%s) && \
+    export VITE_APP_VERSION=$BUILD_TIME && \
+    echo "🔨 Building with unique version: $VITE_APP_VERSION" && \
     npm run build && \
-    echo "Verifying version.txt exists..." && \
+    echo "✅ Verifying version.txt exists..." && \
     ls -la /app/dist/version.txt && \
+    echo "📦 Deployed version:" && \
     cat /app/dist/version.txt
 
 FROM nginx:alpine

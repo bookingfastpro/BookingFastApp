@@ -21,29 +21,40 @@ export class CacheBuster {
 
   static async checkServerVersion(): Promise<boolean> {
     try {
-      const response = await fetch('/version.txt?t=' + Date.now(), {
-        cache: 'no-cache',
-        headers: { 'Cache-Control': 'no-cache' }
+      const timestamp = Date.now();
+      const response = await fetch(`/version.txt?t=${timestamp}`, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
       });
 
       if (!response.ok) {
-        console.warn('Could not fetch server version');
+        console.warn('⚠️ Could not fetch server version (HTTP', response.status, ')');
         return false;
       }
 
       const serverVersion = (await response.text()).trim();
       const currentVersion = this.VERSION;
 
-      console.log('Server version:', serverVersion, 'Current version:', currentVersion);
+      console.log('🔍 Version check:', {
+        server: serverVersion,
+        current: currentVersion,
+        different: serverVersion !== currentVersion
+      });
 
       if (serverVersion !== currentVersion) {
-        console.log('🆕 New server version available!');
+        console.log('🆕 New server version detected!');
+        console.log('   Server:', serverVersion);
+        console.log('   Current:', currentVersion);
         return true;
       }
 
       return false;
     } catch (error) {
-      console.warn('Error checking server version:', error);
+      console.warn('❌ Error checking server version:', error);
       return false;
     }
   }
@@ -55,14 +66,25 @@ export class CacheBuster {
       clearInterval(this.checkInterval);
     }
 
+    // Vérification immédiate au démarrage
+    setTimeout(async () => {
+      const hasNewVersion = await this.checkServerVersion();
+      if (hasNewVersion && this.onNewVersionCallback) {
+        console.log('🚨 New version detected on startup!');
+        this.onNewVersionCallback();
+      }
+    }, 2000);
+
+    // Puis vérification périodique
     this.checkInterval = window.setInterval(async () => {
       const hasNewVersion = await this.checkServerVersion();
       if (hasNewVersion && this.onNewVersionCallback) {
+        console.log('🚨 New version detected during periodic check!');
         this.onNewVersionCallback();
       }
     }, this.CHECK_INTERVAL);
 
-    console.log('✓ Version check started (every 60s)');
+    console.log('✅ Version check started (immediate + every 60s)');
   }
 
   static stopVersionCheck(): void {
