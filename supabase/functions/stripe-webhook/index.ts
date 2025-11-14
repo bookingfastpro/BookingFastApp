@@ -1,13 +1,11 @@
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, stripe-signature',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
 }
 
-// Cache pour éviter les doublons
 const processedSessions = new Map<string, { timestamp: number; result: any }>()
 
-// Nettoyer le cache toutes les 10 minutes
 setInterval(() => {
   const now = Date.now()
   const tenMinutes = 10 * 60 * 1000
@@ -19,7 +17,6 @@ setInterval(() => {
   }
 }, 10 * 60 * 1000)
 
-// Helper pour appeler l'API REST Supabase
 async function supabaseRequest(
   endpoint: string,
   method: string = 'GET',
@@ -62,6 +59,21 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders })
   }
 
+  if (req.method === 'GET') {
+    return new Response(
+      JSON.stringify({
+        status: 'healthy',
+        timestamp: new Date().toISOString(),
+        message: 'Supabase project is active',
+        service: 'stripe-webhook-keep-alive'
+      }),
+      {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    )
+  }
+
   try {
     console.log('🔔 Webhook Stripe reçu')
 
@@ -82,7 +94,6 @@ Deno.serve(async (req) => {
       return new Response('JSON invalide', { status: 400, headers: corsHeaders })
     }
 
-    // 🔥 IGNORER payment_intent.succeeded - ON ATTEND checkout.session.completed
     if (event.type === 'payment_intent.succeeded') {
       console.log('⏭️ IGNORÉ: payment_intent.succeeded - On attend checkout.session.completed')
       return new Response(JSON.stringify({ 
@@ -94,7 +105,6 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Gérer les événements d'abonnement
     if (event.type === 'customer.subscription.updated' || event.type === 'customer.subscription.deleted') {
       const subscription = event.data.object
       console.log('📊 Mise à jour abonnement:', subscription.id)
@@ -117,7 +127,6 @@ Deno.serve(async (req) => {
       })
     }
 
-    // Traiter checkout.session.completed
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object
       const sessionId = session.id
@@ -125,7 +134,6 @@ Deno.serve(async (req) => {
       console.log('💳 Session de paiement complétée:', sessionId)
       console.log('📋 Metadata:', JSON.stringify(session.metadata, null, 2))
       
-      // ⚠️ VÉRIFICATION CRITIQUE : Paiement complet ?
       if (session.status !== 'complete' || session.payment_status !== 'paid') {
         console.log('⚠️ PAIEMENT NON COMPLET - Session ignorée')
         return new Response(JSON.stringify({ 
@@ -136,7 +144,6 @@ Deno.serve(async (req) => {
         })
       }
       
-      // 🔒 Vérifier si déjà traité (éviter doublons)
       if (processedSessions.has(sessionId)) {
         const cached = processedSessions.get(sessionId)!
         console.log('🔒 SESSION DÉJÀ TRAITÉE')
@@ -149,7 +156,6 @@ Deno.serve(async (req) => {
         })
       }
 
-      // Marquer comme en cours de traitement
       processedSessions.set(sessionId, { 
         timestamp: Date.now(), 
         result: { processing: true } 
@@ -157,7 +163,6 @@ Deno.serve(async (req) => {
 
       const metadata = session.metadata || {}
 
-      // 💳 PAIEMENT VIA LIEN DE PAIEMENT (CODE ORIGINAL QUI FONCTIONNAIT)
       if (metadata.payment_type === 'payment_link') {
         console.log('💳 === PAIEMENT VIA LIEN === 💳')
         
@@ -177,7 +182,6 @@ Deno.serve(async (req) => {
           amount
         })
 
-        // 1️⃣ Récupérer la réservation
         console.log('🔍 Récupération réservation...')
         const bookings = await supabaseRequest(`bookings?id=eq.${bookingId}`)
         const booking = bookings?.[0]
@@ -196,10 +200,8 @@ Deno.serve(async (req) => {
           transactions: booking.transactions
         })
 
-        // 2️⃣ 🔥 MISE À JOUR DE LA TRANSACTION EXISTANTE (CODE ORIGINAL)
         const transactions = booking.transactions || []
         
-        // Chercher la transaction "pending" liée à ce payment_link_id
         const pendingTransactionIndex = transactions.findIndex((t: any) => 
           t.status === 'pending' && 
           (t.payment_link_id === paymentLinkId || t.note?.includes(paymentLinkId))
@@ -208,7 +210,6 @@ Deno.serve(async (req) => {
         if (pendingTransactionIndex !== -1) {
           console.log('🔄 MISE À JOUR transaction existante:', transactions[pendingTransactionIndex].id)
           
-          // Mettre à jour la transaction existante
           transactions[pendingTransactionIndex] = {
             ...transactions[pendingTransactionIndex],
             status: 'completed',
@@ -219,7 +220,6 @@ Deno.serve(async (req) => {
         } else {
           console.log('⚠️ Aucune transaction pending trouvée, création nouvelle transaction')
           
-          // Si aucune transaction pending n'est trouvée, en créer une nouvelle
           const newTransaction = {
             id: crypto.randomUUID(),
             amount: amount,
@@ -236,7 +236,6 @@ Deno.serve(async (req) => {
 
         console.log('💰 Transactions après mise à jour:', transactions)
 
-        // 3️⃣ Calculer le nouveau montant payé
         const newPaymentAmount = transactions
           .filter((t: any) => t.status === 'completed')
           .reduce((sum: number, t: any) => sum + t.amount, 0)
@@ -247,7 +246,6 @@ Deno.serve(async (req) => {
           total: booking.total_amount
         })
 
-        // 4️⃣ Déterminer le statut de paiement
         let paymentStatus = 'pending'
         if (newPaymentAmount >= booking.total_amount) {
           paymentStatus = 'completed'
@@ -257,7 +255,6 @@ Deno.serve(async (req) => {
           console.log('⚠️ Paiement PARTIEL')
         }
 
-        // 5️⃣ Mettre à jour la réservation
         console.log('🔄 Mise à jour réservation...')
         const updateData = {
           transactions: transactions,
@@ -274,7 +271,6 @@ Deno.serve(async (req) => {
           updateData
         )
 
-        // 6️⃣ Marquer le lien comme complété
         console.log('🔄 Marquage lien comme complété...')
         
         await supabaseRequest(
@@ -307,7 +303,6 @@ Deno.serve(async (req) => {
         })
       }
 
-      // 📅 RÉSERVATION IFRAME (booking_deposit) - AVEC TRANSACTIONS
       if (metadata.payment_type === 'booking_deposit') {
         console.log('📅 === PAIEMENT RÉSERVATION IFRAME === 📅')
         
@@ -375,7 +370,6 @@ Deno.serve(async (req) => {
         const totalAmount = service.price_ttc * quantity
         const depositAmount = session.amount_total / 100
 
-        // 🔥 CRÉER LA TRANSACTION POUR LE PAIEMENT IFRAME
         console.log('💰 === CRÉATION TRANSACTION IFRAME === 💰')
         const iframeTransaction = {
           id: crypto.randomUUID(),
@@ -401,7 +395,6 @@ Deno.serve(async (req) => {
             return new Response('Réservation non trouvée', { status: 404, headers: corsHeaders })
           }
 
-          // 🔥 AJOUTER LA TRANSACTION AU TABLEAU EXISTANT
           const existingTransactions = existingBooking.transactions || []
           const updatedTransactions = [...existingTransactions, iframeTransaction]
           
@@ -512,7 +505,6 @@ Deno.serve(async (req) => {
         }
       }
 
-      // 🔌 ABONNEMENT PLUGIN
       if (session.client_reference_id && session.client_reference_id.includes('|')) {
         console.log('🔌 ABONNEMENT PLUGIN détecté')
         
@@ -567,7 +559,6 @@ Deno.serve(async (req) => {
         })
       }
 
-      // 💳 Abonnement plateforme
       if (metadata.payment_type === 'platform_subscription') {
         console.log('💳 ABONNEMENT PLATEFORME')
         
