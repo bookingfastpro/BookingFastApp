@@ -52,9 +52,9 @@ export function MaintenanceModal({ isOpen, isReconnecting = false }: Maintenance
       <div className="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full mx-4 animate-fade-in">
         <div className="flex flex-col items-center text-center">
           {/* Icône animée */}
-          <div className="relative w-20 h-20 mb-6">
-            <div className="absolute inset-0 bg-orange-100 rounded-full animate-ping opacity-75"></div>
-            <div className="relative w-20 h-20 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center">
+          <div className="relative w-20 h-20 mb-6 flex items-center justify-center">
+            <div className="absolute w-20 h-20 bg-orange-100 rounded-full animate-ping-smooth opacity-50"></div>
+            <div className="relative w-20 h-20 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-lg transform-gpu">
               {isReconnecting ? (
                 <Wifi className="w-10 h-10 text-white animate-pulse" />
               ) : (
@@ -147,6 +147,22 @@ export function MaintenanceModal({ isOpen, isReconnecting = false }: Maintenance
           animation: fade-in 0.3s ease-out;
         }
 
+        @keyframes ping-smooth {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.5;
+          }
+          50% {
+            transform: scale(1.3);
+            opacity: 0;
+          }
+        }
+
+        .animate-ping-smooth {
+          animation: ping-smooth 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+          will-change: transform, opacity;
+        }
+
         @keyframes progress-indeterminate {
           0% {
             transform: translateX(-100%);
@@ -159,6 +175,12 @@ export function MaintenanceModal({ isOpen, isReconnecting = false }: Maintenance
         .animate-progress-indeterminate {
           animation: progress-indeterminate 1.5s ease-in-out infinite;
           width: 25%;
+          will-change: transform;
+        }
+
+        .transform-gpu {
+          transform: translateZ(0);
+          backface-visibility: hidden;
         }
       `}</style>
     </div>
